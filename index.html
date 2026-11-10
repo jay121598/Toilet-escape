@@ -259,9 +259,10 @@ h1 .pi{width:1.1em;height:1.1em}
    </ol>
    <button class="go" id="goBtn">開始逃亡</button>
   </div>
-  <div class="tp" id="tp-skin" hidden><div class="skins" id="skinG"></div><p class="sub" style="font-size:12px">造型與成就存在這個瀏覽器裡。</p></div>
+  <div class="tp" id="tp-skin" hidden><div class="skins" id="skinG"></div><p class="sub" style="font-size:12px">造型與成就預設存在這個瀏覽器裡；到「排行榜」分頁建立存檔帳號，就能雲端保存、換裝置也能讀回。</p></div>
   <div class="tp" id="tp-rank" hidden>
    <div id="lbAcct"></div>
+   <div id="lbAuth"></div>
    <div class="tabs" style="margin:8px 0"><button class="ltab on" data-lb="kills">怪物擊殺數</button><button class="ltab" data-lb="time">最快逃離時間</button></div>
    <ol class="rk" id="lbList"></ol>
   </div>
@@ -1004,7 +1005,8 @@ const ACH=[
 ];
 let save={ach:{},skin:'default',chat:[]};
 try{const r=JSON.parse(localStorage.getItem('toiletEscapeSave')||'null');if(r&&typeof r==='object'){save.ach=r.ach||{};save.skin=r.skin||'default';save.seen=r.seen||'';save.chat=Array.isArray(r.chat)?r.chat:[];save.dseen3=r.dseen3&&typeof r.dseen3==='object'?r.dseen3:{};save.dcnt3=r.dcnt3&&typeof r.dcnt3==='object'?r.dcnt3:{}}}catch(e){}
-function persist(){try{localStorage.setItem('toiletEscapeSave',JSON.stringify(save))}catch(e){}}
+let cloudHook=null;
+function persist(){try{localStorage.setItem('toiletEscapeSave',JSON.stringify(save))}catch(e){}if(cloudHook)cloudHook()}
 const skinOpen=s=>!s.need||!!save.ach[s.need];
 function setPal(){const sk=SKINS.find(s=>s.id===save.skin&&skinOpen(s))||SKINS[0];curPal=sk.pal}
 function unlock(id){
@@ -2448,42 +2450,116 @@ const fmtT=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
 const SB_URL='https://xvirqaagwabjvpduewpu.supabase.co',SB_KEY='sb_publishable_ENMtG2t13ZK5Czt7u2isnw_Oa6XHTHU';
 const lbT=(p,ms=10000)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms))]);
 async function lbInit(){
- if(typeof supabase==='undefined'||SB_URL.startsWith('YOUR-')){LB.st='offline';lbRender();return}
+ if(typeof supabase==='undefined'||SB_URL.startsWith('YOUR-')){LB.st='offline';LB.why=typeof supabase==='undefined'?'Supabase 程式庫沒有載入成功（網路或瀏覽器擋住了 cdn.jsdelivr.net）':'還沒填 SB_URL';lbRender();return}
  try{
   const sb=supabase.createClient(SB_URL,SB_KEY);
   let {data:{session}}=await lbT(sb.auth.getSession());
   if(!session){const r=await lbT(sb.auth.signInAnonymously());if(r.error)throw r.error;session=r.data.session}
-  LB.db=sb;LB.uid=session.user.id;
+  LB.db=sb;LB.uid=session.user.id;LB.perm=!session.user.is_anonymous;LB.email=session.user.email||'';
   const m=await lbT(sb.from('board').select('id,name,kills,best,ku,bu').eq('id',LB.uid).maybeSingle());
   if(m.error)throw m.error;
   LB.me=m.data||null;LB.st='ok';
   if(LB.me&&$('nm')&&$('nm').value==='小明')$('nm').value=LB.me.name;
   lbRender();lbFetch();
+  if(LB.perm){cloudHook=cloudPush;cloudSync().catch(()=>{})}
   setInterval(()=>{if(!document.hidden)lbFetch()},20000);
- }catch(e){LB.st='err';lbRender()}
+ }catch(e){LB.st='err';LB.why=(e&&(e.message||e.code))||String(e);console.error('[排行榜]',e);lbRender()}
 }
 async function lbFetch(){
  if(!LB.db)return;
  const k=LB.mode==='kills';
  let q=LB.db.from('board').select('id,name,kills,best,ku,bu');
  q=k?q.gt('kills',0).order('kills',{ascending:false}).order('ku',{ascending:true}):q.gt('best',0).order('best',{ascending:true}).order('bu',{ascending:true});
- try{const r=await lbT(q.limit(30));if(r.error)return;LB.rows=r.data||[];lbRender()}catch(e){}
+ try{const r=await lbT(q.limit(30));if(r.error)return;LB.rows=r.data||[];lbList()}catch(e){}
 }
 function lbRender(){
  const a=$('lbAcct'),l=$('lbList');if(!a||!l)return;
  const note=(t)=>`<p class="sub" style="font-size:13px">${t}</p>`;
  if(LB.st==='loading')a.innerHTML=note('連線排行榜中…');
- else if(LB.st==='offline')a.innerHTML=note('排行榜尚未設定（單機遊玩不受影響）。');
- else if(LB.st==='err')a.innerHTML=note('排行榜暫時連不上，稍後再試。（單機遊玩不受影響）');
+ else if(LB.st==='offline')a.innerHTML=note('排行榜尚未設定（單機遊玩不受影響）。'+(LB.why?'<br>原因：'+esc(LB.why):''));
+ else if(LB.st==='err')a.innerHTML=note('排行榜暫時連不上。（單機遊玩不受影響）'+(LB.why?'<br>原因：'+esc(LB.why):''));
  else if(!LB.me||LB.edit){
   a.innerHTML=`${note('取一個全球排行榜暱稱就完成註冊，不需要密碼。成績綁在這個瀏覽器，清除網站資料會失去帳號。')}<div class="lbreg"><input id="lbName" maxlength="10" placeholder="暱稱（1–10 字）" value="${LB.me?esc(LB.me.name):''}" autocomplete="off"><button class="go" id="lbReg">${LB.me?'改暱稱':'註冊'}</button></div><p class="sub" id="lbErr" style="color:var(--alert);font-size:13px">${esc(LB.msg||'')}</p>`;
  }else{
   a.innerHTML=`<div class="lbme"><b>${esc(LB.me.name)}</b><span>已登入</span><span>最高擊殺 ${LB.me.kills||0}</span><span>最快逃離 ${LB.me.best>0?fmtT(LB.me.best):'—'}</span><button class="go ghost" id="lbEdit">改暱稱</button></div>`;
  }
+ lbAuthRender();lbList();
+}
+function lbList(){
+ const l=$('lbList');if(!l)return;
  const kills=LB.mode==='kills';
  const rows=LB.rows.filter(r=>kills?r.kills>0:r.best>0).sort((x,y)=>kills?(y.kills-x.kills)||((x.ku||0)-(y.ku||0)):(x.best-y.best)||((x.bu||0)-(y.bu||0)));
  document.querySelectorAll('.ltab').forEach(b=>b.classList.toggle('on',b.dataset.lb===LB.mode));
  l.innerHTML=rows.length?rows.slice(0,30).map((r,i)=>`<li class="${r.id===LB.uid?'me':''}"><i>${i+1}</i><b>${esc(r.name)}</b><span>${kills?r.kills+' 隻':fmtT(r.best)}</span></li>`).join(''):`<li class="empty">${LB.st==='ok'?'還沒有人上榜，成為第一個吧！':'—'}</li>`;
+}
+/* ---------- 存檔帳號（Email + 密碼）與雲端存檔 ---------- */
+const authMsg=t=>{const e=$('authErr');if(e)e.textContent=t};
+function lbAuthRender(){
+ const a=$('lbAuth');if(!a)return;
+ if(LB.st!=='ok'){a.innerHTML='';return}
+ if(LB.perm){a.innerHTML=`<div class="lbme"><span>存檔帳號：${esc(LB.email)}</span><span>造型與成就已雲端保存</span><button class="go ghost" id="authOut">登出</button></div>`;return}
+ a.innerHTML=`<p class="sub" style="font-size:13px">想保存造型與成就、換裝置也能玩？用 Email 建立存檔帳號（不會寄信，密碼至少 6 個字）。</p><div class="lbreg"><input id="authEmail" type="email" placeholder="Email" autocomplete="email" style="user-select:text"><input id="authPw" type="password" placeholder="密碼" autocomplete="current-password" style="user-select:text"></div><div class="lbreg"><button class="go" id="authUp">建立帳號</button><button class="go ghost" id="authIn">已有帳號，登入</button></div><p class="sub" id="authErr" style="color:var(--alert);font-size:13px"></p>`;
+}
+function mergeSave(c){
+ if(!c||typeof c!=='object')return;
+ save.ach={...(c.ach||{}),...(save.ach||{})};
+ if(c.skin)save.skin=c.skin;
+ if(typeof c.seen==='string'&&c.seen)save.seen=c.seen;
+ if(Array.isArray(c.chat)&&c.chat.length>=save.chat.length)save.chat=c.chat;
+ if(c.dseen3&&typeof c.dseen3==='object')save.dseen3=c.dseen3;
+ if(c.dcnt3&&typeof c.dcnt3==='object')save.dcnt3=c.dcnt3;
+}
+async function cloudPull(){
+ const r=await lbT(LB.db.from('saves').select('data').eq('id',LB.uid).maybeSingle());
+ if(r.error)throw r.error;
+ return r.data?r.data.data:null;
+}
+async function cloudPushNow(){
+ const r=await lbT(LB.db.from('saves').upsert({id:LB.uid,data:save,updated_at:new Date().toISOString()}));
+ if(r.error)throw r.error;
+}
+let cloudT=null;
+function cloudPush(){
+ if(!LB.db||!LB.perm)return;
+ clearTimeout(cloudT);
+ cloudT=setTimeout(()=>{cloudPushNow().catch(()=>{})},1500);
+}
+async function cloudSync(){
+ const before=JSON.stringify(save);
+ mergeSave(await cloudPull());
+ const changed=JSON.stringify(save)!==before;
+ try{localStorage.setItem('toiletEscapeSave',JSON.stringify(save))}catch(e){}
+ await cloudPushNow();
+ if(changed){try{setPal()}catch(e){}try{renderMenu()}catch(e){}}
+}
+async function authDo(kind){
+ const email=(($('authEmail')||{}).value||'').trim(),pw=($('authPw')||{}).value||'';
+ if(!email||pw.length<6){authMsg('請輸入 Email，密碼至少 6 個字。');return}
+ authMsg('處理中…');
+ try{
+  if(kind==='up'){
+   const r=await lbT(LB.db.auth.updateUser({email,password:pw}));
+   if(r.error){authMsg(/registered|exists/i.test(r.error.message)?'這個 Email 已經註冊過了，請按「已有帳號，登入」。':'建立失敗：'+r.error.message);return}
+   const u=r.data.user;
+   if(!u||u.is_anonymous||!u.email){authMsg('還沒完成：Supabase 需要先關閉「Confirm email」。');return}
+   LB.perm=true;LB.email=u.email;cloudHook=cloudPush;
+   await cloudPushNow();
+   lbAuthRender();
+  }else{
+   const r=await lbT(LB.db.auth.signInWithPassword({email,password:pw}));
+   if(r.error){authMsg('Email 或密碼不對。');return}
+   LB.uid=r.data.user.id;LB.perm=true;LB.email=r.data.user.email||email;
+   await cloudSync();
+   location.reload();
+  }
+ }catch(e){authMsg('連線失敗，稍後再試。')}
+}
+async function authOut(){
+ if(!confirm('登出會清除這個裝置上的存檔（雲端存檔還在）。確定要登出嗎？'))return;
+ try{await cloudPushNow()}catch(e){}
+ try{await LB.db.auth.signOut()}catch(e){}
+ try{localStorage.removeItem('toiletEscapeSave')}catch(e){}
+ location.reload();
 }
 async function lbRegister(){
  const el=$('lbName');if(!el||!LB.db)return;
@@ -2535,10 +2611,13 @@ $('exEnd').addEventListener('click',()=>{$('extra').hidden=true;S.paused=false;e
 $('giveup').addEventListener('click',()=>{if(S&&!S.over&&!S.paused)end(false,'你選擇結算這一場，把擊殺數留在排行榜上。')});
 document.addEventListener('click',e=>{
  if(e.target.closest('#lbReg'))lbRegister();
+ else if(e.target.closest('#authUp'))authDo('up');
+ else if(e.target.closest('#authIn'))authDo('in');
+ else if(e.target.closest('#authOut'))authOut();
  else if(e.target.closest('#lbEdit')){LB.edit=true;LB.msg='';lbRender()}
- const t=e.target.closest('.ltab');if(t){LB.mode=t.dataset.lb;LB.rows=[];lbRender();lbFetch()}
+ const t=e.target.closest('.ltab');if(t){LB.mode=t.dataset.lb;LB.rows=[];lbList();lbFetch()}
 });
-document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='lbName'&&e.key==='Enter')lbRegister()});
+document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='lbName'&&e.key==='Enter')lbRegister();else if(e.target&&e.target.id==='authPw'&&e.key==='Enter')authDo('in')});
 lbInit();
 
 /* ---------- 繪圖 ---------- */
