@@ -39,6 +39,10 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
 .ef span{font:700 .8em var(--font-b);padding:.1em .5em;border-radius:99px;color:#10181d}
 #hc{position:absolute;left:50%;top:.6em;transform:translateX(-50%);font:400 2.5em/1.1 var(--font-d);background:rgba(8,14,18,.62);padding:.1em .5em;border-radius:.5em;font-variant-numeric:tabular-nums}
 #hc.low{color:var(--alert)}
+#kc{position:absolute;left:50%;top:3.9em;transform:translateX(-50%);font:700 1.05em var(--font-b);padding:.15em .85em;border-radius:1em;background:rgba(8,14,18,.62);color:#fff;text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums;pointer-events:none;white-space:nowrap}
+#kc b{display:inline-block;color:var(--accent);font-size:1.25em;line-height:1}
+#kc.pop b{animation:kpop .28s ease-out}
+@keyframes kpop{50%{transform:scale(1.6)}}
 #hr{position:absolute;right:1.1em;top:.8em;display:flex;gap:.5em;pointer-events:auto}
 .ab{position:relative;width:3.7em;height:3.7em;min-width:44px;min-height:44px;border-radius:.7em;border:2px solid var(--line);background:rgba(16,28,36,.86);font:400 1.8em/1 var(--font-d);overflow:hidden;cursor:pointer;padding:0;touch-action:none}
 .ab .k{position:absolute;top:.15em;left:.3em;font:500 .36em var(--font-b);color:var(--mute)}
@@ -126,7 +130,7 @@ h1 .pi{width:1.1em;height:1.1em}
 .ach.done .bd{color:var(--good)}
 .btns{display:flex;gap:10px;flex-wrap:wrap}
 .go.ghost{background:transparent;color:var(--fg);border:2px solid var(--line)}
-#bb{position:absolute;left:50%;top:4.9em;transform:translateX(-50%);width:min(26em,56%);display:flex;flex-direction:column;align-items:center;gap:.15em;font:700 .9em var(--font-b);text-shadow:0 1px 2px #000}
+#bb{position:absolute;left:50%;top:6.6em;transform:translateX(-50%);width:min(26em,56%);display:flex;flex-direction:column;align-items:center;gap:.15em;font:700 .9em var(--font-b);text-shadow:0 1px 2px #000}
 #bb[hidden]{display:none}
 .bbb{width:100%;height:.8em;background:rgba(0,0,0,.65);border-radius:.4em;overflow:hidden}
 .bbb i{display:block;height:100%;width:100%;background:#ff9a2e}
@@ -156,7 +160,7 @@ h1 .pi{width:1.1em;height:1.1em}
 #cutfx .cbk{position:absolute;inset:0;background:#000;opacity:1;transition:opacity 2.2s ease}
 #cutfx.lift .cbk{opacity:0}
 #cutfx p{position:absolute;left:0;right:0;top:44%;margin:0;text-align:center;font:400 clamp(18px,4.2cqw,38px)/1.6 var(--font-d);color:#e6dccb;letter-spacing:.12em;opacity:0}
-#stage.cut #hud,#stage.cut #acti,#stage.cut #mute,#stage.cut #toast,#stage.cut #bb,#stage.cut #jz,#stage.cut #joy{display:none!important}
+#stage.cut #kc,#stage.cut #hud,#stage.cut #acti,#stage.cut #mute,#stage.cut #toast,#stage.cut #bb,#stage.cut #jz,#stage.cut #joy{display:none!important}
 #dlg b{color:var(--accent);font:400 1.15em var(--font-d)}
 #dlg p{margin:0;line-height:1.55}
 #dlg small{color:var(--mute);align-self:flex-end}
@@ -217,6 +221,7 @@ h1 .pi{width:1.1em;height:1.1em}
     <div class="st"><span>金幣 <b id="cgt">0/5</b></span><span>攻擊等級 <b id="alv">1</b></span></div>
    </div>
    <div id="hc">20:00</div>
+   <div id="kc">擊殺 <b id="kcn">0</b></div>
    <div id="bb" hidden><span id="bbn">校長</span><div class="bbb"><i id="bbi"></i></div></div>
    <div class="ef" id="ef"></div>
    <div id="hr">
@@ -2936,8 +2941,10 @@ function mini(camX,camY){
 }
 
 let lastHp='',lastCl=-1;
+let lastKills=-1;
 function hudTick(){
  const s=S,sec=Math.ceil(s.t);
+ if(s.kills!==lastKills){const up=s.kills>lastKills&&lastKills>=0;lastKills=s.kills;$('kcn').textContent=s.kills;if(up){const k=$('kc');k.classList.remove('pop');void k.offsetWidth;k.classList.add('pop')}}
  if(s.endless){const x=Math.floor(s.ex),tx=`∞ +${Math.floor(x/60)}:${String(x%60).padStart(2,'0')}`,e=$('hc');if(e.textContent!==tx){e.textContent=tx;e.classList.remove('low')}}else if(sec!==lastSec){lastSec=sec;const e=$('hc');e.textContent=`${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;e.classList.toggle('low',sec<=30)}
  for(const k in s.ab){const a=s.ab[k],b=$('ab'+k);b.querySelector('.cd').style.height=a.on?(a.cd/ABIL[k].cd*100)+'%':'0';b.classList.toggle('ready',a.on&&a.cd<=0)}
  const hp=`${Math.ceil(s.p.hp)}/${s.p.maxHp}`;
