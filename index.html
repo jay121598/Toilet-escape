@@ -1022,18 +1022,18 @@ const ACH=[
  {id:'letgo',name:'放下',desc:'走完隱藏結局',gems:6},
  {id:'chat',name:'尬聊大師',desc:'聽完愛聊天的阿伯的 50 段對話',gems:5}
 ];
-let save={ach:{},skin:'default',chat:[],customs:{},owned:{},esc:0};
+let save={ach:{},skin:'default',chat:[],customs:{},owned:{},esc:0,bonus:0};
 const HEX=/^#[0-9a-f]{6}$/i;
 function cleanCustom(c){if(!c||typeof c!=='object')return null;const o={};for(const k of['body','pants','pack','skirt','hair','dress'])if(typeof c[k]==='string'&&HEX.test(c[k]))o[k]=c[k];return Object.keys(o).length?o:null}
 function cleanCustoms(c){const o={};if(c&&typeof c==='object')for(const id in c){const v=cleanCustom(c[id]);if(v&&SKINS.some(k=>k.id===id))o[id]=v}return o}
 function cleanOwned(c){const o={};if(c&&typeof c==='object')for(const id in c)if(SKINS.some(k=>k.id===id&&k.price))o[id]=1;return o}
-try{const r=JSON.parse(localStorage.getItem('toiletEscapeSave')||'null');if(r&&typeof r==='object'){save.ach=r.ach||{};save.skin=r.skin||'default';{save.customs=cleanCustoms(r.customs);const cu=cleanCustom(r.custom);if(cu&&!save.customs.default)save.customs.default=cu}save.owned=cleanOwned(r.owned);save.esc=Math.max(0,Math.min(1e6,r.esc|0));save.seen=r.seen||'';save.chat=Array.isArray(r.chat)?r.chat:[];save.dseen3=r.dseen3&&typeof r.dseen3==='object'?r.dseen3:{};save.dcnt3=r.dcnt3&&typeof r.dcnt3==='object'?r.dcnt3:{}}}catch(e){}
+try{const r=JSON.parse(localStorage.getItem('toiletEscapeSave')||'null');if(r&&typeof r==='object'){save.ach=r.ach||{};save.skin=r.skin||'default';{save.customs=cleanCustoms(r.customs);const cu=cleanCustom(r.custom);if(cu&&!save.customs.default)save.customs.default=cu}save.owned=cleanOwned(r.owned);save.esc=Math.max(0,Math.min(1e6,r.esc|0));save.bonus=Math.max(-1e6,Math.min(1e6,r.bonus|0));save.seen=r.seen||'';save.chat=Array.isArray(r.chat)?r.chat:[];save.dseen3=r.dseen3&&typeof r.dseen3==='object'?r.dseen3:{};save.dcnt3=r.dcnt3&&typeof r.dcnt3==='object'?r.dcnt3:{}}}catch(e){}
 if(save.ach.escape&&!save.esc)save.esc=1;
 let cloudHook=null;
 function persist(){try{localStorage.setItem('toiletEscapeSave',JSON.stringify(save))}catch(e){}if(cloudHook)cloudHook()}
 const skinOpen=s=>s.need?!!save.ach[s.need]:s.price?!!save.owned[s.id]:true;
 /* 鑽石 = 成就獎勵 + 每次逃離 5 顆 − 已買造型；由存檔推算，不會因為雲端同步而重複或遺失 */
-function gemsOf(){let g=(save.esc||0)*5;for(const a of ACH)if(save.ach[a.id])g+=a.gems||0;for(const k of SKINS)if(k.price&&save.owned[k.id])g-=k.price;return Math.max(0,g)}
+function gemsOf(){let g=(save.esc||0)*5;for(const a of ACH)if(save.ach[a.id])g+=a.gems||0;for(const k of SKINS)if(k.price&&save.owned[k.id])g-=k.price;return Math.max(0,g+(save.bonus|0))}
 const gemI=(n=14)=>`<svg viewBox="0 0 24 24" width="${n}" height="${n}" style="vertical-align:-2px"><path d="M6 3h12l4 6-10 12L2 9z" fill="#5fd4f4"/><path d="M2 9h20L12 21z" fill="#2aa7d6"/><path d="M6 3l-4 6h6zM18 3l4 6h-6zM9 9l3-6 3 6z" fill="#a8ecff"/></svg>`;
 let buyPend=null;
 const palOf=s=>s.cust&&save.customs[s.id]?{...s.pal,...save.customs[s.id]}:s.pal;
@@ -2570,6 +2570,7 @@ function mergeSave(c){
  if(c.skin)save.skin=c.skin;
  {const cu=cleanCustoms(c.customs),lg=cleanCustom(c.custom);if(lg&&!cu.default)cu.default=lg;for(const id in cu)if(!save.customs[id])save.customs[id]=cu[id]}
  {const o=cleanOwned(c.owned);for(const id in o)save.owned[id]=1}
+ if(Number.isFinite(c.bonus))save.bonus=Math.max(-1e6,Math.min(1e6,c.bonus|0));
  if(Number.isFinite(c.esc))save.esc=Math.max(save.esc||0,Math.min(1e6,c.esc|0));
  if(save.ach.escape&&!save.esc)save.esc=1;
  if(typeof c.seen==='string'&&c.seen)save.seen=c.seen;
