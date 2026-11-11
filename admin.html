@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>廁所大逃亡・管理面板</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#10171b;--panel:#18242b;--line:#2b3d47;--fg:#eaf1f4;--mute:#8aa0ab;--accent:#ffb703;--good:#4fd18b;--bad:#ff6b5e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "PingFang TC","Microsoft JhengHei",system-ui,sans-serif;padding:20px 16px}
+main{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+h1{margin:0;font-size:22px}h2{margin:0 0 8px;font-size:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+input,button{font:inherit;color:var(--fg)}
+input[type=text],input[type=email],input[type=password],input[type=number]{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg)}
+button{padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer}
+button.go{background:var(--accent);border-color:var(--accent);color:#1b1300;font-weight:600}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>input{flex:1 1 160px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute)}
+.hit{display:block;width:100%;text-align:left;margin-top:6px}
+.msg{min-height:1.4em;font-size:14px}.ok{color:var(--good)}.err{color:var(--bad)}
+.sub{color:var(--mute);font-size:13px;margin:6px 0 0}
+.chk{flex-direction:row;align-items:center;gap:6px;color:var(--fg);font-size:15px}
+.chk input{width:auto}
+</style></head><body><main>
+<h1>廁所大逃亡・管理面板</h1>
+<section class="card" id="login">
+ <h2>管理員登入</h2>
+ <div class="row"><input id="em" type="email" placeholder="Email（遊戲存檔帳號）" autocomplete="email"><input id="pw" type="password" placeholder="密碼" autocomplete="current-password"><button class="go" id="goLogin">登入</button></div>
+ <p class="msg err" id="loginMsg"></p>
+</section>
+<div id="app" hidden>
+ <section class="card"><div class="row"><b id="who" style="flex:1"></b><button id="out">登出</button></div></section>
+ <section class="card">
+  <h2>找玩家</h2>
+  <div class="row"><input id="q" type="text" placeholder="輸入暱稱（可只打一部分，留空列出全部前 20 位）"><button class="go" id="search">搜尋</button></div>
+  <div id="hits"></div>
+ </section>
+ <section class="card" id="edit" hidden>
+  <h2 id="pname"></h2>
+  <p class="sub">排行榜數據</p>
+  <div class="grid">
+   <label>總擊殺數<input id="fTotal" type="number" min="0" step="1"></label>
+   <label>單場最高擊殺<input id="fKills" type="number" min="0" step="1"></label>
+   <label>最快逃離（秒，0＝沒有）<input id="fBest" type="number" min="0" step="1"></label>
+  </div>
+  <div class="row" style="margin-top:10px"><button class="go" id="saveBoard">儲存排行榜數據</button></div>
+  <div id="saveBox">
+   <p class="sub" style="margin-top:18px">鑽石與造型（雲端存檔）</p>
+   <div class="grid">
+    <label>鑽石總數（直接打你要的數字）<input id="fGems" type="number" min="0" step="1"></label>
+    <label>逃離次數（每次 5 顆）<input id="fEsc" type="number" min="0" step="1"></label>
+   </div>
+   <div class="row" style="margin-top:8px"><label class="chk"><input type="checkbox" id="oLolita">擁有「蘿莉塔」</label><label class="chk"><input type="checkbox" id="oJh">擁有「家豪造型」</label></div>
+   <p class="sub" id="gemInfo"></p>
+   <div class="row" style="margin-top:6px"><button class="go" id="saveSave">儲存鑽石與造型</button></div>
+  </div>
+  <p class="msg" id="msg"></p>
+ </section>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SB_URL='https://xvirqaagwabjvpduewpu.supabase.co',SB_KEY='sb_publishable_ENMtG2t13ZK5Czt7u2isnw_Oa6XHTHU';
+// 與遊戲分開存登入狀態，登入管理面板不會影響遊戲裡的帳號
+const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{storageKey:'toilet-admin-auth'}});
+const GEMS={escape:3,lv10:2,kills50:3,disc:1,max:3,flawless:10,slayer:8,bao:2,mathfail:1,geo:2,letgo:6,chat:5};
+const PRICE={lolita:30,jh:20};
+const $=id=>document.getElementById(id);
+let cur=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function say(t,ok){const m=$('msg');m.textContent=t;m.className='msg '+(ok?'ok':'err')}
+function baseGems(d){ // 與遊戲相同的算法（不含 bonus）
+ let g=0;const ach=d.ach||{};let e=d.esc|0;if(ach.escape&&!e)e=1;g+=e*5;
+ for(const k in GEMS)if(ach[k])g+=GEMS[k];
+ for(const k in PRICE)if((d.owned||{})[k])g-=PRICE[k];
+ return g}
+async function checkAdmin(){
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session){$('login').hidden=false;$('app').hidden=true;return}
+ const r=await sb.rpc('is_admin');
+ if(r.error||r.data!==true){$('loginMsg').textContent='這個帳號不是管理員。';await sb.auth.signOut();$('login').hidden=false;$('app').hidden=true;return}
+ $('login').hidden=true;$('app').hidden=false;$('who').textContent='已登入：'+session.user.email}
+$('goLogin').onclick=async()=>{
+ $('loginMsg').textContent='';
+ const r=await sb.auth.signInWithPassword({email:$('em').value.trim(),password:$('pw').value});
+ if(r.error){$('loginMsg').textContent='登入失敗：'+r.error.message;return}
+ checkAdmin()};
+$('out').onclick=async()=>{await sb.auth.signOut();cur=null;$('edit').hidden=true;checkAdmin()};
+$('search').onclick=async()=>{
+ const r=await sb.rpc('admin_find',{p_q:$('q').value.trim()});
+ if(r.error){$('hits').innerHTML='<p class="msg err">搜尋失敗：'+esc(r.error.message)+'</p>';return}
+ window._rows=r.data||[];
+ $('hits').innerHTML=window._rows.length?window._rows.map((p,i)=>`<button class="hit" data-i="${i}">${esc(p.name)}　<span style="color:var(--mute)">總擊殺 ${p.total}・${p.data?'有雲端存檔':'沒有雲端存檔'}</span></button>`).join(''):'<p class="sub">找不到玩家。</p>'};
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter')$('search').click()});
+$('hits').onclick=e=>{const b=e.target.closest('.hit');if(!b)return;pick(window._rows[b.dataset.i])};
+function pick(p){
+ cur=p;$('edit').hidden=false;$('pname').textContent=p.name;say('');
+ $('fTotal').value=p.total;$('fKills').value=p.kills;$('fBest').value=p.best;
+ const d=p.data;$('saveBox').style.display=d?'':'none';
+ if(d){const b=baseGems(d);$('fGems').value=Math.max(0,b+(d.bonus|0));$('fEsc').value=d.esc|0;
+  $('oLolita').checked=!!(d.owned||{}).lolita;$('oJh').checked=!!(d.owned||{}).jh;
+  $('gemInfo').textContent='改鑽石總數時，系統會自動換算成加成值存進去。改完請玩家重新整理頁面；玩家正在玩的時候改，會被他手上的存檔蓋回去。'}
+ else $('gemInfo').textContent=''}
+$('saveBoard').onclick=async()=>{
+ const r=await sb.rpc('admin_set_board',{p_id:cur.id,p_kills:+$('fKills').value|0,p_best:+$('fBest').value|0,p_total:+$('fTotal').value|0});
+ if(r.error)return say('儲存失敗：'+r.error.message);say('排行榜數據已儲存。',1)};
+$('saveSave').onclick=async()=>{
+ const d={...(cur.data||{})};
+ d.esc=Math.max(0,+$('fEsc').value|0);
+ d.owned={...(d.owned||{})};
+ for(const [id,k] of [['oLolita','lolita'],['oJh','jh']]){if($(id).checked)d.owned[k]=1;else delete d.owned[k]}
+ const want=Math.max(0,+$('fGems').value|0);
+ d.bonus=want-baseGems(d);
+ const r=await sb.rpc('admin_set_save',{p_id:cur.id,p_patch:{esc:d.esc,owned:d.owned,bonus:d.bonus}});
+ if(r.error)return say('儲存失敗：'+r.error.message);
+ cur.data=d;say(`已儲存。這位玩家的鑽石現在是 ${want} 顆。`,1)};
+checkAdmin();
+</script></body></html>
