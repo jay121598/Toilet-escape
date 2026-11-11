@@ -1002,6 +1002,7 @@ let curPal={body:'#f2f5f7',pants:'#1f3a6e',hair:'#2b1e17',skin:'#e8bd98',pack:'#
 const SKINS=[
  {id:'default',name:'預設學生',pal:{body:'#f2f5f7',pants:'#1f3a6e',hair:'#2b1e17',skin:'#e8bd98',pack:'#ffb703'},need:null,cust:[['body','上衣'],['pants','褲子'],['pack','背包']]},
  {id:'girl',name:'女學生',pal:{body:'#f4f6ff',pants:'#f0cdb0',skirt:'#2b3f7a',hair:'#6b3f2e',skin:'#f0c9a8',long:1},need:null,cust:[['body','上衣'],['skirt','裙子'],['hair','頭髮']]},
+ {id:'jh',name:'家豪造型',pal:{body:'#17171b',pants:'#101014',hair:'#17171b',hood:'#17171b',sleeve:'#17171b',skin:'#e5b896',mask:1,wlogo:1},price:20},
  {id:'lolita',name:'蘿莉塔',pal:{body:'#17171c',pants:'#17171c',sleeve:'#17171c',dress:'#eaa6c3',hem:'#5b4560',hair:'#7a4a36',skin:'#f0c9a8',twin:1,tie2:'#2a2230',lolita:1},price:30,cust:[['dress','裙子'],['body','上衣'],['hair','頭髮']]},
  {id:'sport',name:'運動服',pal:{body:'#f6f3ea',pants:'#1c1d22',hair:'#2b1e17',skin:'#e8bd98',tee:'#16161a',shorts:1,stripe:'#f4f4f4',logo:'#16161a'},need:'escape'},
  {id:'cleaner',name:'清潔工制服',pal:{body:'#5b7f8c',pants:'#3b5560',hair:'#2d4a56',skin:'#e5b896',cap:1},need:'kills50'},
@@ -1353,6 +1354,8 @@ const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
 const PATCH={v:'v2.5',date:'2026/11/11',items:[
+ ['新造型：家豪','黑帽 T、黑口罩、胸前白色 W。需要 20 顆鑽石購買。'],
+ ['圖層調整','滾動衛生紙留下的白色路徑現在會畫在金幣下方，金幣不會再被路徑蓋住。'],
  ['新增鑽石與造型購買','主選單右上角會顯示鑽石數量。鑽石可以用來購買造型（需靠成就解鎖的造型不能用買的）。每次成功逃離獲得 5 顆，成就也會依難度給鑽石：毫髮無傷 10、校長終結者 8、放下 6、尬聊大師 5、初次逃脫／清潔工剋星／練到滿級各 3、屎力全開／Bao力份子／地理實察各 2、訓導處常客／數學死當各 1。鑽石數由成就與逃離次數推算，雲端存檔同步也不會多算或少算。'],
  ['新造型：蘿莉塔','粉色格紋的疊層蓬裙、黑色泡泡袖上衣、胸前黑色蝴蝶結、蕾絲髮帶與雙麻花辮，搭配黑襪與厚底鞋。需要 30 顆鑽石購買，上衣、裙子、頭髮顏色都能自訂。'],
  ['女學生可自訂顏色','造型分頁的自訂顏色不再只限預設學生：選到哪個造型就改哪個。女學生可調整上衣、裙子、頭髮顏色。'],
@@ -2871,12 +2874,12 @@ function render(){
  for(const r of rooms)if(r.kind&&r.kind!=='hall'&&vis(r.px,r.py,300))drawRoomDecor(r);
  for(const t of toilets)if(vis(t.x,t.y,60))drawToilet(t,s.tick);
  for(const e of s.eggs)if(vis(e.x,e.y,40))drawEgg(e,s.tick);
- for(const g of s.coinL)if(vis(g.x,g.y,40))drawCoin(g,s.tick);
  for(const g of s.trails){
   const a=Math.min(1,g.life/.6);cx.lineCap='round';
   cx.strokeStyle=`rgba(255,255,255,${.75*a})`;cx.lineWidth=g.w;cx.beginPath();cx.moveTo(g.x1,g.y1);cx.lineTo(g.x2,g.y2);cx.stroke();
   cx.strokeStyle=`rgba(190,180,160,${.6*a})`;cx.lineWidth=2;cx.setLineDash([5,6]);cx.beginPath();cx.moveTo(g.x1,g.y1);cx.lineTo(g.x2,g.y2);cx.stroke();cx.setLineDash([]);
  }
+ for(const g of s.coinL)if(vis(g.x,g.y,40))drawCoin(g,s.tick);
  drawGas();drawToxGas();drawBottles();drawBossFx();
  for(const u of s.stu)if(vis(u.x,u.y,80))ents.push({y:u.y,d:'stu',u});
  if(s.cut)ents.push({y:s.cut.ny,d:'bm'});
