@@ -39,7 +39,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
 .ef span{font:700 .8em var(--font-b);padding:.1em .5em;border-radius:99px;color:#10181d}
 #hc{position:absolute;left:50%;top:.6em;transform:translateX(-50%);font:400 2.5em/1.1 var(--font-d);background:rgba(8,14,18,.62);padding:.1em .5em;border-radius:.5em;font-variant-numeric:tabular-nums}
 #hc.low{color:var(--alert)}
-#kc{position:absolute;left:50%;top:3.9em;transform:translateX(-50%);font:700 1.05em var(--font-b);padding:.15em .85em;border-radius:1em;background:rgba(8,14,18,.62);color:#fff;text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums;pointer-events:none;white-space:nowrap}
+#kc{position:absolute;left:50%;top:4.8em;transform:translateX(-50%);font:700 1.05em var(--font-b);padding:.15em .85em;border-radius:1em;background:rgba(8,14,18,.62);color:#fff;text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums;pointer-events:none;white-space:nowrap}
 #kc b{display:inline-block;color:var(--accent);font-size:1.25em;line-height:1}
 #kc.pop b{animation:kpop .28s ease-out}
 @keyframes kpop{50%{transform:scale(1.6)}}
@@ -130,7 +130,7 @@ h1 .pi{width:1.1em;height:1.1em}
 .ach.done .bd{color:var(--good)}
 .btns{display:flex;gap:10px;flex-wrap:wrap}
 .go.ghost{background:transparent;color:var(--fg);border:2px solid var(--line)}
-#bb{position:absolute;left:50%;top:6.6em;transform:translateX(-50%);width:min(26em,56%);display:flex;flex-direction:column;align-items:center;gap:.15em;font:700 .9em var(--font-b);text-shadow:0 1px 2px #000}
+#bb{position:absolute;left:50%;top:7.5em;transform:translateX(-50%);width:min(26em,56%);display:flex;flex-direction:column;align-items:center;gap:.15em;font:700 .9em var(--font-b);text-shadow:0 1px 2px #000}
 #bb[hidden]{display:none}
 .bbb{width:100%;height:.8em;background:rgba(0,0,0,.65);border-radius:.4em;overflow:hidden}
 .bbb i{display:block;height:100%;width:100%;background:#ff9a2e}
@@ -1310,7 +1310,10 @@ const TPAL={
 const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
-const PATCH={v:'v2.2',date:'2026/11/07',items:[
+const PATCH={v:'v2.3',date:'2026/11/11',items:[
+ ['新增擊殺數統計','畫面上方、計時器正下方會即時顯示本場擊殺數，每打倒一隻敵人就會跳動一下。'],
+ ['手機版版面調整','擊殺數不再與計時器重疊；小地圖會依左上角資訊面板的高度自動往下移，不再與血量條、屎等級區塊重疊。'],
+
  ['全球排行榜與註冊登入','新增「排行榜」分頁：怪物擊殺數、最快逃離時間兩種榜。取暱稱註冊後（不需要密碼），每場結算會自動更新成績。'],
  ['超過 20 分鐘可繼續遊玩','時間到時可選擇繼續遊玩：即使十泡拉完也無法再逃離學校，只能繼續殺怪，擊殺數會計入排行榜，右下角可隨時「結算離場」。'],
 
@@ -2912,7 +2915,7 @@ function stuHint(camX,camY){
   if(u.leaving||u.told)continue;
   const d=Math.hypot(u.x-p.x,u.y-p.y);if(d>1700)continue;
   if(u.hx===undefined){u.hx=rnd(-170,170);u.hy=rnd(-170,170)}
-  const M=124,mx=14,my=200,k=M/WORLD,pl=.5+.5*Math.sin(s.tick*2.4);
+  const M=124,mx=14,my=mmTop(),k=M/WORLD,pl=.5+.5*Math.sin(s.tick*2.4);
   cx.save();
   cx.strokeStyle=`rgba(190,215,255,${.25+.3*pl})`;cx.lineWidth=1.5;cx.setLineDash([3,3]);
   cx.beginPath();cx.arc(mx+(u.x+u.hx)*k,my+(u.y+u.hy)*k,8+3*pl,0,7);cx.stroke();cx.setLineDash([]);
@@ -2924,8 +2927,19 @@ function stuHint(camX,camY){
   cx.restore();
  }
 }
+/* 小地圖放在左上角資訊面板下方：手機上面板相對畫面較大，所以依面板實際高度往下移，避免重疊 */
+let mmCache=200,mmAt=0;
+function mmTop(){
+ const now=performance.now();
+ if(now-mmAt>250){
+  mmAt=now;
+  const hp=document.querySelector('#hud>div'),cr=cv.getBoundingClientRect();
+  if(hp&&cr.width>0){const pr=hp.getBoundingClientRect();mmCache=Math.max(200,Math.round((pr.bottom-cr.top)*W/cr.width+10))}
+ }
+ return mmCache;
+}
 function mini(camX,camY){
- const s=S,M=124,mx=14,my=200,k=M/WORLD;
+ const s=S,M=124,mx=14,my=mmTop(),k=M/WORLD;
  cx.save();cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(8,14,18,.8)';rr(mx-4,my-4,M+8,M+8,8);
  cx.drawImage(mmBase,mx,my,M,M);cx.drawImage(mmFog,mx,my,M,M);
