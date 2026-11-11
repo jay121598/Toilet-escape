@@ -116,6 +116,10 @@ h1 .pi{width:1.1em;height:1.1em}
 #extra{z-index:26}
 .tp{display:flex;flex-direction:column;gap:12px}
 .tp[hidden]{display:none}
+.cust[hidden]{display:none}
+.gembadge{position:absolute;top:22px;right:22px;display:flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font:600 15px var(--font-b);font-variant-numeric:tabular-nums}
+.card.menu{position:relative}
+.skc.buy{border-color:var(--alert)}
 .cust{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:12px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px}
 .cust b{flex:1 0 100%;font-weight:600}
 .cust label{display:flex;align-items:center;gap:6px}
@@ -248,6 +252,7 @@ h1 .pi{width:1.1em;height:1.1em}
 
 <section id="start" class="ov">
  <div class="card menu">
+  <div class="gembadge" title="鑽石"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 3h12l4 6-10 12L2 9z" fill="#5fd4f4"/><path d="M2 9h20L12 21z" fill="#2aa7d6"/><path d="M6 3l-4 6h6zM18 3l4 6h-6zM9 9l3-6 3 6z" fill="#a8ecff"/></svg><b id="gemN">0</b></div>
   <h1>廁所大逃亡<svg class="pi" style="color:var(--poop)"><use href="#poop"/></svg></h1>
   <div class="tabs" role="tablist">
    <button class="tab on" data-tab="play" role="tab">開始</button>
@@ -270,7 +275,8 @@ h1 .pi{width:1.1em;height:1.1em}
    <button class="go" id="goBtn">開始逃亡</button>
   </div>
   <div class="tp" id="tp-skin" hidden><div class="skins" id="skinG"></div>
-   <div class="cust"><b>預設學生・自訂顏色</b><label>上衣<input type="color" id="cBody"></label><label>褲子<input type="color" id="cPants"></label><label>背包<input type="color" id="cPack"></label><button class="go ghost" id="cReset" type="button">還原</button></div><p class="sub" style="font-size:12px">造型與成就預設存在這個瀏覽器裡；到「排行榜」分頁建立存檔帳號，就能雲端保存、換裝置也能讀回。</p></div>
+   <p class="sub" id="buyMsg" style="font-size:13px;margin:6px 0 0;color:var(--alert)"></p>
+   <div class="cust" id="cust"><b id="custT"></b><label><span id="cl0"></span><input type="color" id="c0"></label><label><span id="cl1"></span><input type="color" id="c1"></label><label><span id="cl2"></span><input type="color" id="c2"></label><button class="go ghost" id="cReset" type="button">還原</button></div><p class="sub" style="font-size:12px">造型與成就預設存在這個瀏覽器裡；到「排行榜」分頁建立存檔帳號，就能雲端保存、換裝置也能讀回。</p></div>
   <div class="tp" id="tp-rank" hidden>
    <div id="lbAcct"></div>
    <div id="lbAuth"></div>
@@ -500,7 +506,7 @@ function newGame(name){
  genMap();setPal();audioInit();setTrack('main');
  S={name,t:CFG.gameT,poops:0,level:0,tick:0,over:false,hint:null,kills:0,maxLv:0,spT:3,fT:0,lT:0,gateOpen:false,
   p:{x:(50)*T,y:30*T,face:1,dx:0,dy:1,pooping:0,pt:null,walk:0,hp:CFG.hp,maxHp:CFG.hp,atk:CFG.atk,atkT:0,inv:0,held:0,grace:0,ugly:0,pieT:0},
-  cl:[],proj:[],lure:null,fx:[],eggs:[],eggT:CFG.eggInt,evil:0,bproj:[],slam:[],tg:[],ex:0,endless:false,gateTile:0,damaged:false,newAch:[],boss:null,bossKilled:false,kindT:0,noHurt:0,hpPrev:CFG.hp,regenLv:0,idGot:false,stuN:0,stu:[],hidden4:false,cut:null,cutDone:false,bot:[],pPoison:0,poiAcc:0,stuCur:null,pie:false,geo:false,geoT:10,buffT:0,gas:[],trip:null,board:null,mainMap:null,multiLv:0,speedLv:0,walkLv:0,coins:0,need:5,panelN:0,pend:[],paused:false,atkLv:1,branch:0,effLv:{'麻痹':0,'虛弱':0,'劇毒':0},trails:[],booms:[],bombs:[],coinL:[],rid:0,opts:null,
+  cl:[],proj:[],lure:null,fx:[],eggs:[],eggT:CFG.eggInt,evil:0,bproj:[],slam:[],tg:[],ex:0,endless:false,gateTile:0,damaged:false,newAch:[],gemGain:0,boss:null,bossKilled:false,kindT:0,noHurt:0,hpPrev:CFG.hp,regenLv:0,idGot:false,stuN:0,stu:[],hidden4:false,cut:null,cutDone:false,bot:[],pPoison:0,poiAcc:0,stuCur:null,pie:false,geo:false,geoT:10,buffT:0,gas:[],trip:null,board:null,mainMap:null,multiLv:0,speedLv:0,walkLv:0,coins:0,need:5,panelN:0,pend:[],paused:false,atkLv:1,branch:0,effLv:{'麻痹':0,'虛弱':0,'劇毒':0},trails:[],booms:[],bombs:[],coinL:[],rid:0,opts:null,
   ab:{'真':{on:false,cd:0},'善':{on:false,cd:0},'美':{on:false,cd:0}},
   eff:{'麻痹':false,'虛弱':false,'劇毒':false}};
  lastSec=-1;gateMsgT=0;
@@ -633,12 +639,12 @@ function useAbility(k){
 
 function end(win,msg){
  S.over=true;$('giveup').hidden=true;setTrack(null);sfx(win?'win':'lose');
- if(win){unlock('escape');if(!S.damaged)unlock('flawless');if(S.bossKilled)unlock('slayer')}
+ if(win){save.esc=(save.esc||0)+1;S.gemGain=(S.gemGain||0)+5;persist();unlock('escape');if(!S.damaged)unlock('flawless');if(S.bossKilled)unlock('slayer')}
  $('endT').textContent=win?`${S.name} 逃出學校了`:`${S.name} 沒能逃掉`;
  $('endT').style.color=win?'var(--good)':'var(--alert)';
  $('endM').textContent=msg;
  const used=S.endless?CFG.gameT+Math.floor(S.ex):CFG.gameT-S.t,m=Math.floor(used/60),s=Math.floor(used%60);
- $('endS').innerHTML=`<span>已拉 <b>${S.poops}</b>/${CFG.goal}</span><span>用時 <b>${m}:${String(s).padStart(2,'0')}</b></span><span>打倒清潔工 <b>${S.kills}</b></span><span>最高屎等級 <b>${S.maxLv}</b></span>`+(S.newAch.length?`<span>新成就 <b>${S.newAch.map(id=>ACH.find(a=>a.id===id).name).join('、')}</b></span>`:'');
+ $('endS').innerHTML=`<span>已拉 <b>${S.poops}</b>/${CFG.goal}</span><span>用時 <b>${m}:${String(s).padStart(2,'0')}</b></span><span>打倒清潔工 <b>${S.kills}</b></span><span>最高屎等級 <b>${S.maxLv}</b></span>`+(S.newAch.length?`<span>新成就 <b>${S.newAch.map(id=>ACH.find(a=>a.id===id).name).join('、')}</b></span>`:'')+(S.gemGain?`<span>鑽石 <b>+${S.gemGain}</b></span>`:'');
  lbAfterEnd(win);
  setTimeout(()=>{$('end').hidden=false;$('again').focus()},win?700:500);
 }
@@ -994,40 +1000,48 @@ const DIR={body:'#3b3f55',pants:'#25283a',hair:'#1b1b1b',skin:'#e5b896',glasses:
 const PRIN={body:'#2d3142',pants:'#1f2233',hair:'#d0d0d8',skin:'#e5b896',glasses:1,tie:'#c0392b'};
 let curPal={body:'#f2f5f7',pants:'#1f3a6e',hair:'#2b1e17',skin:'#e8bd98',pack:'#ffb703'};
 const SKINS=[
- {id:'default',name:'預設學生',pal:{body:'#f2f5f7',pants:'#1f3a6e',hair:'#2b1e17',skin:'#e8bd98',pack:'#ffb703'},need:null},
- {id:'girl',name:'女學生',pal:{body:'#f4f6ff',pants:'#f0cdb0',skirt:'#2b3f7a',hair:'#6b3f2e',skin:'#f0c9a8',long:1},need:null},
+ {id:'default',name:'預設學生',pal:{body:'#f2f5f7',pants:'#1f3a6e',hair:'#2b1e17',skin:'#e8bd98',pack:'#ffb703'},need:null,cust:[['body','上衣'],['pants','褲子'],['pack','背包']]},
+ {id:'girl',name:'女學生',pal:{body:'#f4f6ff',pants:'#f0cdb0',skirt:'#2b3f7a',hair:'#6b3f2e',skin:'#f0c9a8',long:1},need:null,cust:[['body','上衣'],['skirt','裙子'],['hair','頭髮']]},
+ {id:'lolita',name:'蘿莉塔',pal:{body:'#17171c',pants:'#17171c',sleeve:'#17171c',dress:'#eaa6c3',hem:'#5b4560',hair:'#7a4a36',skin:'#f0c9a8',twin:1,tie2:'#2a2230',lolita:1},price:30,cust:[['dress','裙子'],['body','上衣'],['hair','頭髮']]},
  {id:'sport',name:'運動服',pal:{body:'#f6f3ea',pants:'#1c1d22',hair:'#2b1e17',skin:'#e8bd98',tee:'#16161a',shorts:1,stripe:'#f4f4f4',logo:'#16161a'},need:'escape'},
  {id:'cleaner',name:'清潔工制服',pal:{body:'#5b7f8c',pants:'#3b5560',hair:'#2d4a56',skin:'#e5b896',cap:1},need:'kills50'},
  {id:'principal',name:'校長造型',pal:PRIN,need:'slayer'}
 ];
 const ACH=[
- {id:'escape',name:'初次逃脫',desc:'成功逃出學校一次',reward:'運動服'},
- {id:'lv10',name:'屎力全開',desc:'屎等級達到 10'},
- {id:'kills50',name:'清潔工剋星',desc:'單場打倒 50 位敵人',reward:'清潔工制服'},
- {id:'disc',name:'訓導處常客',desc:'被主任抓去訓導處'},
- {id:'max',name:'練到滿級',desc:'任何一項升級達到 Lv10'},
- {id:'flawless',name:'毫髮無傷',desc:'不受到任何傷害就成功通關'},
- {id:'slayer',name:'校長終結者',desc:'擊敗校長，並成功逃出學校',reward:'校長造型'},
- {id:'bao',name:'Bao力份子',desc:'答對 Bao 老師的數學題',reward:'刮鬍泡派'},
- {id:'mathfail',name:'數學死當',desc:'答錯 Bao 老師的數學題'},
- {id:'geo',name:'地理實察',desc:'與國土老師完成鄉村實察',reward:'地理震波'},
- {id:'letgo',name:'放下',desc:'走完隱藏結局'},
- {id:'chat',name:'尬聊大師',desc:'聽完愛聊天的阿伯的 50 段對話'}
+ {id:'escape',name:'初次逃脫',desc:'成功逃出學校一次',gems:3,reward:'運動服'},
+ {id:'lv10',name:'屎力全開',desc:'屎等級達到 10',gems:2},
+ {id:'kills50',name:'清潔工剋星',desc:'單場打倒 50 位敵人',gems:3,reward:'清潔工制服'},
+ {id:'disc',name:'訓導處常客',desc:'被主任抓去訓導處',gems:1},
+ {id:'max',name:'練到滿級',desc:'任何一項升級達到 Lv10',gems:3},
+ {id:'flawless',name:'毫髮無傷',desc:'不受到任何傷害就成功通關',gems:10},
+ {id:'slayer',name:'校長終結者',desc:'擊敗校長，並成功逃出學校',gems:8,reward:'校長造型'},
+ {id:'bao',name:'Bao力份子',desc:'答對 Bao 老師的數學題',gems:2,reward:'刮鬍泡派'},
+ {id:'mathfail',name:'數學死當',desc:'答錯 Bao 老師的數學題',gems:1},
+ {id:'geo',name:'地理實察',desc:'與國土老師完成鄉村實察',gems:2,reward:'地理震波'},
+ {id:'letgo',name:'放下',desc:'走完隱藏結局',gems:6},
+ {id:'chat',name:'尬聊大師',desc:'聽完愛聊天的阿伯的 50 段對話',gems:5}
 ];
-let save={ach:{},skin:'default',chat:[]};
+let save={ach:{},skin:'default',chat:[],customs:{},owned:{},esc:0};
 const HEX=/^#[0-9a-f]{6}$/i;
-function cleanCustom(c){if(!c||typeof c!=='object')return null;const o={};for(const k of['body','pants','pack'])if(typeof c[k]==='string'&&HEX.test(c[k]))o[k]=c[k];return Object.keys(o).length?o:null}
-try{const r=JSON.parse(localStorage.getItem('toiletEscapeSave')||'null');if(r&&typeof r==='object'){save.ach=r.ach||{};save.skin=r.skin||'default';{const cu=cleanCustom(r.custom);if(cu)save.custom=cu}save.seen=r.seen||'';save.chat=Array.isArray(r.chat)?r.chat:[];save.dseen3=r.dseen3&&typeof r.dseen3==='object'?r.dseen3:{};save.dcnt3=r.dcnt3&&typeof r.dcnt3==='object'?r.dcnt3:{}}}catch(e){}
+function cleanCustom(c){if(!c||typeof c!=='object')return null;const o={};for(const k of['body','pants','pack','skirt','hair','dress'])if(typeof c[k]==='string'&&HEX.test(c[k]))o[k]=c[k];return Object.keys(o).length?o:null}
+function cleanCustoms(c){const o={};if(c&&typeof c==='object')for(const id in c){const v=cleanCustom(c[id]);if(v&&SKINS.some(k=>k.id===id))o[id]=v}return o}
+function cleanOwned(c){const o={};if(c&&typeof c==='object')for(const id in c)if(SKINS.some(k=>k.id===id&&k.price))o[id]=1;return o}
+try{const r=JSON.parse(localStorage.getItem('toiletEscapeSave')||'null');if(r&&typeof r==='object'){save.ach=r.ach||{};save.skin=r.skin||'default';{save.customs=cleanCustoms(r.customs);const cu=cleanCustom(r.custom);if(cu&&!save.customs.default)save.customs.default=cu}save.owned=cleanOwned(r.owned);save.esc=Math.max(0,Math.min(1e6,r.esc|0));save.seen=r.seen||'';save.chat=Array.isArray(r.chat)?r.chat:[];save.dseen3=r.dseen3&&typeof r.dseen3==='object'?r.dseen3:{};save.dcnt3=r.dcnt3&&typeof r.dcnt3==='object'?r.dcnt3:{}}}catch(e){}
+if(save.ach.escape&&!save.esc)save.esc=1;
 let cloudHook=null;
 function persist(){try{localStorage.setItem('toiletEscapeSave',JSON.stringify(save))}catch(e){}if(cloudHook)cloudHook()}
-const skinOpen=s=>!s.need||!!save.ach[s.need];
-const palOf=s=>s.id==='default'&&save.custom?{...s.pal,...save.custom}:s.pal;
+const skinOpen=s=>s.need?!!save.ach[s.need]:s.price?!!save.owned[s.id]:true;
+/* 鑽石 = 成就獎勵 + 每次逃離 5 顆 − 已買造型；由存檔推算，不會因為雲端同步而重複或遺失 */
+function gemsOf(){let g=(save.esc||0)*5;for(const a of ACH)if(save.ach[a.id])g+=a.gems||0;for(const k of SKINS)if(k.price&&save.owned[k.id])g-=k.price;return Math.max(0,g)}
+const gemI=(n=14)=>`<svg viewBox="0 0 24 24" width="${n}" height="${n}" style="vertical-align:-2px"><path d="M6 3h12l4 6-10 12L2 9z" fill="#5fd4f4"/><path d="M2 9h20L12 21z" fill="#2aa7d6"/><path d="M6 3l-4 6h6zM18 3l4 6h-6zM9 9l3-6 3 6z" fill="#a8ecff"/></svg>`;
+let buyPend=null;
+const palOf=s=>s.cust&&save.customs[s.id]?{...s.pal,...save.customs[s.id]}:s.pal;
 function setPal(){const sk=SKINS.find(s=>s.id===save.skin&&skinOpen(s))||SKINS[0];curPal=palOf(sk)}
 function unlock(id){
  if(save.ach[id])return;
  save.ach[id]=Date.now();persist();
  const a=ACH.find(x=>x.id===id);
- if(S){sfx('ach');S.newAch.push(id);toast(`成就解鎖：${a.name}${a.reward?'，獲得「'+a.reward+'」':''}`)}
+ if(S){sfx('ach');S.newAch.push(id);S.gemGain=(S.gemGain||0)+(a.gems||0);toast(`成就解鎖：${a.name}${a.reward?'，獲得「'+a.reward+'」':''}${a.gems?'，鑽石 +'+a.gems:''}`)}
 }
 function previewSkin(c,s,open){
  const old=cx;cx=c.getContext('2d');
@@ -1040,15 +1054,18 @@ function previewSkin(c,s,open){
 function renderMenu(){
  renderPatch();
  $('achN').textContent=`${Object.keys(save.ach).length}/${ACH.length}`;
+ $('gemN').textContent=gemsOf();
  $('skinG').innerHTML=SKINS.map(s=>{
   const open=skinOpen(s),sel=save.skin===s.id&&open;
-  return `<button class="skc${sel?' sel':''}${open?'':' lock'}" data-skin="${s.id}"><canvas width="90" height="120" data-pv="${s.id}"></canvas><b>${s.name}</b><small>${open?(sel?'使用中':'點擊使用'):'未解鎖：'+ACH.find(a=>a.id===s.need).name}</small></button>`;
+  const sub=open?(sel?'使用中':'點擊使用'):s.need?'未解鎖：'+ACH.find(a=>a.id===s.need).name:buyPend===s.id?'再點一次確認購買':`${gemI(13)} ${s.price} 鑽石・點擊購買`;
+  return `<button class="skc${sel?' sel':''}${open?'':' lock'}${buyPend===s.id?' buy':''}" data-skin="${s.id}"><canvas width="90" height="120" data-pv="${s.id}"></canvas><b>${s.name}</b><small>${sub}</small></button>`;
  }).join('');
  document.querySelectorAll('canvas[data-pv]').forEach(c=>{const s=SKINS.find(k=>k.id===c.dataset.pv);previewSkin(c,s,skinOpen(s))});
- {const dp=palOf(SKINS[0]);[['cBody','body'],['cPants','pants'],['cPack','pack']].forEach(([i,k])=>{const e=$(i);if(document.activeElement!==e)e.value=dp[k]})}
+ {const sk=SKINS.find(k=>k.id===save.skin&&skinOpen(k))||SKINS[0],pl=palOf(sk);$('cust').hidden=!sk.cust;
+  if(sk.cust){$('custT').textContent=sk.name+'・自訂顏色';sk.cust.forEach(([k,n],i)=>{$('cl'+i).textContent=n;const e=$('c'+i);if(document.activeElement!==e)e.value=pl[k]})}}
  $('achL').innerHTML=ACH.map(a=>{
   const d=!!save.ach[a.id];
-  return `<div class="ach${d?' done':''}"><b>${a.name}</b><span class="bd">${d?'已解鎖':'未解鎖'}</span><small>${a.desc}${a.reward?`　獎勵：${a.reward}`:''}</small></div>`;
+  return `<div class="ach${d?' done':''}"><b>${a.name}</b><span class="bd">${d?'已解鎖':'未解鎖'}</span><small>${a.desc}${a.reward?`　獎勵：${a.reward}`:''}${a.gems?`　${gemI(12)} +${a.gems}`:''}</small></div>`;
  }).join('');
 }
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
@@ -1056,17 +1073,26 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
  document.querySelectorAll('.tp').forEach(p=>p.hidden=p.id!=='tp-'+b.dataset.tab);
  if(b.dataset.tab!=='play')renderMenu();
 }));
-[['cBody','body'],['cPants','pants'],['cPack','pack']].forEach(([id,k])=>$(id).addEventListener('input',e=>{
- if(!HEX.test(e.target.value))return;
- save.custom={...(save.custom||{}),[k]:e.target.value};save.skin='default';persist();setPal();
- renderMenu();
+const curSkin=()=>SKINS.find(k=>k.id===save.skin&&skinOpen(k))||SKINS[0];
+[0,1,2].forEach(i=>$('c'+i).addEventListener('input',e=>{
+ const sk=curSkin();if(!sk.cust||!HEX.test(e.target.value))return;
+ save.customs[sk.id]={...(save.customs[sk.id]||{}),[sk.cust[i][0]]:e.target.value};persist();setPal();renderMenu();
 }));
-$('cReset').addEventListener('click',()=>{delete save.custom;persist();setPal();renderMenu()});
+$('cReset').addEventListener('click',()=>{delete save.customs[curSkin().id];persist();setPal();renderMenu()});
 $('skinG').addEventListener('click',e=>{
  const b=e.target.closest('.skc');if(!b)return;
  const s=SKINS.find(k=>k.id===b.dataset.skin);
- if(!skinOpen(s))return;
- save.skin=s.id;persist();renderMenu();
+ $('buyMsg').textContent='';
+ if(!skinOpen(s)){
+  if(!s.price)return;
+  const g=gemsOf();
+  if(g<s.price){buyPend=null;$('buyMsg').textContent=`鑽石不足：「${s.name}」要 ${s.price} 顆，你有 ${g} 顆。完成成就、成功逃離就能獲得鑽石。`;renderMenu();return}
+  if(buyPend!==s.id){buyPend=s.id;renderMenu();return}
+  save.owned[s.id]=1;save.skin=s.id;buyPend=null;persist();setPal();renderMenu();
+  $('buyMsg').style.color='var(--good)';$('buyMsg').textContent=`已購買「${s.name}」，花費 ${s.price} 鑽石。`;return
+ }
+ buyPend=null;$('buyMsg').style.color='var(--alert)';
+ save.skin=s.id;persist();setPal();renderMenu();
 });
 $('toMenu').addEventListener('click',()=>{$('giveup').hidden=true;$('end').hidden=true;$('start').hidden=false;renderMenu();S=null});
 
@@ -1326,7 +1352,11 @@ const TPAL={
 const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
-const PATCH={v:'v2.4',date:'2026/11/11',items:[
+const PATCH={v:'v2.5',date:'2026/11/11',items:[
+ ['新增鑽石與造型購買','主選單右上角會顯示鑽石數量。鑽石可以用來購買造型（需靠成就解鎖的造型不能用買的）。每次成功逃離獲得 5 顆，成就也會依難度給鑽石：毫髮無傷 10、校長終結者 8、放下 6、尬聊大師 5、初次逃脫／清潔工剋星／練到滿級各 3、屎力全開／Bao力份子／地理實察各 2、訓導處常客／數學死當各 1。鑽石數由成就與逃離次數推算，雲端存檔同步也不會多算或少算。'],
+ ['新造型：蘿莉塔','粉色格紋的疊層蓬裙、黑色泡泡袖上衣、胸前黑色蝴蝶結、蕾絲髮帶與雙麻花辮，搭配黑襪與厚底鞋。需要 30 顆鑽石購買，上衣、裙子、頭髮顏色都能自訂。'],
+ ['女學生可自訂顏色','造型分頁的自訂顏色不再只限預設學生：選到哪個造型就改哪個。女學生可調整上衣、裙子、頭髮顏色。'],
+
  ['新增排行榜：總擊殺數','排行榜多了「總擊殺數」分頁，計算你從第一場開始累計的所有擊殺數。原本的怪物擊殺榜改稱「單場擊殺」，仍是單場最高紀錄。每場結算時，這場的擊殺數都會累加進總數（需先註冊暱稱）。'],
  ['初始外觀可自訂顏色','「造型」分頁新增自訂顏色：預設學生的上衣、褲子、背包顏色都可以自己挑，會跟著存檔（登入存檔帳號後也會雲端保存），按「還原」可回到原本配色。'],
  ['運動服外觀改版','運動服改成白色上衣搭配黑色肩袖拼接、胸前小標誌，下身是側邊有白色條紋的黑色運動短褲。'],
@@ -2008,7 +2038,7 @@ function endHidden(){
  $('endT').textContent=`${s.name} 已成功放下`;$('endT').style.color='var(--good)';
  $('endM').textContent='那場大火之後，有些話終於說出口了。';
  const used=CFG.gameT-s.t,m=Math.floor(used/60),sc=Math.floor(used%60);
- $('endS').innerHTML=`<span>已拉 <b>${s.poops}</b>/${CFG.goal}</span><span>用時 <b>${m}:${String(sc).padStart(2,'0')}</b></span><span>打倒清潔工 <b>${s.kills}</b></span><span>最高屎等級 <b>${s.maxLv}</b></span>`+(s.newAch.length?`<span>新成就 <b>${s.newAch.map(id=>ACH.find(a=>a.id===id).name).join('、')}</b></span>`:'');
+ $('endS').innerHTML=`<span>已拉 <b>${s.poops}</b>/${CFG.goal}</span><span>用時 <b>${m}:${String(sc).padStart(2,'0')}</b></span><span>打倒清潔工 <b>${s.kills}</b></span><span>最高屎等級 <b>${s.maxLv}</b></span>`+(s.newAch.length?`<span>新成就 <b>${s.newAch.map(id=>ACH.find(a=>a.id===id).name).join('、')}</b></span>`:'')+(s.gemGain?`<span>鑽石 <b>+${s.gemGain}</b></span>`:'');
  setTimeout(()=>{$('end').hidden=false;$('again').focus()},1400);
 }
 
@@ -2535,7 +2565,10 @@ function mergeSave(c){
  if(!c||typeof c!=='object')return;
  save.ach={...(c.ach||{}),...(save.ach||{})};
  if(c.skin)save.skin=c.skin;
- {const cu=cleanCustom(c.custom);if(cu)save.custom=cu}
+ {const cu=cleanCustoms(c.customs),lg=cleanCustom(c.custom);if(lg&&!cu.default)cu.default=lg;for(const id in cu)if(!save.customs[id])save.customs[id]=cu[id]}
+ {const o=cleanOwned(c.owned);for(const id in o)save.owned[id]=1}
+ if(Number.isFinite(c.esc))save.esc=Math.max(save.esc||0,Math.min(1e6,c.esc|0));
+ if(save.ach.escape&&!save.esc)save.esc=1;
  if(typeof c.seen==='string'&&c.seen)save.seen=c.seen;
  if(Array.isArray(c.chat)&&c.chat.length>=save.chat.length)save.chat=c.chat;
  if(c.dseen3&&typeof c.dseen3==='object')save.dseen3=c.dseen3;
@@ -2679,10 +2712,21 @@ function person(x,y,f,o){
   cx.beginPath();cx.moveTo(11,ty-1);cx.lineTo(3,ty-1);cx.lineTo(11,ty+14);cx.closePath();cx.fill();
   cx.restore()}
  if(o.logo){cx.fillStyle=o.logo;const lx=f*5-1,ly=-38-bob+sit;cx.fillRect(lx-2,ly,2,2);cx.fillRect(lx+1,ly-1,2,3);cx.fillRect(lx-1,ly+2,4,1.5)}
+ if(o.lolita){
+  cx.fillStyle='#d9a45a';cx.fillRect(-9+sw*3,-3,9,3);cx.fillRect(0-sw*3,-3,9,3);
+  cx.fillStyle=o.dress;rr(-8,-44-bob+sit,16,22,4);
+  cx.fillStyle=o.hem;cx.beginPath();cx.moveTo(-8,-25+sit);cx.lineTo(8,-25+sit);cx.lineTo(19,-8+sit);cx.lineTo(-19,-8+sit);cx.closePath();cx.fill();
+  cx.fillStyle=o.dress;cx.beginPath();cx.moveTo(-8,-25+sit);cx.lineTo(8,-25+sit);cx.lineTo(15,-14+sit);cx.lineTo(-15,-14+sit);cx.closePath();cx.fill();
+  cx.fillStyle='rgba(255,255,255,.4)';for(let i=-2;i<=2;i++)cx.fillRect(i*5-.5,-24+sit,1,10);
+  cx.fillStyle='#17171c';cx.fillRect(-13,-15+sit,26,1.4);
+  cx.fillStyle=o.dress;for(let i=-3;i<=3;i++){cx.beginPath();cx.arc(i*5.4,-8+sit,3,0,Math.PI);cx.fill()}
+  cx.fillStyle='#17171c';const by=-40-bob+sit;cx.beginPath();cx.moveTo(f*1,by);cx.lineTo(f*1-6,by-3);cx.lineTo(f*1-6,by+3);cx.closePath();cx.fill();cx.beginPath();cx.moveTo(f*1,by);cx.lineTo(f*1+6,by-3);cx.lineTo(f*1+6,by+3);cx.closePath();cx.fill();
+ }
  if(o.skirt){cx.fillStyle=o.skirt;cx.beginPath();cx.moveTo(-10,-24+sit);cx.lineTo(10,-24+sit);cx.lineTo(15,-8+sit);cx.lineTo(-15,-8+sit);cx.closePath();cx.fill()}
  if(o.tie){cx.fillStyle=o.tie;cx.beginPath();cx.moveTo(f*3-3,-44-bob+sit);cx.lineTo(f*3+3,-44-bob+sit);cx.lineTo(f*3,-30-bob+sit);cx.closePath();cx.fill()}
  if(o.wlogo){cx.fillStyle='#ffffff';cx.font='700 14px sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText('W',0,-33-bob+sit)}
  cx.fillStyle=o.sleeve||o.skin;cx.fillRect(f*8-2.5,-42-bob+sit+sw*2,5,16);
+ if(o.lolita){cx.beginPath();cx.arc(f*8,-40-bob+sit+sw*2,5.5,0,7);cx.fill();cx.fillStyle=o.skin;cx.beginPath();cx.arc(f*8,-26-bob+sit+sw*2,2.6,0,7);cx.fill()}
  if(o.tee){cx.fillStyle=o.body;cx.fillRect(f*8-3,-43-bob+sit+sw*2,6,8);cx.fillStyle=o.tee;cx.fillRect(f*8-3,-43-bob+sit+sw*2,6,3)}
  cx.fillStyle=o.skin;
  if(o.hood){cx.fillStyle=o.hood;cx.beginPath();cx.arc(0,hy+1,14,0,7);cx.fill();cx.fillStyle=o.skin}
@@ -2693,10 +2737,11 @@ function person(x,y,f,o){
   cx.fillStyle=o.hair;
   cx.beginPath();cx.ellipse(-14-sy,hy+9,5,11,.28,0,7);cx.fill();
   cx.beginPath();cx.ellipse(14-sy,hy+9,5,11,-.28,0,7);cx.fill();
-  cx.fillRect(-11,hy-2,22,5);
+  if(o.lolita)cx.fillRect(-11,hy-8,22,4);else cx.fillRect(-11,hy-2,22,5);
   cx.fillStyle=o.tie2||'#ff5d8f';
   cx.beginPath();cx.arc(-11.5,hy,3,0,7);cx.arc(11.5,hy,3,0,7);cx.fill();
  }
+ if(o.lolita){cx.strokeStyle=o.dress;cx.lineWidth=3;cx.beginPath();cx.arc(0,hy-2,11,Math.PI*1.04,Math.PI*1.96);cx.stroke();cx.fillStyle=o.dress;cx.beginPath();cx.arc(-f*6,hy-9,3,0,7);cx.fill();cx.fillStyle='#17171c';cx.fillRect(-3,hy+10,6,2.5)}
  if(o.pig){cx.fillStyle='#f4a6b0';cx.beginPath();cx.moveTo(-9,hy-8);cx.lineTo(-4,hy-17);cx.lineTo(-1,hy-9);cx.fill();cx.beginPath();cx.moveTo(9,hy-8);cx.lineTo(4,hy-17);cx.lineTo(1,hy-9);cx.fill()}
  if(o.spike){cx.fillStyle=o.hair;for(let i=-2;i<=2;i++){cx.beginPath();cx.moveTo(i*4.5-3,hy-8);cx.lineTo(i*4.5,hy-18-(i%2?0:3));cx.lineTo(i*4.5+3,hy-8);cx.fill()}}
  if(o.cap)cx.fillRect(f*3,hy-5,f*11,4);
