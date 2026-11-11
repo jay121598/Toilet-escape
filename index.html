@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><meta name="theme-color" content="#0f1a21"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="廁所大逃亡"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>廁所大逃亡</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,6 +93,14 @@ h1 .pi{width:1.1em;height:1.1em}
  #stage{width:min(100%,calc(100svh*16/9))}
 }
 @media (prefers-reduced-motion:reduce){#toast,.hpf{transition:none}}
+/* 手機：整頁鎖住不能捲動，避免在遊戲中滑動時被當成捲動網頁、網址列跳出來而中斷操作 */
+@media (pointer:coarse){
+ html,body{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+}
+@media (pointer:coarse) and (orientation:landscape){#stage{width:min(100%,calc(100dvh*16/9))}}
+#fsb{position:absolute;left:6.6em;bottom:1em;z-index:3;font:500 clamp(10px,1.5cqw,13px) var(--font-b);padding:.35em .8em;border-radius:99px;border:1px solid var(--line);background:rgba(8,14,18,.7);cursor:pointer;min-height:32px;display:none}
+#fsHint{font-size:13px;color:var(--mute);margin:0;padding:8px 10px;border:1px dashed var(--line);border-radius:8px}
+#fsMenu{display:none}
 
 .menu{max-height:calc(100dvh - 32px);overflow:auto}
 .tabs{display:flex;gap:6px}
@@ -251,7 +259,7 @@ h1 .pi{width:1.1em;height:1.1em}
     <button class="ab lock" data-a="美" id="ab美"><span class="k">3</span>?<small>未學會</small><i class="cd"></i></button>
    </div>
   </div>
-  <button id="mute" aria-label="音樂與音效開關">音 開</button>
+  <button id="mute" aria-label="音樂與音效開關">音 開</button><button id="fsb" type="button">全螢幕</button>
   <button id="acti">互動</button>
   <div id="toast" role="status"></div>
   <div id="dlg" hidden><b id="dlgN"></b><p id="dlgT"></p><small>按 E／點一下繼續</small><div id="dlgB"></div></div>
@@ -286,6 +294,8 @@ h1 .pi{width:1.1em;height:1.1em}
     <li>屎等級 5 起會出現主任，被碰到會被抓去訓導處 15 秒，不扣血。拉完十泡後，校長會出現在中庭。</li>
     <li>老師獎勵：能力 20%、附加效果 20%、攻擊 +3 30%、血量 +5 30%。茶葉蛋回 5 血。老師休息結束後會刷新，有機率變成隱藏老師。</li>
    </ol>
+   <button class="go ghost" id="fsMenu" type="button">進入全螢幕</button>
+   <p id="fsHint" hidden>iPhone 的 Safari 不支援網頁全螢幕。請點瀏覽器下方的「分享」→「加入主畫面」，之後從主畫面的圖示開啟，就是沒有網址列的全螢幕。</p>
    <button class="go" id="goBtn">開始逃亡</button>
   </div>
   <div class="tp" id="tp-skin" hidden><div class="skins" id="skinG"></div>
@@ -1375,6 +1385,7 @@ const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
 const PATCH={v:'v2.5',date:'2026/11/11',items:[
+ ['手機全螢幕與防誤觸','新增全螢幕按鈕（Android 瀏覽器可直接進入，進遊戲時也會自動全螢幕）。iPhone 的 Safari 不支援網頁全螢幕，改用「加入主畫面」後開啟，就是沒有網址列的全螢幕。手機上整頁鎖定不可捲動，也擋掉雙指縮放與連點放大，遊戲中滑動不會再被當成捲動網頁。'],
  ['登入／註冊移到主選單右上角','主選單標題旁新增「登入」「註冊」按鈕，按下去才會跳出帳號視窗，裡面有登入、建立存檔帳號與排行榜暱稱。排行榜分頁只留榜單，更乾淨。'],
  ['新造型：家豪','黑帽 T、黑口罩、胸前白色 W。需要 20 顆鑽石購買。'],
  ['圖層調整','滾動衛生紙留下的白色路徑現在會畫在金幣下方，金幣不會再被路徑蓋住。'],
@@ -3099,6 +3110,32 @@ function startGame(){
 }
 try{const n=localStorage.getItem('toiletEscapeName');if(n)$('nm').value=n}catch(e){}
 $('goBtn').addEventListener('click',startGame);
+/* ---- 全螢幕與手勢鎖定 ---- */
+const FSE=document.documentElement,FSreq=FSE.requestFullscreen||FSE.webkitRequestFullscreen;
+const fsOn=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+const standalone=()=>!!(navigator.standalone||matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches);
+async function toggleFS(){
+ try{
+  if(fsOn()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);return}
+  await FSreq.call(FSE,{navigationUI:'hide'});
+  try{await screen.orientation.lock('landscape')}catch(e){}
+ }catch(e){}
+}
+function fsSync(){
+ const on=fsOn();
+ $('fsb').textContent=on?'退出全螢幕':'全螢幕';$('fsMenu').textContent=on?'退出全螢幕':'進入全螢幕';
+}
+if(isTouch&&!standalone()){
+ if(FSreq){$('fsb').style.display='block';$('fsMenu').style.display='block'}
+ else $('fsHint').hidden=false;
+}
+$('fsb').addEventListener('click',toggleFS);$('fsMenu').addEventListener('click',toggleFS);
+document.addEventListener('fullscreenchange',fsSync);document.addEventListener('webkitfullscreenchange',fsSync);
+$('goBtn').addEventListener('click',()=>{if(isTouch&&FSreq&&!fsOn())toggleFS()});
+// 擋掉整頁的拖曳與雙指縮放；選單內可捲動的卡片不受影響
+document.addEventListener('touchmove',e=>{if(!e.target.closest('.ov .card,.menu'))e.preventDefault()},{passive:false});
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault()));
+let lastTap=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTap<350&&!e.target.closest('input,textarea'))e.preventDefault();lastTap=n},{passive:false});
 $('nm').addEventListener('keydown',e=>{if(e.key==='Enter')startGame()});
 $('again').addEventListener('click',()=>newGame(S.name));
 document.querySelectorAll('.ab').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();useAbility(b.dataset.a)}));
