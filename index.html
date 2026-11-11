@@ -117,7 +117,19 @@ h1 .pi{width:1.1em;height:1.1em}
 .tp{display:flex;flex-direction:column;gap:12px}
 .tp[hidden]{display:none}
 .cust[hidden]{display:none}
-.gembadge{position:absolute;top:22px;right:22px;display:flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font:600 15px var(--font-b);font-variant-numeric:tabular-nums}
+.hrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.hr2{display:flex;align-items:center;gap:8px;margin-left:auto}
+.acbtns{display:flex;gap:6px}
+.acb{padding:5px 10px;font:600 13px var(--font-b);border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;white-space:nowrap}
+.acb.pri{background:var(--accent);border-color:var(--accent);color:#1b1300}
+.menu h1{font-size:clamp(23px,6.2vw,46px)}
+@media (max-width:480px){.acb{padding:4px 7px;font-size:12px}.hr2{gap:6px}.gembadge{padding:3px 8px;font-size:13px;gap:4px}.gembadge svg{width:15px;height:15px}}
+.acctH{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.acctH .go{font-size:14px;padding:6px 12px}
+.tabs[hidden]{display:none}
+.atab{flex:1;padding:8px 4px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;font:500 15px var(--font-b)}
+.atab.on{background:var(--accent);border-color:var(--accent);color:#1b1300}
+.gembadge{display:flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font:600 15px var(--font-b);font-variant-numeric:tabular-nums}
 .card.menu{position:relative}
 .skc.buy{border-color:var(--alert)}
 .cust{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:12px 0 4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px}
@@ -252,8 +264,10 @@ h1 .pi{width:1.1em;height:1.1em}
 
 <section id="start" class="ov">
  <div class="card menu">
-  <div class="gembadge" title="鑽石"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 3h12l4 6-10 12L2 9z" fill="#5fd4f4"/><path d="M2 9h20L12 21z" fill="#2aa7d6"/><path d="M6 3l-4 6h6zM18 3l4 6h-6zM9 9l3-6 3 6z" fill="#a8ecff"/></svg><b id="gemN">0</b></div>
+  <div class="hrow">
   <h1>廁所大逃亡<svg class="pi" style="color:var(--poop)"><use href="#poop"/></svg></h1>
+  <div class="hr2"><div class="acbtns" id="acBtns"><button class="acb" data-ac="in">登入</button><button class="acb pri" data-ac="up">註冊</button></div><div class="gembadge" title="鑽石"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 3h12l4 6-10 12L2 9z" fill="#5fd4f4"/><path d="M2 9h20L12 21z" fill="#2aa7d6"/><path d="M6 3l-4 6h6zM18 3l4 6h-6zM9 9l3-6 3 6z" fill="#a8ecff"/></svg><b id="gemN">0</b></div></div>
+  </div>
   <div class="tabs" role="tablist">
    <button class="tab on" data-tab="play" role="tab">開始</button>
    <button class="tab" data-tab="skin" role="tab">造型</button>
@@ -278,8 +292,7 @@ h1 .pi{width:1.1em;height:1.1em}
    <p class="sub" id="buyMsg" style="font-size:13px;margin:6px 0 0;color:var(--alert)"></p>
    <div class="cust" id="cust"><b id="custT"></b><label><span id="cl0"></span><input type="color" id="c0"></label><label><span id="cl1"></span><input type="color" id="c1"></label><label><span id="cl2"></span><input type="color" id="c2"></label><button class="go ghost" id="cReset" type="button">還原</button></div><p class="sub" style="font-size:12px">造型與成就預設存在這個瀏覽器裡；到「排行榜」分頁建立存檔帳號，就能雲端保存、換裝置也能讀回。</p></div>
   <div class="tp" id="tp-rank" hidden>
-   <div id="lbAcct"></div>
-   <div id="lbAuth"></div>
+   <p class="sub" id="lbHint" style="font-size:13px;margin:0"></p>
    <div class="tabs" style="margin:8px 0"><button class="ltab on" data-lb="kills">單場擊殺</button><button class="ltab" data-lb="total">總擊殺數</button><button class="ltab" data-lb="time">最快逃離</button></div>
    <ol class="rk" id="lbList"></ol>
   </div>
@@ -288,6 +301,14 @@ h1 .pi{width:1.1em;height:1.1em}
  </div>
 </section>
 
+<section id="acct" class="ov" hidden>
+ <div class="card">
+  <div class="acctH"><b style="font-size:20px">帳號</b><button class="go ghost" id="acctX" type="button">關閉</button></div>
+  <div class="tabs" id="acctTabs"><button class="atab on" data-am="in" type="button">登入</button><button class="atab" data-am="up" type="button">註冊</button></div>
+  <div id="lbAuth"></div>
+  <div id="lbAcctW"><p class="sub" style="font-size:13px;margin:0 0 6px"><b>排行榜暱稱</b></p><div id="lbAcct"></div></div>
+ </div>
+</section>
 <section id="pick" class="ov" hidden>
  <div class="card">
   <h2 id="pkT"></h2>
@@ -1354,6 +1375,7 @@ const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
 const PATCH={v:'v2.5',date:'2026/11/11',items:[
+ ['登入／註冊移到主選單右上角','主選單標題旁新增「登入」「註冊」按鈕，按下去才會跳出帳號視窗，裡面有登入、建立存檔帳號與排行榜暱稱。排行榜分頁只留榜單，更乾淨。'],
  ['新造型：家豪','黑帽 T、黑口罩、胸前白色 W。需要 20 顆鑽石購買。'],
  ['圖層調整','滾動衛生紙留下的白色路徑現在會畫在金幣下方，金幣不會再被路徑蓋住。'],
  ['新增鑽石與造型購買','主選單右上角會顯示鑽石數量。鑽石可以用來購買造型（需靠成就解鎖的造型不能用買的）。每次成功逃離獲得 5 顆，成就也會依難度給鑽石：毫髮無傷 10、校長終結者 8、放下 6、尬聊大師 5、初次逃脫／清潔工剋星／練到滿級各 3、屎力全開／Bao力份子／地理實察各 2、訓導處常客／數學死當各 1。鑽石數由成就與逃離次數推算，雲端存檔同步也不會多算或少算。'],
@@ -2504,7 +2526,7 @@ function villageConvo(){
  return shuffle(out);
 }
 /* ---------- 全球排行榜、帳號、20 分鐘後的選擇 ---------- */
-const LB={db:null,uid:null,me:null,st:'loading',rows:[],mode:'kills',msg:''};
+const LB={db:null,uid:null,me:null,st:'loading',rows:[],mode:'kills',msg:'',amode:'in'};
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtT=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
 /* Supabase 設定：到 Supabase → Project Settings → API 複製（anon key 本來就是公開的，安全靠資料庫的 RLS） */
@@ -2548,6 +2570,7 @@ function lbRender(){
   a.innerHTML=`<div class="lbme"><b>${esc(LB.me.name)}</b><span>已登入</span><span>單場最高 ${LB.me.kills||0}</span><span>累計擊殺 ${LB.me.total||0}</span><span>最快逃離 ${LB.me.best>0?fmtT(LB.me.best):'—'}</span><button class="go ghost" id="lbEdit">改暱稱</button></div>`;
  }
  lbAuthRender();lbList();
+ {const h=$('lbHint');if(h)h.textContent=LB.st==='ok'&&!LB.me?'還沒有排行榜暱稱：按右上角的「註冊」取一個暱稱，成績才會上榜。':''}
 }
 function lbList(){
  const l=$('lbList');if(!l)return;
@@ -2558,11 +2581,20 @@ function lbList(){
 }
 /* ---------- 存檔帳號（Email + 密碼）與雲端存檔 ---------- */
 const authMsg=t=>{const e=$('authErr');if(e)e.textContent=t};
+function acctBtns(){
+ const w=$('acBtns');if(!w)return;
+ w.innerHTML=LB.perm?`<button class="acb pri" data-ac="in">${LB.me?esc(LB.me.name):'帳號'}</button>`:`<button class="acb" data-ac="in">登入</button><button class="acb pri" data-ac="up">註冊</button>`;
+}
 function lbAuthRender(){
- const a=$('lbAuth');if(!a)return;
- if(LB.st!=='ok'){a.innerHTML='';return}
- if(LB.perm){a.innerHTML=`<div class="lbme"><span>存檔帳號：${esc(LB.email)}</span><span>造型與成就已雲端保存</span><button class="go ghost" id="authOut">登出</button></div>`;return}
- a.innerHTML=`<p class="sub" style="font-size:13px">想保存造型與成就、換裝置也能玩？用 Email 建立存檔帳號（不會寄信，密碼至少 6 個字）。</p><div class="lbreg"><input id="authEmail" type="email" placeholder="Email" autocomplete="email" style="user-select:text"><input id="authPw" type="password" placeholder="密碼" autocomplete="current-password" style="user-select:text"></div><div class="lbreg"><button class="go" id="authUp">建立帳號</button><button class="go ghost" id="authIn">已有帳號，登入</button></div><p class="sub" id="authErr" style="color:var(--alert);font-size:13px"></p>`;
+ acctBtns();
+ const a=$('lbAuth'),w=$('lbAcctW'),tb=$('acctTabs');if(!a)return;
+ if(LB.st!=='ok'){a.innerHTML='';tb.hidden=true;w.hidden=false;return}
+ if(LB.perm){tb.hidden=true;w.hidden=false;a.innerHTML=`<div class="lbme"><span>存檔帳號：${esc(LB.email)}</span><span>造型、成就與鑽石已雲端保存</span><button class="go ghost" id="authOut">登出</button></div>`;return}
+ tb.hidden=false;
+ document.querySelectorAll('.atab').forEach(b=>b.classList.toggle('on',b.dataset.am===(LB.amode||'in')));
+ const up=LB.amode==='up';
+ w.hidden=!up;
+ a.innerHTML=`<p class="sub" style="font-size:13px;margin:0">${up?'想保存造型、成就與鑽石、換裝置也能玩？用 Email 建立存檔帳號（不會寄信，密碼至少 6 個字）。':'已經有存檔帳號？輸入 Email 與密碼登入，造型、成就與鑽石會從雲端讀回。'}</p><div class="lbreg"><input id="authEmail" type="email" placeholder="Email" autocomplete="email" style="user-select:text"><input id="authPw" type="password" placeholder="密碼" autocomplete="${up?'new-password':'current-password'}" style="user-select:text"></div><div class="lbreg">${up?'<button class="go" id="authUp">建立帳號</button>':'<button class="go" id="authIn">登入</button>'}</div><p class="sub" id="authErr" style="color:var(--alert);font-size:13px;margin:0"></p>`;
 }
 function mergeSave(c){
  if(!c||typeof c!=='object')return;
@@ -2685,6 +2717,9 @@ document.addEventListener('click',e=>{
  else if(e.target.closest('#authIn'))authDo('in');
  else if(e.target.closest('#authOut'))authOut();
  else if(e.target.closest('#lbEdit')){LB.edit=true;LB.msg='';lbRender()}
+ else if(e.target.closest('#acctX'))$('acct').hidden=true;
+ else if(e.target.closest('.acb')){LB.amode=e.target.closest('.acb').dataset.ac;$('acct').hidden=false;lbAuthRender()}
+ else if(e.target.closest('.atab')){LB.amode=e.target.closest('.atab').dataset.am;lbAuthRender()}
  const t=e.target.closest('.ltab');if(t){LB.mode=t.dataset.lb;LB.rows=[];lbList();lbFetch()}
 });
 document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='lbName'&&e.key==='Enter')lbRegister();else if(e.target&&e.target.id==='authPw'&&e.key==='Enter')authDo('in')});
