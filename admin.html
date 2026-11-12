@@ -72,6 +72,7 @@ function baseGems(d){ // 與遊戲相同的算法（不含 bonus）
  let g=0;const ach=d.ach||{};let e=d.esc|0;if(ach.escape&&!e)e=1;g+=e*5;
  for(const k in GEMS)if(ach[k])g+=GEMS[k];
  for(const k in PRICE)if((d.owned||{})[k])g-=PRICE[k];
+ g-=(d.gspent|0);g+=(d.refund|0);
  return g}
 async function checkAdmin(){
  const {data:{session}}=await sb.auth.getSession();
