@@ -1068,7 +1068,7 @@ function gemsOf(){let g=(save.esc||0)*5;for(const a of ACH)if(save.ach[a.id])g+=
 const gemI=(n=14)=>`<svg viewBox="0 0 24 24" width="${n}" height="${n}" style="vertical-align:-2px"><path d="M6 3h12l4 6-10 12L2 9z" fill="#5fd4f4"/><path d="M2 9h20L12 21z" fill="#2aa7d6"/><path d="M6 3l-4 6h6zM18 3l4 6h-6zM9 9l3-6 3 6z" fill="#a8ecff"/></svg>`;
 let buyPend=null;
 const palOf=s=>s.cust&&save.customs[s.id]?{...s.pal,...save.customs[s.id]}:s.pal;
-function setPal(){const sk=SKINS.find(s=>s.id===save.skin&&skinOpen(s))||SKINS[0];curPal=palOf(sk);curSkinId=sk.id}
+function setPal(){const sk=SKINS.find(s=>s.id===save.skin&&skinOpen(s))||SKINS[0];curPal=palOf(sk);curSkinId=sk.id;document.documentElement.style.setProperty('--poop',poopCol())}
 function unlock(id){
  if(save.ach[id])return;
  save.ach[id]=Date.now();persist();
@@ -1390,7 +1390,8 @@ const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
 const PATCH={v:'v2.5',date:'2026/11/11',items:[
- ['造型專屬攻擊外觀','運動服、清潔工制服、蘿莉塔、家豪、校長造型各有專屬的攻擊畫面：滾動衛生紙、爆炸衛生紙、用過的衛生紙三個分支都會換成各自造型的物件（籃球、拖把頭、泰迪熊、W 字炸彈、「訓」字印章…）、紙路、爆炸與毒氣特效，出手動作與音效也不同。判定範圍與傷害完全不變，預設學生與女學生維持原樣。'],
+ ['專屬造型的屎','運動服、清潔工制服、蘿莉塔、家豪、校長造型的屎有了各自的顏色與裝飾：運動服橘色、清潔工藍色泡泡屎、蘿莉塔粉紅色蝴蝶結屎、家豪黑色亮面屎、校長金色閃亮屎。廁所裡的屎、屎等級圖示、拉屎進度條都會跟著變色。'],
+ ['造型專屬攻擊外觀','運動服、清潔工制服、蘿莉塔、家豪、校長造型各有專屬的攻擊畫面：滾動衛生紙、爆炸衛生紙、用過的衛生紙三個分支都會換成各自造型的物件（籃球、拖把頭、泰迪熊、「豪」字炸彈、「訓」字印章…）、紙路、爆炸與毒氣特效，出手動作與音效也不同。判定範圍與傷害完全不變，預設學生與女學生維持原樣。'],
  ['手機全螢幕與防誤觸','新增全螢幕按鈕（Android 瀏覽器可直接進入，進遊戲時也會自動全螢幕）。iPhone 的 Safari 不支援網頁全螢幕，改用「加入主畫面」後開啟，就是沒有網址列的全螢幕。手機上整頁鎖定不可捲動，也擋掉雙指縮放與連點放大，遊戲中滑動不會再被當成捲動網頁。'],
  ['登入／註冊移到主選單右上角','主選單標題旁新增「登入」「註冊」按鈕，按下去才會跳出帳號視窗，裡面有登入、建立存檔帳號與排行榜暱稱。排行榜分頁只留榜單，更乾淨。'],
  ['新造型：家豪','黑帽 T、黑口罩、胸前白色 W。需要 20 顆鑽石購買。'],
@@ -1665,12 +1666,12 @@ const AV={
     cx.fillStyle='#17171b';cx.beginPath();cx.roundRect?cx.roundRect(-r,-r*.65,r*2,r*1.3,r*.4):cx.rect(-r,-r*.65,r*2,r*1.3);cx.fill();cx.strokeStyle='#e8e8e8';cx.stroke();cx.restore();return}
    if(k==='bomb'){skC(x,y,r,'#17171b','#e8e8e8',2);cx.strokeStyle='#ff7a2e';cx.lineWidth=2;cx.beginPath();cx.moveTo(x+r*.4,y-r*.9);cx.lineTo(x+r*.8,y-r*1.5);cx.stroke()}
    else skC(x,y,r,'#17171b','#f4f4f4',2);
-   cx.save();cx.translate(x,y);if(k==='roll')cx.rotate(rot);cx.fillStyle=fl?'#ff6a5a':'#ffffff';cx.font=`700 ${Math.round(r*1.3)}px ${FONT}`;cx.textAlign='center';cx.fillText('W',0,r*.46);cx.restore()},
+   cx.save();cx.translate(x,y);if(k==='roll')cx.rotate(rot);cx.fillStyle=fl?'#ff6a5a':'#ffffff';cx.font=`700 ${Math.round(r*1.3)}px ${FONT}`;cx.textAlign='center';cx.fillText('豪',0,r*.46);cx.restore()},
   trail(g,a){skSeg(g,`rgba(22,22,26,${.88*a})`,g.w,[7,7],`rgba(245,245,245,${.9*a})`,g.w*.55)},
   gas(g,a,R){skGas(g,a,R,'rgba(26,26,32,A)','rgba(10,10,14,0)');const s=S;
    cx.strokeStyle=`rgba(255,255,255,${(.18+.14*Math.sin(s.tick*9))*a})`;cx.lineWidth=2;cx.setLineDash([8,8]);cx.beginPath();cx.arc(g.x,g.y-10,R*.82,s.tick,s.tick+6.2);cx.stroke();cx.setLineDash([])},
   boom(f,k){const r0=f.r*Math.min(1,k*2.5);skC(f.x,f.y,r0,`rgba(20,20,24,${.55*(1-k)})`,`rgba(255,255,255,${1-k})`,4);
-   cx.fillStyle=`rgba(255,255,255,${1-k})`;cx.font=`700 ${Math.round(Math.max(20,f.r*.55))}px ${FONT}`;cx.textAlign='center';cx.fillText('W',f.x,f.y+f.r*.2)}},
+   cx.fillStyle=`rgba(255,255,255,${1-k})`;cx.font=`700 ${Math.round(Math.max(20,f.r*.55))}px ${FONT}`;cx.textAlign='center';cx.fillText('豪',f.x,f.y+f.r*.2)}},
  /* 校長造型：公文卷／「訓」字印章／金色雷雲 */
  principal:{snd:'tStamp',
   obj(k,x,y,r,rot){
@@ -2841,10 +2842,20 @@ lbInit();
 const FONT='Huninn,"PingFang TC","Microsoft JhengHei",sans-serif';
 function rr(x,y,w,h,r){cx.beginPath();if(cx.roundRect)cx.roundRect(x,y,w,h,r);else cx.rect(x,y,w,h);cx.fill()}
 function star(x,y,r){cx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,d=i%2?r*.45:r;cx.lineTo(x+Math.cos(a)*d,y+Math.sin(a)*d)}cx.closePath();cx.fill()}
+/* 有專屬攻擊的造型，屎也有自己的顏色：[深色底, 主色] */
+const POOP={default:['#8a5428','#9a6232'],sport:['#c45a1a','#e8772e'],cleaner:['#3f93b8','#5fb4d6'],lolita:['#e377ad','#f59ac6'],jh:['#17171b','#2a2a30'],principal:['#cf9d20','#f0c040']};
+const poopCol=()=>(POOP[curSkinId]||POOP.default)[1];
 function poopIcon(x,y,s){
- cx.fillStyle='#8a5428';cx.beginPath();cx.ellipse(x,y,13*s,6*s,0,0,7);cx.fill();
- cx.fillStyle='#9a6232';cx.beginPath();cx.ellipse(x,y-8*s,9.5*s,5.5*s,0,0,7);cx.fill();
+ const pc=POOP[curSkinId]||POOP.default;
+ cx.fillStyle=pc[0];cx.beginPath();cx.ellipse(x,y,13*s,6*s,0,0,7);cx.fill();
+ cx.fillStyle=pc[1];cx.beginPath();cx.ellipse(x,y-8*s,9.5*s,5.5*s,0,0,7);cx.fill();
  cx.beginPath();cx.ellipse(x,y-15*s,6*s,4.5*s,0,0,7);cx.fill();
+ const k=curSkinId;
+ if(k==='lolita'){cx.fillStyle='#fff';for(const d of[-1,1]){cx.beginPath();cx.moveTo(x,y-20*s);cx.lineTo(x+d*7*s,y-24*s);cx.lineTo(x+d*7*s,y-16*s);cx.closePath();cx.fill()}cx.fillStyle='#e377ad';cx.beginPath();cx.arc(x,y-20*s,2*s,0,7);cx.fill()}
+ else if(k==='principal'){cx.fillStyle='#fff6c0';star(x+5*s,y-9*s,3.2*s);star(x-8*s,y-3*s,2.4*s)}
+ else if(k==='jh'){cx.fillStyle='rgba(255,255,255,.7)';cx.beginPath();cx.ellipse(x-3*s,y-16*s,2*s,1.2*s,-.5,0,7);cx.fill();cx.beginPath();cx.ellipse(x-5*s,y-9*s,2.4*s,1.3*s,-.4,0,7);cx.fill()}
+ else if(k==='cleaner'){cx.strokeStyle='rgba(235,248,255,.9)';cx.lineWidth=1.2;for(const [dx,dy,r] of [[-9,-18,3],[9,-12,2.4],[-3,-24,2]]){cx.beginPath();cx.arc(x+dx*s,y+dy*s,r*s,0,7);cx.stroke()}}
+ else if(k==='sport'){cx.strokeStyle='#3a1a08';cx.lineWidth=1.3;cx.beginPath();cx.moveTo(x-7*s,y-8*s);cx.lineTo(x+7*s,y-8*s);cx.moveTo(x,y-19*s);cx.lineTo(x,y-3*s);cx.stroke()}
 }
 function person(x,y,f,o){
  const sw=Math.sin(o.walk||0),bob=Math.abs(Math.cos(o.walk||0))*2,sit=o.sit?10:0,hy=-57-bob+sit;
@@ -3062,7 +3073,7 @@ function render(){
    if(s.pPoison>0)drawPoisonFx(p,s.tick);
    cx.font=`700 13px ${FONT}`;cx.textAlign='center';cx.fillStyle='#fff';cx.fillText(s.name,p.x,p.y-80);
    if(p.held>0)bubble(p.x,p.y-104,`訓話中 ${Math.ceil(p.held)} 秒`);
-   if(sit){const k=1-p.pooping/CFG.poopT;cx.fillStyle='rgba(8,14,18,.8)';rr(p.x-36,p.y-110,72,10,5);cx.fillStyle='#9a6232';rr(p.x-35,p.y-109,70*k,8,4);cx.fillStyle='#fff';cx.font=`500 13px ${FONT}`;cx.fillText('嗯……',p.x,p.y-120)}
+   if(sit){const k=1-p.pooping/CFG.poopT;cx.fillStyle='rgba(8,14,18,.8)';rr(p.x-36,p.y-110,72,10,5);cx.fillStyle=poopCol();rr(p.x-35,p.y-109,70*k,8,4);cx.fillStyle='#fff';cx.font=`500 13px ${FONT}`;cx.fillText('嗯……',p.x,p.y-120)}
   }
  }
  if(s.lure){
