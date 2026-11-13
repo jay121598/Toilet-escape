@@ -140,6 +140,28 @@ h1 .pi{width:1.1em;height:1.1em}
 .gembadge{display:flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid var(--line);border-radius:999px;background:var(--bg);font:600 15px var(--font-b);font-variant-numeric:tabular-nums}
 .card.menu{position:relative}
 .skc.buy{border-color:var(--alert)}
+.netbox{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:10px}
+.netbox b{display:block;margin-bottom:8px}
+.netbox small{display:block;margin-top:8px;font-size:12px;opacity:.75;line-height:1.5}
+.netbtns{display:flex;gap:8px;flex-wrap:wrap}
+.netbtns .go{flex:1;min-width:96px;padding:10px 6px;font-size:15px}
+.netc .go{width:100%}
+.netj{display:flex;gap:8px;margin-top:8px}
+.netj input{flex:1;min-width:0;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);font:500 16px var(--font-b);text-align:center;letter-spacing:.2em}
+.rcode{font-size:15px;margin:6px 0}.rcode b{font:700 34px var(--font-d);letter-spacing:.2em;color:var(--accent);margin-left:6px}
+.mem{list-style:none;padding:0;margin:8px 0;display:grid;gap:6px}
+.mem li{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px}
+.mem li.me{border-color:var(--accent)}.mem em{font-style:normal;font-size:12px;color:var(--accent);margin-left:auto}
+#netCd{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:rgba(8,14,18,.6);font:700 22vmin var(--font-d);color:var(--accent)}
+#netCd[hidden],#netHud[hidden]{display:none}
+#netHud{position:absolute;right:1.2cqw;top:13cqw;display:grid;gap:3px;min-width:15cqw;font-size:clamp(9px,1.5cqw,14px);z-index:5;pointer-events:none}
+#netHud .nr{display:flex;align-items:center;gap:.6em;padding:.25em .7em;border-radius:6px;background:rgba(8,14,18,.7);border:1px solid var(--line)}
+#netHud .nr.me{border-color:var(--accent)}#netHud .nr b{flex:1}#netHud .nr em{font-style:normal;opacity:.8}
+#netHud .nr.dn em{color:var(--alert)}#netHud .nr.esc em{color:var(--good)}#netHud .nr.out{opacity:.6}
+.nres{margin:10px 0;text-align:left}.nres h3{margin:0 0 6px;font-size:17px}
+.nres ol{list-style:none;padding:0;margin:0;display:grid;gap:5px}
+.nres li{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+.nres li.me{border-color:var(--accent)}.nres li i{font-style:normal;width:1.4em;color:var(--accent);font-weight:700}.nres li b{flex:1}
 .shopbar{display:flex;align-items:center;gap:8px;margin:0 0 10px;flex-wrap:wrap}
 .st{text-align:center;flex:1;min-width:70px;padding:8px 4px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;font:500 15px var(--font-b)}
 .st.on{background:var(--accent);border-color:var(--accent);color:#1b1300}
@@ -277,6 +299,7 @@ h1 .pi{width:1.1em;height:1.1em}
   </div>
   <button id="mute" aria-label="音樂與音效開關">音 開</button><button id="fsb" type="button">全螢幕</button>
   <button id="acti">互動</button>
+  <div id="netHud" hidden></div>
   <div id="toast" role="status"></div>
   <div id="dlg" hidden><b id="dlgN"></b><p id="dlgT"></p><small>按 E／點一下繼續</small><div id="dlgB"></div></div>
   <button id="giveup" hidden>結算離場</button>
@@ -313,6 +336,7 @@ h1 .pi{width:1.1em;height:1.1em}
    <button class="go ghost" id="fsMenu" type="button">進入全螢幕</button>
    <p id="fsHint" hidden>iPhone 的 Safari 不支援網頁全螢幕。請點瀏覽器下方的「分享」→「加入主畫面」，之後從主畫面的圖示開啟，就是沒有網址列的全螢幕。</p>
    <button class="go" id="goBtn">開始逃亡</button>
+   <div class="netbox"><b>連線模式</b><div class="netbtns"><button class="go ghost" data-nm="coop" type="button">合作逃亡</button><button class="go ghost" data-nm="kill" type="button">擊殺賽</button><button class="go ghost" data-nm="time" type="button">時間賽</button></div><small>合作：2–4 人一起逃，能互相救援。擊殺賽：4 分鐘比誰殺最多。時間賽：比誰先逃出學校。擊殺賽與時間賽各有獨立的排行榜。</small></div>
   </div>
   <div class="tp" id="tp-skin" hidden>
    <div class="shopbar" id="shopTabs"><button class="st on" data-st="skins" type="button">造型</button><button class="st" data-st="up" type="button">鑽石強化</button><button class="st" data-st="pet" type="button">寵物</button></div>
@@ -324,7 +348,7 @@ h1 .pi{width:1.1em;height:1.1em}
   </div>
   <div class="tp" id="tp-rank" hidden>
    <p class="sub" id="lbHint" style="font-size:13px;margin:0"></p>
-   <div class="tabs" style="margin:8px 0"><button class="ltab on" data-lb="kills">單場擊殺</button><button class="ltab" data-lb="total">總擊殺數</button><button class="ltab" data-lb="time">最快逃離</button></div>
+   <div class="tabs" style="margin:8px 0"><button class="ltab on" data-lb="kills">單場擊殺</button><button class="ltab" data-lb="total">總擊殺數</button><button class="ltab" data-lb="time">最快逃離</button><button class="ltab" data-lb="vk">擊殺賽</button><button class="ltab" data-lb="vt">時間賽</button></div>
    <ol class="rk" id="lbList"></ol>
   </div>
   <div class="tp" id="tp-ach" hidden><div class="achs" id="achL"></div></div>
@@ -386,11 +410,21 @@ h1 .pi{width:1.1em;height:1.1em}
  </div>
 </section>
 
+<section id="net" class="ov" hidden>
+ <div class="card">
+  <div class="acctH"><b style="font-size:20px" id="netT">連線</b><button class="go ghost" id="netX" type="button">離開</button></div>
+  <p class="sub" id="netD" style="font-size:13px;margin:6px 0"></p>
+  <div id="netB"></div>
+  <p class="sub" id="netMsg" style="font-size:13px;color:var(--alert)"></p>
+ </div>
+</section>
+<div id="netCd" hidden></div>
 <section id="end" class="ov" hidden>
  <div class="card">
   <h2 id="endT"></h2>
   <p class="sub" id="endM"></p>
   <div class="stats" id="endS"></div>
+  <div id="netRes"></div><p class="sub" id="netSub" style="font-size:14px"></p>
   <p class="sub" id="lbMsg" style="font-size:14px"></p>
   <div class="btns"><button class="go" id="again">再玩一次</button><button class="go ghost" id="toMenu">回主選單</button></div>
  </div>
@@ -555,7 +589,7 @@ function chase(c,flow,gx,gy,spd,dt){
 /* ---------- 遊戲狀態 ---------- */
 const joy={on:false,x:0,y:0,m:0},keys={};
 function newGame(name){
- genMap();setPal();audioInit();setTrack('main');
+ netMap();setPal();audioInit();setTrack('main');
  S={name,t:CFG.gameT,poops:0,level:0,tick:0,over:false,hint:null,kills:0,maxLv:0,spT:3,fT:0,lT:0,gateOpen:false,
   p:{x:(50)*T,y:30*T,face:1,dx:0,dy:1,pooping:0,pt:null,walk:0,hp:CFG.hp+4*(save.up.hp|0),maxHp:CFG.hp+4*(save.up.hp|0),atk:CFG.atk,atkT:0,inv:0,held:0,grace:0,ugly:0,pieT:0},
   cl:[],proj:[],lure:null,fx:[],eggs:[],eggT:CFG.eggInt,evil:0,bproj:[],slam:[],tg:[],ex:0,endless:false,gateTile:0,damaged:false,newAch:[],gemGain:0,boss:null,bossKilled:false,kindT:0,noHurt:0,hpPrev:CFG.hp+4*(save.up.hp|0),regenLv:0,idGot:false,stuN:0,stu:[],hidden4:false,cut:null,cutDone:false,bot:[],pPoison:0,poiAcc:0,stuCur:null,pie:false,geo:false,geoT:10,buffT:0,gas:[],trip:null,board:null,mainMap:null,multiLv:0,speedLv:0,walkLv:0,coins:0,need:5,panelN:0,pend:[],paused:false,atkLv:1,branch:0,effLv:{'麻痹':0,'虛弱':0,'劇毒':0},trails:[],booms:[],bombs:[],coinL:[],rid:0,opts:null,
@@ -691,6 +725,15 @@ function useAbility(k){
 }
 
 function end(win,msg){
+ if(S&&S.downed&&!win)return;
+ if(NET.active&&NET.mode==='coop'&&!win&&S&&!S.over&&netHope()){netDown();return}
+ endCore(win,msg);
+ if(NET.active){
+  if(NET.mode==='kill'){$('endT').textContent=`${S.name} 擊殺賽結束`;$('endT').style.color='var(--accent)'}
+  $('again').hidden=true;netOnEnd(win);
+ }
+}
+function endCore(win,msg){
  S.over=true;$('giveup').hidden=true;setTrack(null);sfx(win?'win':'lose');
  if(win){save.esc=(save.esc||0)+1;S.gemGain=(S.gemGain||0)+5;persist();unlock('escape');if(!S.damaged)unlock('flawless');if(S.bossKilled)unlock('slayer')}
  $('endT').textContent=win?`${S.name} 逃出學校了`:`${S.name} 沒能逃掉`;
@@ -715,13 +758,14 @@ function killCleaner(c){c.dead=true;if(c.type==='gym'&&!c.gassed&&S.gas.length<6
 function update(dt){
  const s=S,p=s.p;if(!s.paused)s.tick+=dt;
  if(s.over||s.paused)return;
+ if(s.downed){downedTick(dt);return}
  if(s.trip){tripUpdate(dt);return}
  if(s.cut){cutUpdate(dt);return}
  if(s.buffT>0){s.buffT-=dt;if(s.buffT<=0){s.buffT=0;syncEff();toast('國文加持結束了')}}
  {const p0=s.p;if(p0.hp<s.hpPrev-.001)s.noHurt=0;else s.noHurt+=dt;
   if(s.noHurt>=regenDelay()&&p0.hp<p0.maxHp&&p0.held<=0&&p0.pooping<=0)p0.hp=Math.min(p0.maxHp,p0.hp+regenRate()*dt);
   s.hpPrev=p0.hp}
- if(s.endless)s.ex+=dt;else{s.t-=dt;if(s.t<=0){s.t=0;timeUp();return}}
+ if(s.endless)s.ex+=dt;else{s.t-=dt;if(s.t<=0){s.t=0;if(NET.active){end(false,NET.mode==='kill'?'時間到！擊殺賽結束。':'時間到，校門還沒打開。');return}timeUp();return}}
  for(const k in s.ab){const a=s.ab[k];if(a.cd>0)a.cd=Math.max(0,a.cd-dt)}
  for(const t of teachers)if(t.cd>0){t.cd=Math.max(0,t.cd-dt);if(t.cd<=0&&t.used)refreshTeacher(t)}
  if(s.lure){s.lure.t-=dt;if(s.lure.t<=0)s.lure=null}
@@ -1552,7 +1596,7 @@ $('sp-pet').addEventListener('click',e=>{
  if(i>=0)save.eq.splice(i,1);else{save.eq.push(id);while(save.eq.length>save.slots)save.eq.shift()}
  petMsg='';persist();renderMenu();
 });
-$('toMenu').addEventListener('click',()=>{$('giveup').hidden=true;$('end').hidden=true;$('start').hidden=false;renderMenu();S=null});
+$('toMenu').addEventListener('click',()=>{netLeave();$('giveup').hidden=true;$('end').hidden=true;$('start').hidden=false;renderMenu();S=null});
 
 /* ---------- 主任、校長 ---------- */
 const SK=['假','惡','醜'];
@@ -1815,7 +1859,12 @@ const TPAL={
 const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
-const PATCH={v:'v2.6',date:'2026/11/13',items:[
+const PATCH={v:'v2.7',date:'2026/11/13',items:[
+ ['連線模式','主選單「開始」分頁下方新增連線模式：建立房間得到 4 位數房號，朋友輸入房號加入（最多 4 人），房主按開始，大家會玩同一張地圖。'],
+ ['合作逃亡','2–4 人一起逃，隊友即時顯示在畫面上（包含寵物）。倒下的隊友靠近 2.5 秒可以救起來，靠近隊友會慢慢回血，全員逃出才算全隊成功。每個人遇到的清潔工是各自獨立的。'],
+ ['擊殺賽','限時 4 分鐘，比誰打倒的清潔工最多，對手以半透明幽靈顯示。也可以單人挑戰直接上榜。'],
+ ['時間賽','比誰先逃出學校，對手以半透明幽靈顯示。也可以單人挑戰直接上榜。'],
+ ['兩個新排行榜','排行榜新增「擊殺賽」與「時間賽」兩個分頁，成績各自獨立計算。'],
  ['商店系統','「造型」分頁改成「商店」，裡面分三類：造型、鑽石強化、寵物。'],
  ['鑽石強化','可以用鑽石永久強化：初始生命值（每級 +4，最高 5 級）、初始走路速度（每級 +2%）、拉屎時間縮短（每級 -3%，最多 -15%）。沒有攻擊力強化。'],
  ['寵物抽獎','寵物只能抽獎取得：抽 1 次 10 鑽石，10 連抽 90 鑽石（保底稀有以上），50 抽內必出傳說。共 9 隻：普通（小狗、小貓）、稀有（鸚鵡、老鷹）、史詩（河馬、長頸鹿）、傳說（龍、鳳凰、石頭）。重複抽到會換成鑽石。'],
@@ -3096,6 +3145,11 @@ let BCOLS='id,name,kills,best,ku,bu,total,tu';
 async function lbFetch(){
  if(!LB.db)return;
  const m=LB.mode,k=m==='kills',t=m==='total';
+ if(m==='vk'||m==='vt'){
+  const kk=m==='vk';let q=LB.db.from('versus_board').select('id,name,score,ts').eq('mode',kk?'kill':'time').gt('score',0);
+  q=kk?q.order('score',{ascending:false}).order('ts',{ascending:true}):q.order('score',{ascending:true}).order('ts',{ascending:true});
+  try{const r=await lbT(q.limit(30));LB.vErr=!!r.error;LB.rows=r.error?[]:(r.data||[]);lbList()}catch(e){}
+  return}
  if(t&&BCOLS.indexOf('total')<0)return;
  let q=LB.db.from('board').select(BCOLS);
  q=t?q.gt('total',0).order('total',{ascending:false}).order('tu',{ascending:true}):k?q.gt('kills',0).order('kills',{ascending:false}).order('ku',{ascending:true}):q.gt('best',0).order('best',{ascending:true}).order('bu',{ascending:true});
@@ -3117,6 +3171,7 @@ function lbRender(){
 }
 function lbList(){
  const l=$('lbList');if(!l)return;
+ if(LB.mode==='vk'||LB.mode==='vt'){const vk=LB.mode==='vk';document.querySelectorAll('.ltab').forEach(b=>b.classList.toggle('on',b.dataset.lb===LB.mode));l.innerHTML=LB.rows.length?LB.rows.slice(0,30).map((r,i)=>`<li class="${r.id===LB.uid?'me':''}"><i>${i+1}</i><b>${esc(r.name)}</b><span>${vk?r.score+' 隻':fmtT(r.score)}</span></li>`).join(''):`<li class="empty">${LB.vErr?'這個排行榜還沒啟用（需要在 Supabase 執行 net.sql）。':'還沒有人上榜，來當第一個吧！'}</li>`;return}
  const kills=LB.mode==='kills',tot=LB.mode==='total';
  const rows=LB.rows.filter(r=>tot?r.total>0:kills?r.kills>0:r.best>0).sort((x,y)=>tot?(y.total-x.total)||((x.tu||0)-(y.tu||0)):kills?(y.kills-x.kills)||((x.ku||0)-(y.ku||0)):(x.best-y.best)||((x.bu||0)-(y.bu||0)));
  document.querySelectorAll('.ltab').forEach(b=>b.classList.toggle('on',b.dataset.lb===LB.mode));
@@ -3268,6 +3323,233 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='lbName'&&e.key==='Enter')lbRegister();else if(e.target&&e.target.id==='authPw'&&e.key==='Enter')authDo('in')});
 lbInit();
+/* ================= 連線模式（Supabase Realtime） ================= */
+const NM={
+ coop:{n:'合作逃亡',min:2,d:'2–4 人在同一張地圖上一起逃亡。隊友會即時出現在你的畫面裡；倒下的隊友，靠近他 2.5 秒就能救起來；靠近隊友會慢慢回血。全員逃出學校才算全隊成功。（清潔工是每個人各自的。）'},
+ kill:{n:'擊殺賽',min:1,d:'同一張地圖限時 4 分鐘，打倒最多清潔工的人獲勝，對手以半透明幽靈顯示。有獨立的「擊殺賽」排行榜。'},
+ time:{n:'時間賽',min:1,d:'同一張地圖，比誰先逃出學校，對手以半透明幽靈顯示。有獨立的「時間賽」排行榜。'}
+};
+const KILL_T=240,NMAX=4;
+const NET={mode:'coop',active:false,ch:null,code:'',host:false,room:{},peers:{},fin:{},seed:0,solo:false,st:'idle',msg:'',tS:0,tH:0,tR:0,won:false,phase:'lobby',cdT:null,tJ:0,pw:0};
+const myId=()=>LB.uid||'me';
+const myName=()=>(($('nm').value||'').trim()||'小明').slice(0,8);
+function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function netMap(){
+ if(NET.active&&NET.seed){const o=Math.random;Math.random=mulberry(NET.seed);try{genMap()}finally{Math.random=o}}else genMap();
+}
+const netMeta=()=>({name:myName(),sk:curSkinId,host:NET.host,mode:NET.mode,phase:NET.phase});
+function netSend(p){if(NET.ch){try{const r=NET.ch.send({type:'broadcast',event:'m',payload:p});if(r&&r.catch)r.catch(()=>{})}catch(e){}}}
+function netCloseCh(){const ch=NET.ch;NET.ch=null;if(ch&&LB.db){try{ch.untrack&&ch.untrack()}catch(e){}try{LB.db.removeChannel(ch)}catch(e){}}}
+function netLeave(){
+ netCloseCh();clearInterval(NET.cdT);
+ Object.assign(NET,{active:false,st:'idle',host:false,room:{},peers:{},fin:{},solo:false,phase:'lobby',seed:0,won:false});
+ $('netCd').hidden=true;$('netHud').hidden=true;$('again').hidden=false;$('netRes').innerHTML='';$('netSub').textContent='';
+}
+function netOpen(mode){
+ if(LB.st!=='ok'||!LB.db){alert('連線模式需要先連上線上服務（排行榜連線成功）。請檢查網路後重新整理頁面。');return}
+ netLeave();NET.mode=mode;NET.msg='';$('net').hidden=false;netRender();
+}
+function netFail(msg){netLeave();NET.msg=msg;netRender()}
+async function netJoin(code,host){
+ netCloseCh();
+ Object.assign(NET,{code,host,room:{},peers:{},fin:{},st:'joining',msg:'',phase:'lobby',tJ:Date.now(),solo:false});
+ netRender();
+ const ch=LB.db.channel('te-'+code,{config:{broadcast:{self:false},presence:{key:myId()}}});
+ NET.ch=ch;
+ ch.on('broadcast',{event:'m'},e=>netRecv(e.payload));
+ ch.on('presence',{event:'sync'},netPres);
+ try{
+  await new Promise((res,rej)=>{const t=setTimeout(()=>rej(new Error('timeout')),9000);ch.subscribe(s=>{if(s==='SUBSCRIBED'){clearTimeout(t);res()}else if(s==='CHANNEL_ERROR'||s==='TIMED_OUT'||s==='CLOSED'){clearTimeout(t);rej(new Error(s))}})});
+  await ch.track(netMeta());
+ }catch(e){netFail('連不上房間，稍後再試。');return}
+ if(!host){
+  await new Promise(r=>setTimeout(r,1300));
+  if(NET.ch!==ch)return;
+  netPres0();
+  const h=Object.values(NET.room).find(m=>m.host);
+  if(!h){netFail(`找不到房間 ${code}。`);return}
+  if(Object.keys(NET.room).length>NMAX){netFail('房間已經滿了（最多 4 人）。');return}
+  if(h.phase==='play'){netFail('這個房間已經開始遊戲了。');return}
+  if(h.mode)NET.mode=h.mode;
+ }
+ NET.st='lobby';NET.tJ=Date.now();netRender();
+}
+function netPres0(){
+ const st=NET.ch?NET.ch.presenceState():{},r={};
+ for(const k in st)if(st[k]&&st[k][0])r[k]=st[k][0];
+ NET.room=r;
+}
+function netPres(){
+ netPres0();
+ if(NET.st==='lobby'&&!NET.active){
+  const h=Object.values(NET.room).find(m=>m.host);
+  if(!h&&Date.now()-NET.tJ>2500){netFail('房主離開了，房間已關閉。');return}
+  if(h&&h.mode)NET.mode=h.mode;
+  netRender();
+ }
+}
+function netHostStart(){
+ const n=Object.keys(NET.room).length;
+ if(n<NM[NET.mode].min)return;
+ const seed=1+Math.floor(Math.random()*2147483000);
+ NET.phase='play';try{NET.ch.track(netMeta())}catch(e){}
+ netSend({t:'go',mode:NET.mode,seed});
+ netBegin(NET.mode,seed);
+}
+function netBegin(mode,seed){
+ NET.mode=mode;NET.seed=seed;NET.active=true;NET.fin={};NET.won=false;
+ $('net').hidden=true;
+ let n=3;const cd=$('netCd');cd.hidden=false;cd.textContent=n;
+ clearInterval(NET.cdT);
+ NET.cdT=setInterval(()=>{n--;if(n>0)cd.textContent=n;else{clearInterval(NET.cdT);cd.hidden=true;netGo()}},1000);
+}
+function netGo(){
+ const nm=myName();try{localStorage.setItem('toiletEscapeName',nm)}catch(e){}
+ newGame(nm);
+ if(NET.mode==='kill')S.t=KILL_T;
+ NET.tS=0;NET.tH=0;NET.tR=0;NET.pw=0;
+ $('again').hidden=true;$('netHud').hidden=!NET.ch;
+ toast(NET.mode==='kill'?'擊殺賽開始！4 分鐘內打倒最多清潔工':NET.mode==='time'?'時間賽開始！最快逃出學校的人獲勝':'合作逃亡開始！靠近倒下的隊友可以救他');
+}
+function netRecv(m){
+ if(!m||typeof m!=='object')return;
+ if(m.t==='go'){if(!NET.active&&NET.st==='lobby'&&NM[m.mode])netBegin(m.mode,m.seed|0)}
+ else if(m.t==='p'&&typeof m.i==='string'&&m.i!==myId()){
+  const n=v=>Number.isFinite(+v)?+v:0,pe=NET.peers[m.i]||(NET.peers[m.i]={dx:n(m.x),dy:n(m.y),pd:[],rvT:0});
+  pe.tx=n(m.x);pe.ty=n(m.y);pe.f=m.f<0?-1:1;pe.h=n(m.h);pe.m=n(m.m)||1;pe.k=n(m.k)|0;pe.l=n(m.l)|0;
+  pe.st=['play','dn','esc','out'].includes(m.st)?m.st:'play';pe.sk=typeof m.sk==='string'?m.sk:'default';pe.w=m.w?1:0;
+  pe.pt=Array.isArray(m.pt)?m.pt.slice(0,2):[];pe.id=m.i;pe.seen=Date.now();
+ }
+ else if(m.t==='fin'&&typeof m.i==='string'){NET.fin[m.i]={i:m.i,k:m.k|0,e:m.e?1:0,s:m.s|0};netResRender()}
+ else if(m.t==='rv'&&m.to===myId()&&S&&S.downed)netRevive();
+}
+/* 倒下與救援（合作） */
+const netHope=()=>Object.values(NET.peers).some(pe=>pe.st==='play'&&Date.now()-pe.seen<5000);
+function netDown(){
+ const s=S;s.downed=true;s.p.hp=0;s.rvT=0;sfx('hurt');
+ toast('你倒下了！等隊友靠近救你');
+}
+function netRevive(){
+ const s=S;s.downed=false;s.p.hp=Math.max(1,Math.ceil(s.p.maxHp*.5));s.p.inv=2.5;s.noHurt=0;s.hpPrev=s.p.hp;
+ sfx('reward');toast('隊友把你救起來了！');
+}
+function downedTick(dt){
+ if(!netHope()){S.downed=false;end(false,'全隊都倒下了。');return}
+ S.p.hp=0;
+}
+/* 每幀 */
+function netTick(dt){
+ const s=S,p=s.p,now=Date.now();
+ NET.tS-=dt;
+ if(NET.tS<=0&&NET.ch){
+  NET.tS=.1;
+  const w=p.walk!==NET.pw;NET.pw=p.walk;
+  netSend({t:'p',i:myId(),x:Math.round(p.x),y:Math.round(p.y),f:p.face,h:Math.max(0,Math.round(p.hp)),m:Math.round(p.maxHp),k:s.kills,l:s.poops,
+   st:s.over?(NET.won?'esc':'out'):s.downed?'dn':'play',sk:curSkinId,w:w?1:0,
+   pt:(s.pets||[]).map(q=>[q.id,Math.round(q.x),Math.round(q.y),q.face,q.st==='down'?1:0,Math.round(q.z||0)])});
+ }
+ for(const id in NET.peers){
+  const pe=NET.peers[id],k=Math.min(1,dt*10);
+  if(Math.hypot(pe.tx-pe.dx,pe.ty-pe.dy)>300){pe.dx=pe.tx;pe.dy=pe.ty}else{pe.dx+=(pe.tx-pe.dx)*k;pe.dy+=(pe.ty-pe.dy)*k}
+  for(let i=0;i<pe.pt.length;i++){const q=pe.pt[i],d=pe.pd[i]||(pe.pd[i]={x:q[1],y:q[2]});if(Math.hypot(q[1]-d.x,q[2]-d.y)>300){d.x=q[1];d.y=q[2]}else{d.x+=(q[1]-d.x)*k;d.y+=(q[2]-d.y)*k}}
+ }
+ if(NET.mode==='coop'&&!s.over&&!s.downed&&!s.paused){
+  let near=false;
+  for(const id in NET.peers){
+   const pe=NET.peers[id];if(now-pe.seen>5000)continue;
+   const d=Math.hypot(pe.dx-p.x,pe.dy-p.y);
+   if(pe.st==='play'&&d<280)near=true;
+   if(pe.st==='dn'&&d<56){pe.rvT=(pe.rvT||0)+dt;if(pe.rvT>=2.5){pe.rvT=0;netSend({t:'rv',to:id});pe.st='play'}}else pe.rvT=0;
+  }
+  if(near&&p.hp<p.maxHp&&p.hp>0)p.hp=Math.min(p.maxHp,p.hp+1.2*dt);
+ }
+ NET.tH-=dt;
+ if(NET.tH<=0){NET.tH=.3;if(!$('netHud').hidden)netHudRender();if(s.over)netResRender()}
+}
+function netRows(){
+ const rows=[],seen={};
+ const add=(id,nm,live,isMe)=>{if(seen[id])return;seen[id]=1;const f=NET.fin[id];rows.push({id,nm,me:isMe,f,k:f?f.k:live.k|0,l:live.l|0,st:live.st||'play'})};
+ add(myId(),myName(),{k:S?S.kills:0,l:S?S.poops:0,st:S?(S.downed?'dn':S.over?(NET.won?'esc':'out'):'play'):'play'},true);
+ for(const id in NET.peers){const pe=NET.peers[id];add(id,(NET.room[id]||{}).name||'玩家',{k:pe.k,l:pe.l,st:Date.now()-pe.seen>6000?'out':pe.st},false)}
+ for(const id in NET.fin)if(!seen[id])add(id,(NET.room[id]||{}).name||'玩家',{k:NET.fin[id].k,st:'out'},false);
+ return rows;
+}
+function netHudRender(){
+ const rows=netRows(),lab={play:'進行中',dn:'倒下',esc:'已逃出',out:'已結束'};
+ if(NET.mode==='kill')rows.sort((a,b)=>b.k-a.k);
+ $('netHud').innerHTML=rows.map(r=>`<div class="nr${r.me?' me':''} ${r.st}"><b>${esc(r.nm)}</b><span>擊殺 ${r.k}${NET.mode==='kill'?'':`・屎 ${r.l}/${CFG.goal}`}</span><em>${lab[r.st]||''}</em></div>`).join('');
+}
+function netResRender(){
+ const el=$('netRes');if(!el||!NET.active)return;
+ const rows=netRows(),done=rows.every(r=>r.f);
+ const rank=r=>r.f?(NET.mode==='time'?(r.f.e?r.f.s:1e9):-r.k):(NET.mode==='time'?2e9:-r.k+1e6);
+ if(NET.mode==='coop')rows.sort((a,b)=>b.k-a.k);
+ else if(NET.mode==='kill')rows.sort((a,b)=>b.k-a.k);
+ else rows.sort((a,b)=>rank(a)-rank(b));
+ let head;
+ if(NET.mode==='coop'){const all=rows.every(r=>r.f&&r.f.e);head=done?(all?'全隊成功逃出學校！':'全隊失敗…還有人沒逃出去'):'等待隊友…'}
+ else head=done?'比賽結束':'比賽進行中…';
+ el.innerHTML=`<div class="nres"><h3>${head}</h3><ol>${rows.map((r,i)=>{
+  const t=r.f?(r.f.e?`逃出 ${fmtT(r.f.s)}・擊殺 ${r.f.k}`:`${NET.mode==='kill'?'時間到':'未逃出'}・擊殺 ${r.f.k}`):`進行中・擊殺 ${r.k}`;
+  return `<li class="${r.me?'me':''}"><i>${NET.mode==='coop'?'':i+1}</i><b>${esc(r.nm)}</b><span>${t}</span></li>`}).join('')}</ol></div>`;
+}
+async function netOnEnd(win){
+ NET.won=!!win;
+ const used=Math.round(CFG.gameT-S.t),rec={i:myId(),k:S.kills,e:win?1:0,s:NET.mode==='kill'?Math.round(KILL_T-S.t):used};
+ NET.fin[myId()]=rec;netSend(Object.assign({t:'fin'},rec));
+ netResRender();
+ const sub=$('netSub');sub.textContent='';
+ const mode=NET.mode==='kill'?'kill':NET.mode==='time'?'time':null,score=mode==='kill'?S.kills:(win?used:0);
+ if(mode&&score>0){
+  if(!LB.db){sub.textContent='排行榜連不上，這一場成績沒有送出。'}
+  else if(!LB.me){sub.textContent='你還沒註冊暱稱，到主選單右上角「註冊」取暱稱後就能上榜。'}
+  else try{const r=await lbT(LB.db.rpc('submit_versus',{p_mode:mode,p_score:score}));if(r.error)throw r.error;sub.textContent=mode==='kill'?`擊殺賽成績 ${score} 隻已送出排行榜。`:`時間賽成績 ${fmtT(score)} 已送出排行榜。`;LB.rows=[];if(LB.mode==='vk'||LB.mode==='vt')lbFetch()}
+  catch(e){sub.textContent=/submit_versus|function/i.test((e&&e.message)||'')?'這個排行榜還沒啟用（需要在 Supabase 執行 net.sql）。':'排行榜更新失敗，稍後再試。'}
+ }else if(mode==='time'&&!win)sub.textContent='沒有逃出學校，時間賽沒有成績。';
+}
+/* 畫面 */
+function drawPeer(pe){
+ const s=S,vs=NET.mode!=='coop',sk=SKINS.find(k=>k.id===pe.sk)||SKINS[0],dn=pe.st==='dn',al=vs?.5:1,x=pe.dx,y=pe.dy;
+ cx.save();
+ for(let i=0;i<pe.pt.length;i++){const q=pe.pt[i],d=pe.pd[i];if(d&&PETS[q[0]]){cx.globalAlpha=al;petSprite(q[0],d.x,d.y,q[3],{t:s.tick,z:q[5],sleep:!!q[4],mv:pe.w})}}
+ cx.globalAlpha=1;
+ if(dn){cx.translate(x,y);cx.rotate(Math.PI/2*.92*pe.f);cx.globalAlpha=.8;person(0,0,pe.f,{...sk.pal,walk:0,alpha:.8});}
+ else person(x,y,pe.f,{...sk.pal,walk:pe.w?s.tick*10:0,alpha:al});
+ cx.restore();
+ const nm=(NET.room[pe.id]||{}).name||'玩家';
+ cx.save();cx.textAlign='center';cx.font=`600 13px ${FONT}`;cx.fillStyle=vs?'#9ad0ff':'#7be07b';cx.fillText(dn?nm+'（倒下）':nm,x,y-(dn?44:88));
+ const bw=36,by=y-(dn?36:82);cx.fillStyle='rgba(0,0,0,.6)';cx.fillRect(x-bw/2,by,bw,5);cx.fillStyle='#7be07b';cx.fillRect(x-bw/2+1,by+1,(bw-2)*clamp(pe.h/pe.m,0,1),3);
+ if(dn&&pe.rvT>0){cx.strokeStyle='#ffd24a';cx.lineWidth=4;cx.beginPath();cx.arc(x,y-20,26,-Math.PI/2,-Math.PI/2+6.2832*Math.min(1,pe.rvT/2.5));cx.stroke()}
+ cx.restore();
+}
+/* 介面 */
+function netRender(){
+ const m=NM[NET.mode]||NM.coop;
+ $('netT').textContent=m.n;$('netD').textContent=m.d;$('netMsg').textContent=NET.msg||'';
+ let h='';
+ if(NET.st==='idle'){
+  h=`<p class="sub" style="font-size:13px;margin:0 0 8px">使用主選單的「你的名字」：<b>${esc(myName())}</b></p><div class="netc"><button class="go" data-n="create" type="button">建立房間</button></div>
+  <div class="netj"><input id="netCode" inputmode="numeric" maxlength="4" placeholder="4 位數房號" autocomplete="off"><button class="go ghost" data-n="join" type="button">加入房間</button></div>`
+  +(NET.mode!=='coop'?'<button class="go ghost" data-n="solo" type="button" style="margin-top:8px;width:100%">單人挑戰（直接衝排行榜）</button>':'');
+ }else if(NET.st==='joining')h='<p class="sub">連線中…</p>';
+ else{
+  const ids=Object.keys(NET.room).sort((a,b)=>(NET.room[b].host?1:0)-(NET.room[a].host?1:0)),n=ids.length,min=m.min;
+  h=`<div class="rcode">房號 <b>${esc(NET.code)}</b></div><ul class="mem">${ids.map(id=>`<li${id===myId()?' class="me"':''}><b>${esc(NET.room[id].name||'玩家')}</b>${NET.room[id].host?'<em>房主</em>':''}</li>`).join('')}</ul>`
+  +(NET.host?`<button class="go" data-n="start" type="button" ${n<min?'disabled':''}>${n<min?`至少要 ${min} 人才能開始`:'開始遊戲'}</button><p class="sub" style="font-size:12px">把房號告訴朋友，最多 ${NMAX} 人。</p>`:'<p class="sub">等房主開始遊戲…</p>');
+ }
+ $('netB').innerHTML=h;
+}
+document.addEventListener('click',e=>{
+ const nb=e.target.closest('[data-nm]');if(nb){netOpen(nb.dataset.nm);return}
+ if(e.target.closest('#netX')){netLeave();$('net').hidden=true;return}
+ const b=e.target.closest('[data-n]');if(!b||$('net').hidden)return;
+ const a=b.dataset.n;
+ if(a==='create')netJoin(String(1000+Math.floor(Math.random()*9000)),true);
+ else if(a==='join'){const c=(($('netCode')||{}).value||'').trim();if(!/^\d{4}$/.test(c)){NET.msg='請輸入 4 位數房號。';netRender();return}netJoin(c,false)}
+ else if(a==='solo'){NET.solo=true;netBegin(NET.mode,1+Math.floor(Math.random()*2147483000))}
+ else if(a==='start')netHostStart();
+});
+
 
 /* ---------- 繪圖 ---------- */
 const FONT='Huninn,"PingFang TC","Microsoft JhengHei",sans-serif';
@@ -3477,11 +3759,13 @@ function render(){
  for(const t of teachers)if(vis(t.x,t.y,80))ents.push({y:t.y,d:'teacher',t});
  for(const c of s.cl)if(vis(c.x,c.y,80))ents.push({y:c.y,d:'cl',c});
  for(const pt of s.pets||[])ents.push({y:pt.y,d:'pet',pt});
+ if(NET.active)for(const id in NET.peers){const pe=NET.peers[id];if(pe.st!=='esc'&&pe.st!=='out'&&Date.now()-pe.seen<6000)ents.push({y:pe.dy,d:'peer',pe})}
  ents.push({y:p.y,d:'player'});
  ents.sort((a,b)=>a.y-b.y);
  for(const e of ents){
   if(e.d==='tree')drawTree(e);
   else if(e.d==='pet')drawPetEnt(e.pt);
+  else if(e.d==='peer')drawPeer(e.pe);
   else if(e.d==='stu'||e.d==='bm')drawStuEnt(e);
   else if(e.d==='teacher'){
    const t=e.t,k=t.kind||'norm',hid=k!=='norm';person(t.x,t.y,-1,hid?TPAL[k]:TC);
@@ -3739,7 +4023,7 @@ addEventListener('blur',()=>{for(const k in keys)keys[k]=false});
 
 function frame(ts){
  const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
- if(S){update(dt);render();hudTick()}
+ if(S){update(dt);if(NET.active)netTick(dt);render();hudTick()}
  requestAnimationFrame(frame);
 }
 renderMenu();
