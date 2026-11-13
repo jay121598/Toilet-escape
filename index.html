@@ -336,7 +336,7 @@ h1 .pi{width:1.1em;height:1.1em}
    <button class="go ghost" id="fsMenu" type="button">進入全螢幕</button>
    <p id="fsHint" hidden>iPhone 的 Safari 不支援網頁全螢幕。請點瀏覽器下方的「分享」→「加入主畫面」，之後從主畫面的圖示開啟，就是沒有網址列的全螢幕。</p>
    <button class="go" id="goBtn">開始逃亡</button>
-   <div class="netbox"><b>連線模式</b><div class="netbtns"><button class="go ghost" data-nm="coop" type="button">合作逃亡</button><button class="go ghost" data-nm="kill" type="button">擊殺賽</button><button class="go ghost" data-nm="time" type="button">時間賽</button></div><small>合作：2–4 人一起逃，能互相救援。擊殺賽：4 分鐘比誰殺最多。時間賽：比誰先逃出學校。擊殺賽與時間賽各有獨立的排行榜。</small></div>
+   <div class="netbox"><b>連線模式</b><div class="netbtns"><button class="go ghost" data-nm="coop" type="button">合作逃亡</button><button class="go ghost" data-nm="kill" type="button">擊殺賽</button><button class="go ghost" data-nm="time" type="button">時間賽</button></div><small>合作：2–4 人一起逃，能互相救援。擊殺賽：4 分鐘比誰殺最多。時間賽：比誰先逃出學校。比賽結束後會顯示房內的名次。</small></div>
   </div>
   <div class="tp" id="tp-skin" hidden>
    <div class="shopbar" id="shopTabs"><button class="st on" data-st="skins" type="button">造型</button><button class="st" data-st="up" type="button">鑽石強化</button><button class="st" data-st="pet" type="button">寵物</button></div>
@@ -348,7 +348,7 @@ h1 .pi{width:1.1em;height:1.1em}
   </div>
   <div class="tp" id="tp-rank" hidden>
    <p class="sub" id="lbHint" style="font-size:13px;margin:0"></p>
-   <div class="tabs" style="margin:8px 0"><button class="ltab on" data-lb="kills">單場擊殺</button><button class="ltab" data-lb="total">總擊殺數</button><button class="ltab" data-lb="time">最快逃離</button><button class="ltab" data-lb="vk">擊殺賽</button><button class="ltab" data-lb="vt">時間賽</button></div>
+   <div class="tabs" style="margin:8px 0"><button class="ltab on" data-lb="kills">單場擊殺</button><button class="ltab" data-lb="total">總擊殺數</button><button class="ltab" data-lb="time">最快逃離</button></div>
    <ol class="rk" id="lbList"></ol>
   </div>
   <div class="tp" id="tp-ach" hidden><div class="achs" id="achL"></div></div>
@@ -1862,9 +1862,8 @@ const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1
 const PATCH={v:'v2.7',date:'2026/11/13',items:[
  ['連線模式','主選單「開始」分頁下方新增連線模式：建立房間得到 4 位數房號，朋友輸入房號加入（最多 4 人），房主按開始，大家會玩同一張地圖。'],
  ['合作逃亡','2–4 人一起逃，隊友即時顯示在畫面上（包含寵物）。倒下的隊友靠近 2.5 秒可以救起來，靠近隊友會慢慢回血，全員逃出才算全隊成功。每個人遇到的清潔工是各自獨立的。'],
- ['擊殺賽','限時 4 分鐘，比誰打倒的清潔工最多，對手以半透明幽靈顯示。'],
- ['時間賽','比誰先逃出學校，對手以半透明幽靈顯示。'],
- ['兩個新排行榜','排行榜新增「擊殺賽」與「時間賽」兩個分頁，成績各自獨立計算。'],
+ ['擊殺賽','限時 4 分鐘，比誰打倒的清潔工最多，對手以半透明幽靈顯示，結束後顯示房內名次。'],
+ ['時間賽','比誰先逃出學校，對手以半透明幽靈顯示，結束後顯示房內名次。'],
  ['商店系統','「造型」分頁改成「商店」，裡面分三類：造型、鑽石強化、寵物。'],
  ['鑽石強化','可以用鑽石永久強化：初始生命值（每級 +4，最高 5 級）、初始走路速度（每級 +2%）、拉屎時間縮短（每級 -3%，最多 -15%）。沒有攻擊力強化。'],
  ['寵物抽獎','寵物只能抽獎取得：抽 1 次 10 鑽石，10 連抽 90 鑽石（保底稀有以上），50 抽內必出傳說。共 9 隻：普通（小狗、小貓）、稀有（鸚鵡、老鷹）、史詩（河馬、長頸鹿）、傳說（龍、鳳凰、石頭）。重複抽到會換成鑽石。'],
@@ -3326,8 +3325,8 @@ lbInit();
 /* ================= 連線模式（Supabase Realtime） ================= */
 const NM={
  coop:{n:'合作逃亡',min:2,d:'2–4 人在同一張地圖上一起逃亡。隊友會即時出現在你的畫面裡；倒下的隊友，靠近他 2.5 秒就能救起來；靠近隊友會慢慢回血。全員逃出學校才算全隊成功。（清潔工是每個人各自的。）'},
- kill:{n:'擊殺賽',min:1,d:'同一張地圖限時 4 分鐘，打倒最多清潔工的人獲勝，對手以半透明幽靈顯示。有獨立的「擊殺賽」排行榜。'},
- time:{n:'時間賽',min:1,d:'同一張地圖，比誰先逃出學校，對手以半透明幽靈顯示。有獨立的「時間賽」排行榜。'}
+ kill:{n:'擊殺賽',min:2,d:'同一張地圖限時 4 分鐘，打倒最多清潔工的人獲勝，對手以半透明幽靈顯示。結束後顯示房內名次。'},
+ time:{n:'時間賽',min:2,d:'同一張地圖，比誰先逃出學校，對手以半透明幽靈顯示。結束後顯示房內名次。'}
 };
 const KILL_T=240,NMAX=4;
 const NET={mode:'coop',active:false,ch:null,code:'',host:false,room:{},peers:{},fin:{},seed:0,solo:false,st:'idle',msg:'',tS:0,tH:0,tR:0,won:false,phase:'lobby',cdT:null,tJ:0,pw:0};
@@ -3498,14 +3497,6 @@ async function netOnEnd(win){
  const used=Math.round(CFG.gameT-S.t),rec={i:myId(),k:S.kills,e:win?1:0,s:NET.mode==='kill'?Math.round(KILL_T-S.t):used};
  NET.fin[myId()]=rec;netSend(Object.assign({t:'fin'},rec));
  netResRender();
- const sub=$('netSub');sub.textContent='';
- const mode=NET.mode==='kill'?'kill':NET.mode==='time'?'time':null,score=mode==='kill'?S.kills:(win?used:0);
- if(mode&&score>0){
-  if(!LB.db){sub.textContent='排行榜連不上，這一場成績沒有送出。'}
-  else if(!LB.me){sub.textContent='你還沒註冊暱稱，到主選單右上角「註冊」取暱稱後就能上榜。'}
-  else try{const r=await lbT(LB.db.rpc('submit_versus',{p_mode:mode,p_score:score}));if(r.error)throw r.error;sub.textContent=mode==='kill'?`擊殺賽成績 ${score} 隻已送出排行榜。`:`時間賽成績 ${fmtT(score)} 已送出排行榜。`;LB.rows=[];if(LB.mode==='vk'||LB.mode==='vt')lbFetch()}
-  catch(e){sub.textContent=/submit_versus|function/i.test((e&&e.message)||'')?'這個排行榜還沒啟用（需要在 Supabase 執行 net.sql）。':'排行榜更新失敗，稍後再試。'}
- }else if(mode==='time'&&!win)sub.textContent='沒有逃出學校，時間賽沒有成績。';
 }
 /* 畫面 */
 function drawPeer(pe){
