@@ -1862,8 +1862,8 @@ const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1
 const PATCH={v:'v2.7',date:'2026/11/13',items:[
  ['連線模式','主選單「開始」分頁下方新增連線模式：建立房間得到 4 位數房號，朋友輸入房號加入（最多 4 人），房主按開始，大家會玩同一張地圖。'],
  ['合作逃亡','2–4 人一起逃，隊友即時顯示在畫面上（包含寵物）。倒下的隊友靠近 2.5 秒可以救起來，靠近隊友會慢慢回血，全員逃出才算全隊成功。每個人遇到的清潔工是各自獨立的。'],
- ['擊殺賽','限時 4 分鐘，比誰打倒的清潔工最多，對手以半透明幽靈顯示。也可以單人挑戰直接上榜。'],
- ['時間賽','比誰先逃出學校，對手以半透明幽靈顯示。也可以單人挑戰直接上榜。'],
+ ['擊殺賽','限時 4 分鐘，比誰打倒的清潔工最多，對手以半透明幽靈顯示。'],
+ ['時間賽','比誰先逃出學校，對手以半透明幽靈顯示。'],
  ['兩個新排行榜','排行榜新增「擊殺賽」與「時間賽」兩個分頁，成績各自獨立計算。'],
  ['商店系統','「造型」分頁改成「商店」，裡面分三類：造型、鑽石強化、寵物。'],
  ['鑽石強化','可以用鑽石永久強化：初始生命值（每級 +4，最高 5 級）、初始走路速度（每級 +2%）、拉屎時間縮短（每級 -3%，最多 -15%）。沒有攻擊力強化。'],
@@ -3529,8 +3529,7 @@ function netRender(){
  let h='';
  if(NET.st==='idle'){
   h=`<p class="sub" style="font-size:13px;margin:0 0 8px">使用主選單的「你的名字」：<b>${esc(myName())}</b></p><div class="netc"><button class="go" data-n="create" type="button">建立房間</button></div>
-  <div class="netj"><input id="netCode" inputmode="numeric" maxlength="4" placeholder="4 位數房號" autocomplete="off"><button class="go ghost" data-n="join" type="button">加入房間</button></div>`
-  +(NET.mode!=='coop'?'<button class="go ghost" data-n="solo" type="button" style="margin-top:8px;width:100%">單人挑戰（直接衝排行榜）</button>':'');
+  <div class="netj"><input id="netCode" inputmode="numeric" maxlength="4" placeholder="4 位數房號" autocomplete="off"><button class="go ghost" data-n="join" type="button">加入房間</button></div>`;
  }else if(NET.st==='joining')h='<p class="sub">連線中…</p>';
  else{
   const ids=Object.keys(NET.room).sort((a,b)=>(NET.room[b].host?1:0)-(NET.room[a].host?1:0)),n=ids.length,min=m.min;
@@ -3546,7 +3545,6 @@ document.addEventListener('click',e=>{
  const a=b.dataset.n;
  if(a==='create')netJoin(String(1000+Math.floor(Math.random()*9000)),true);
  else if(a==='join'){const c=(($('netCode')||{}).value||'').trim();if(!/^\d{4}$/.test(c)){NET.msg='請輸入 4 位數房號。';netRender();return}netJoin(c,false)}
- else if(a==='solo'){NET.solo=true;netBegin(NET.mode,1+Math.floor(Math.random()*2147483000))}
  else if(a==='start')netHostStart();
 });
 
