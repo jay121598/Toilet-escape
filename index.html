@@ -162,6 +162,7 @@ h1 .pi{width:1.1em;height:1.1em}
 #netHud .nr{display:flex;align-items:center;gap:.6em;padding:.25em .7em;border-radius:6px;background:rgba(8,14,18,.7);border:1px solid var(--line)}
 #netHud .nr.me{border-color:var(--accent)}#netHud .nr b{flex:1}#netHud .nr em{font-style:normal;opacity:.8}
 #netHud .nr.dn em{color:var(--alert)}#netHud .nr.esc em{color:var(--good)}#netHud .nr.out{opacity:.6}
+#netHud.many{font-size:clamp(8px,1.2cqw,12px);gap:2px}
 .nres{margin:10px 0;text-align:left}.nres h3{margin:0 0 6px;font-size:17px}
 .nres ol{list-style:none;padding:0;margin:0;display:grid;gap:5px}
 .nres li{display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px}
@@ -341,7 +342,7 @@ h1 .pi{width:1.1em;height:1.1em}
    <button class="go ghost" id="fsMenu" type="button">進入全螢幕</button>
    <p id="fsHint" hidden>iPhone 的 Safari 不支援網頁全螢幕。請點瀏覽器下方的「分享」→「加入主畫面」，之後從主畫面的圖示開啟，就是沒有網址列的全螢幕。</p>
    <button class="go" id="goBtn">開始逃亡</button>
-   <div class="netbox"><b>連線模式</b><div class="netbtns"><button class="go ghost" data-nm="coop" type="button">合作逃亡</button><button class="go ghost" data-nm="kill" type="button">擊殺賽</button><button class="go ghost" data-nm="time" type="button">時間賽</button></div><small>合作：2–4 人一起逃，能互相救援。擊殺賽：4 分鐘比誰殺最多。時間賽：比誰先逃出學校。比賽結束後會顯示房內的名次。</small></div>
+   <div class="netbox"><b>連線模式</b><div class="netbtns"><button class="go ghost" data-nm="coop" type="button">合作逃亡</button><button class="go ghost" data-nm="kill" type="button">擊殺賽</button><button class="go ghost" data-nm="time" type="button">時間賽</button></div><small>合作：2–8 人一起逃，能互相救援。擊殺賽：4 分鐘比誰殺最多。時間賽：比誰先逃出學校。比賽結束後會顯示房內的名次。</small></div>
   </div>
   <div class="tp" id="tp-skin" hidden>
    <div class="shopbar" id="shopTabs"><button class="stb on" data-st="skins" type="button">造型</button><button class="stb" data-st="up" type="button">鑽石強化</button><button class="stb" data-st="pet" type="button">寵物</button></div>
@@ -547,10 +548,17 @@ function genMap(){
  const cr=choose(5,800,r=>r.side==='top'),tr=choose(CFG.goal,700,()=>true);
  const dr=choose(3,900,()=>true);discs=dr;dr.forEach(r=>{r.kind='disc';r.name='訓導處'});
  toilets=[];teachers=[];
- tr.forEach(r=>{
+ const ord=(NET.active&&NET.ord&&NET.ord.length>1)?NET.ord:null;
+ tr.forEach((r,ri)=>{
   r.kind='toilet';r.name='廁所';
   let tx;do{tx=r.x0+1+((Math.random()*(r.x1-r.x0-1))|0)}while(tx===r.dx||tx===r.dx+1);
-  toilets.push({x:(tx+.5)*T,y:(r.y0+.5)*T,used:false,room:r});
+  if(!ord)toilets.push({x:(tx+.5)*T,y:(r.y0+.5)*T,used:false,room:r,rid:ri,mine:true,own:null});
+  else{ // 連線：一間廁所依人數有同樣多個馬桶，每人一個
+   const n=ord.length,w=r.x1-r.x0-1,n0=Math.min(n,w),cells=[];
+   for(let i=0;i<n0;i++)cells.push([r.x0+1+Math.floor((i+.5)*w/n0),r.y0]);
+   for(let i=0;i<n-n0;i++)cells.push([r.x0+1+Math.floor((i+.5)*w/(n-n0)),r.y0+2]);
+   ord.forEach((id,i)=>toilets.push({x:(cells[i][0]+.5)*T,y:(cells[i][1]+.5)*T,used:false,room:r,rid:ri,mine:id===myId(),own:id}));
+  }
  });
  const cn=shuffle(CLASSN.slice());
  cr.forEach(r=>{r.kind='class';r.name=cn.pop();teachers.push({x:r.px,y:(r.y0+1.5)*T,cd:0,room:r,kind:'norm',used:false})});
@@ -664,7 +672,7 @@ function setSpawnTimer(){const s=spRow(S.level);if(s)S.spT=Math.min(S.spT,s[0])}
 /* ---------- 互動 ---------- */
 function nearby(){
  const p=S.p;
- for(const t of toilets)if(!t.used&&Math.hypot(p.x-t.x,p.y-t.y)<58)return{kind:'toilet',ref:t,x:t.x,y:t.y-62,text:'拉屎'};
+ for(const t of toilets)if(t.mine&&!t.used&&Math.hypot(p.x-t.x,p.y-t.y)<58)return{kind:'toilet',ref:t,x:t.x,y:t.y-62,text:'拉屎'};
  for(const t of teachers){
   if(Math.hypot(p.x-t.x,p.y-t.y)<62)return t.cd>0?{kind:'wait',x:t.x,y:t.y-92,text:`老師休息中 ${Math.ceil(t.cd)} 秒`}:{kind:'teacher',ref:t,x:t.x,y:t.y-92,text:`向${TNAME[t.kind||'norm']}請教`};
  }
@@ -1916,9 +1924,10 @@ const TPAL={
 const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
-const PATCH={v:'v2.7',date:'2026/11/13',items:[
- ['連線模式','主選單「開始」分頁下方新增連線模式：建立房間得到 4 位數房號，朋友輸入房號加入（最多 4 人），房主按開始，大家會玩同一張地圖。'],
- ['合作逃亡','2–4 人一起逃，隊友即時顯示在畫面上（包含寵物）。倒下的隊友靠近 2.5 秒可以救起來，靠近隊友會慢慢回血，全員逃出才算全隊成功。每個人遇到的清潔工是各自獨立的。'],
+const PATCH={v:'v2.8',date:'2026/11/14',items:[
+ ['多人馬桶','連線模式最多可以 8 人。連線時每間廁所會依照人數擺同樣多個馬桶，每個人有自己的一個：你的馬桶會發亮，別人的馬桶會標上名字，拉完會顯示。大家看到的廁所是一樣的。'],
+ ['連線模式','主選單「開始」分頁下方新增連線模式：建立房間得到 4 位數房號，朋友輸入房號加入（最多 8 人），房主按開始，大家會玩同一張地圖。'],
+ ['合作逃亡','2–8 人一起逃，隊友即時顯示在畫面上（包含寵物）。倒下的隊友靠近 2.5 秒可以救起來，靠近隊友會慢慢回血，全員逃出才算全隊成功。每個人遇到的清潔工是各自獨立的。'],
  ['擊殺賽','限時 4 分鐘，比誰打倒的清潔工最多，對手以半透明幽靈顯示，結束後顯示房內名次。'],
  ['時間賽','比誰先逃出學校，對手以半透明幽靈顯示，結束後顯示房內名次。'],
  ['商店系統','「造型」分頁改成「商店」，裡面分三類：造型、鑽石強化、寵物。'],
@@ -3381,12 +3390,12 @@ document.addEventListener('keydown',e=>{if(e.target&&e.target.id==='lbName'&&e.k
 lbInit();
 /* ================= 連線模式（Supabase Realtime） ================= */
 const NM={
- coop:{n:'合作逃亡',min:2,d:'2–4 人在同一張地圖上一起逃亡。隊友會即時出現在你的畫面裡；倒下的隊友，靠近他 2.5 秒就能救起來；靠近隊友會慢慢回血。全員逃出學校才算全隊成功。（清潔工是每個人各自的。）'},
+ coop:{n:'合作逃亡',min:2,d:'2–8 人在同一張地圖上一起逃亡。隊友會即時出現在你的畫面裡；倒下的隊友，靠近他 2.5 秒就能救起來；靠近隊友會慢慢回血。全員逃出學校才算全隊成功。（清潔工是每個人各自的。）'},
  kill:{n:'擊殺賽',min:2,d:'同一張地圖限時 4 分鐘，打倒最多清潔工的人獲勝，對手以半透明幽靈顯示。結束後顯示房內名次。'},
  time:{n:'時間賽',min:2,d:'同一張地圖，比誰先逃出學校，對手以半透明幽靈顯示。結束後顯示房內名次。'}
 };
-const KILL_T=240,NMAX=4;
-const NET={mode:'coop',active:false,ch:null,code:'',host:false,room:{},peers:{},fin:{},seed:0,solo:false,st:'idle',msg:'',tS:0,tH:0,tR:0,won:false,phase:'lobby',cdT:null,tJ:0,pw:0};
+const KILL_T=240,NMAX=8;
+const NET={ord:[],mode:'coop',active:false,ch:null,code:'',host:false,room:{},peers:{},fin:{},seed:0,solo:false,st:'idle',msg:'',tS:0,tH:0,tR:0,won:false,phase:'lobby',cdT:null,tJ:0,pw:0};
 const myId=()=>LB.uid||'me';
 const myName=()=>(($('nm').value||'').trim()||'小明').slice(0,8);
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -3398,8 +3407,8 @@ function netSend(p){if(NET.ch){try{const r=NET.ch.send({type:'broadcast',event:'
 function netCloseCh(){const ch=NET.ch;NET.ch=null;if(ch&&LB.db){try{ch.untrack&&ch.untrack()}catch(e){}try{LB.db.removeChannel(ch)}catch(e){}}}
 function netLeave(){
  netCloseCh();clearInterval(NET.cdT);
- Object.assign(NET,{active:false,st:'idle',host:false,room:{},peers:{},fin:{},solo:false,phase:'lobby',seed:0,won:false});
- $('netCd').hidden=true;$('netHud').hidden=true;$('again').hidden=false;$('netRes').innerHTML='';$('netSub').textContent='';
+ Object.assign(NET,{ord:[],active:false,st:'idle',host:false,room:{},peers:{},fin:{},solo:false,phase:'lobby',seed:0,won:false});
+ $('netCd').hidden=true;$('netHud').hidden=true;$('ef').style.right='';$('again').hidden=false;$('netRes').innerHTML='';$('netSub').textContent='';
 }
 function netOpen(mode){
  if(LB.st!=='ok'||!LB.db){alert('連線模式需要先連上線上服務（排行榜連線成功）。請檢查網路後重新整理頁面。');return}
@@ -3424,7 +3433,7 @@ async function netJoin(code,host){
   netPres0();
   const h=Object.values(NET.room).find(m=>m.host);
   if(!h){netFail(`找不到房間 ${code}。`);return}
-  if(Object.keys(NET.room).length>NMAX){netFail('房間已經滿了（最多 4 人）。');return}
+  if(Object.keys(NET.room).length>NMAX){netFail('房間已經滿了（最多 8 人）。');return}
   if(h.phase==='play'){netFail('這個房間已經開始遊戲了。');return}
   if(h.mode)NET.mode=h.mode;
  }
@@ -3449,10 +3458,12 @@ function netHostStart(){
  if(n<NM[NET.mode].min)return;
  const seed=1+Math.floor(Math.random()*2147483000);
  NET.phase='play';try{NET.ch.track(netMeta())}catch(e){}
- netSend({t:'go',mode:NET.mode,seed});
- netBegin(NET.mode,seed);
+ const ord=Object.keys(NET.room).sort();
+ netSend({t:'go',mode:NET.mode,seed,ord});
+ netBegin(NET.mode,seed,ord);
 }
-function netBegin(mode,seed){
+function netBegin(mode,seed,ord){
+ NET.ord=Array.isArray(ord)&&ord.length>1&&ord.length<=NMAX&&ord.every(x=>typeof x==='string')&&ord.includes(myId())?ord.slice():[];
  NET.mode=mode;NET.seed=seed;NET.active=true;NET.fin={};NET.won=false;
  $('net').hidden=true;
  let n=3;const cd=$('netCd');cd.hidden=false;cd.textContent=n;
@@ -3464,15 +3475,15 @@ function netGo(){
  newGame(nm);
  if(NET.mode==='kill')S.t=KILL_T;
  NET.tS=0;NET.tH=0;NET.tR=0;NET.pw=0;
- $('again').hidden=true;$('netHud').hidden=!NET.ch;
+ $('again').hidden=true;$('netHud').hidden=!NET.ch;$('ef').style.right=NET.ch?'17.5cqw':'';
  toast(NET.mode==='kill'?'擊殺賽開始！4 分鐘內打倒最多清潔工':NET.mode==='time'?'時間賽開始！最快逃出學校的人獲勝':'合作逃亡開始！靠近倒下的隊友可以救他');
 }
 function netRecv(m){
  if(!m||typeof m!=='object')return;
- if(m.t==='go'){if(!NET.active&&NET.st==='lobby'&&NM[m.mode])netBegin(m.mode,m.seed|0)}
+ if(m.t==='go'){if(!NET.active&&NET.st==='lobby'&&NM[m.mode])netBegin(m.mode,m.seed|0,m.ord)}
  else if(m.t==='p'&&typeof m.i==='string'&&m.i!==myId()){
   const n=v=>Number.isFinite(+v)?+v:0,pe=NET.peers[m.i]||(NET.peers[m.i]={dx:n(m.x),dy:n(m.y),pd:[],rvT:0});
-  pe.tx=n(m.x);pe.ty=n(m.y);pe.f=m.f<0?-1:1;pe.h=n(m.h);pe.m=n(m.m)||1;pe.k=n(m.k)|0;pe.l=n(m.l)|0;
+  pe.tx=n(m.x);pe.ty=n(m.y);pe.f=m.f<0?-1:1;pe.h=n(m.h);pe.m=n(m.m)||1;pe.k=n(m.k)|0;pe.l=n(m.l)|0;pe.u=n(m.u)|0;pe.pp=Number.isFinite(+m.pp)?+m.pp:-1;
   pe.st=['play','dn','esc','out'].includes(m.st)?m.st:'play';pe.sk=typeof m.sk==='string'?m.sk:'default';pe.w=m.w?1:0;
   pe.pt=Array.isArray(m.pt)?m.pt.slice(0,2):[];pe.id=m.i;pe.seen=Date.now();
  }
@@ -3498,9 +3509,9 @@ function netTick(dt){
  const s=S,p=s.p,now=Date.now();
  NET.tS-=dt;
  if(NET.tS<=0&&NET.ch){
-  NET.tS=.1;
+  NET.tS=Math.max(.1,.025*(Object.keys(NET.peers).length+1));
   const w=p.walk!==NET.pw;NET.pw=p.walk;
-  netSend({t:'p',i:myId(),x:Math.round(p.x),y:Math.round(p.y),f:p.face,h:Math.max(0,Math.round(p.hp)),m:Math.round(p.maxHp),k:s.kills,l:s.poops,
+  netSend({t:'p',i:myId(),x:Math.round(p.x),y:Math.round(p.y),f:p.face,h:Math.max(0,Math.round(p.hp)),m:Math.round(p.maxHp),k:s.kills,l:s.poops,u:toilets.reduce((a,t)=>t.mine&&t.used?a|(1<<t.rid):a,0),pp:(p.pooping>0&&p.pt)?p.pt.rid:-1,
    st:s.over?(NET.won?'esc':'out'):s.downed?'dn':'play',sk:curSkinId,w:w?1:0,
    pt:(s.pets||[]).map(q=>[q.id,Math.round(q.x),Math.round(q.y),q.face,q.st==='down'?1:0,Math.round(q.z||0)])});
  }
@@ -3519,6 +3530,7 @@ function netTick(dt){
   }
   if(near&&p.hp<p.maxHp&&p.hp>0)p.hp=Math.min(p.maxHp,p.hp+1.2*dt);
  }
+ for(const t of toilets)if(t.own&&!t.mine){const pe=NET.peers[t.own];t.used=!!(pe&&((pe.u|0)>>t.rid&1))}
  NET.tH-=dt;
  if(NET.tH<=0){NET.tH=.3;if(!$('netHud').hidden)netHudRender();if(s.over)netResRender()}
 }
@@ -3533,6 +3545,7 @@ function netRows(){
 function netHudRender(){
  const rows=netRows(),lab={play:'進行中',dn:'倒下',esc:'已逃出',out:'已結束'};
  if(NET.mode==='kill')rows.sort((a,b)=>b.k-a.k);
+ $('netHud').classList.toggle('many',rows.length>4);
  $('netHud').innerHTML=rows.map(r=>`<div class="nr${r.me?' me':''} ${r.st}"><b>${esc(r.nm)}</b><span>擊殺 ${r.k}${NET.mode==='kill'?'':`・屎 ${r.l}/${CFG.goal}`}</span><em>${lab[r.st]||''}</em></div>`).join('');
 }
 function netResRender(){
@@ -3567,6 +3580,7 @@ function drawPeer(pe){
  const nm=(NET.room[pe.id]||{}).name||'玩家';
  cx.save();cx.textAlign='center';cx.font=`600 13px ${FONT}`;cx.fillStyle=vs?'#9ad0ff':'#7be07b';cx.fillText(dn?nm+'（倒下）':nm,x,y-(dn?44:88));
  const bw=36,by=y-(dn?36:82);cx.fillStyle='rgba(0,0,0,.6)';cx.fillRect(x-bw/2,by,bw,5);cx.fillStyle='#7be07b';cx.fillRect(x-bw/2+1,by+1,(bw-2)*clamp(pe.h/pe.m,0,1),3);
+ if(pe.pp>=0&&!dn){cx.fillStyle='#ffd24a';cx.font=`600 12px ${FONT}`;cx.fillText('拉屎中…',x,y-102)}
  if(dn&&pe.rvT>0){cx.strokeStyle='#ffd24a';cx.lineWidth=4;cx.beginPath();cx.arc(x,y-20,26,-Math.PI/2,-Math.PI/2+6.2832*Math.min(1,pe.rvT/2.5));cx.stroke()}
  cx.restore();
 }
@@ -3738,12 +3752,14 @@ function drawRoomDecor(r){
  }
 }
 function drawToilet(t,tick){
+ const mine=t.mine!==false;
  cx.fillStyle='#f4f7f8';rr(t.x-13,t.y-24,26,14,3);
- cx.save();if(!t.used){cx.shadowColor='#ffd24a';cx.shadowBlur=16+8*Math.sin(tick*5)}
+ cx.save();if(mine&&!t.used){cx.shadowColor='#ffd24a';cx.shadowBlur=16+8*Math.sin(tick*5)}
  cx.fillStyle='#fff';cx.beginPath();cx.ellipse(t.x,t.y+2,15,12,0,0,7);cx.fill();cx.restore();
  cx.fillStyle='#cfe0e4';cx.beginPath();cx.ellipse(t.x,t.y+2,10,7,0,0,7);cx.fill();
  if(t.used)poopIcon(t.x,t.y+6,.55);
- else{cx.fillStyle='#ffb703';const by=Math.sin(tick*4)*4;cx.beginPath();cx.moveTo(t.x-9,t.y-42+by);cx.lineTo(t.x+9,t.y-42+by);cx.lineTo(t.x,t.y-30+by);cx.closePath();cx.fill()}
+ else if(mine){cx.fillStyle='#ffb703';const by=Math.sin(tick*4)*4;cx.beginPath();cx.moveTo(t.x-9,t.y-42+by);cx.lineTo(t.x+9,t.y-42+by);cx.lineTo(t.x,t.y-30+by);cx.closePath();cx.fill()}
+ if(!mine&&t.own){const nm=(NET.room[t.own]||{}).name||'玩家';cx.save();cx.font=`600 11px ${FONT}`;cx.textAlign='center';cx.fillStyle='rgba(8,14,18,.7)';const w=cx.measureText(nm).width+8;cx.fillRect(t.x-w/2,t.y-48,w,14);cx.fillStyle='#cfe0e4';cx.fillText(nm,t.x,t.y-37);cx.restore()}
 }
 function drawEgg(e,tick){
  const by=Math.sin(tick*3+e.ph)*3;
@@ -3927,7 +3943,7 @@ function arrows(camX,camY){
  const s=S,p=s.p,sx=p.x-camX,sy=p.y-camY-30;
  let tgt=null,col='#ffb703';
  if(s.gateOpen){tgt={x:50*T,y:98*T};col='#5ad19a'}
- else{let bd=1e12;for(const t of toilets){if(t.used||!explored[Math.floor(t.y/200)*20+Math.floor(t.x/200)])continue;const d=Math.hypot(t.x-p.x,t.y-p.y);if(d<bd){bd=d;tgt=t}}}
+ else{let bd=1e12;for(const t of toilets){if(!t.mine||t.used||!explored[Math.floor(t.y/200)*20+Math.floor(t.x/200)])continue;const d=Math.hypot(t.x-p.x,t.y-p.y);if(d<bd){bd=d;tgt=t}}}
  if(!tgt)return;
  const dx=tgt.x-p.x,dy=tgt.y-p.y,d=Math.hypot(dx,dy);if(d<200)return;
  const a=Math.atan2(dy,dx),ax=sx+Math.cos(a)*96,ay=sy+Math.sin(a)*96;
@@ -3968,7 +3984,7 @@ function mini(camX,camY){
  cx.fillStyle='rgba(8,14,18,.8)';rr(mx-4,my-4,M+8,M+8,8);
  cx.drawImage(mmBase,mx,my,M,M);cx.drawImage(mmFog,mx,my,M,M);
  const known=(x,y)=>explored[Math.floor(y/200)*20+Math.floor(x/200)];
- for(const t of toilets)if(known(t.x,t.y)){cx.fillStyle=t.used?'#667':'#ffb703';cx.beginPath();cx.arc(mx+t.x*k,my+t.y*k,3,0,7);cx.fill()}
+ for(const t of toilets)if(t.mine&&known(t.x,t.y)){cx.fillStyle=t.used?'#667':'#ffb703';cx.beginPath();cx.arc(mx+t.x*k,my+t.y*k,3,0,7);cx.fill()}
  for(const t of teachers)if(known(t.x,t.y)){const hid=t.kind&&t.kind!=='norm';cx.fillStyle=hid?'#ffd24a':'#bda6ff';const z=hid?7:5;cx.fillRect(mx+t.x*k-z/2,my+t.y*k-z/2,z,z)}
  cx.fillStyle='#e8c88a';for(const e of s.eggs)if(known(e.x,e.y))cx.fillRect(mx+e.x*k-1.5,my+e.y*k-1.5,3,3);
  for(const r of discs)if(known(r.px,r.py)){cx.fillStyle='#ff7ad9';cx.fillRect(mx+r.px*k-2,my+r.py*k-2,4,4)}
