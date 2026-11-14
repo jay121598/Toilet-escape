@@ -17,6 +17,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
 #stage{position:relative;width:min(100%,calc((100svh - 64px)*16/9));aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000;border:1px solid var(--line);container-type:inline-size;touch-action:none}
 #cv{display:block;width:100%;height:100%}
 .legend{margin:0;color:var(--mute);font-size:13px;text-align:center}
+#hl,#hr{transition:opacity .2s}
 #hud{position:absolute;inset:0;pointer-events:none;font-size:clamp(9px,1.9cqw,17px)}
 #hl{position:absolute;left:1.1em;top:.8em;background:rgba(8,14,18,.66);padding:.5em .8em;border-radius:.7em;width:11.5em}
 .lbl{font:500 .85em var(--font-b);color:var(--mute);letter-spacing:.08em}
@@ -3890,7 +3891,7 @@ function render(){
  if(s.hint)bubble(s.hint.x,s.hint.y,s.hint.kind==='wait'?s.hint.text:`${isTouch?'按互動':'按 E'}：${s.hint.text}`);
  cx.restore();
  if(s.cut){cutFx();return}
- arrows(camX,camY);mini(camX,camY);stuHint(camX,camY);
+ hudFade(camX,camY);arrows(camX,camY);mini(camX,camY);stuHint(camX,camY);
 }
 
 function cutFx(){
@@ -3911,6 +3912,16 @@ function drawBossFx(){
   const p=s.p,a=Math.atan2(p.y-b.y,p.x-b.x);
   cx.strokeStyle=`rgba(255,80,60,${.35+.3*Math.sin(s.tick*30)})`;cx.lineWidth=26;cx.lineCap='round';cx.beginPath();cx.moveTo(b.x,b.y);cx.lineTo(b.x+Math.cos(a)*520,b.y+Math.sin(a)*520);cx.stroke();cx.lineCap='butt';
  }
+}
+/* 人物走到畫面邊緣被面板擋住時，把面板變淡 */
+let miniF=false,hlF=false,hrF=false;
+function hudFade(camX,camY){
+ const p=S.p,sx=p.x-camX,sy=p.y-camY,r=cv.getBoundingClientRect(),k=r.width/W||1;
+ const hit=el=>{if(!el)return false;const b=el.getBoundingClientRect(),x=r.left+sx*k,y=r.top+(sy-34)*k;return x>b.left-20&&x<b.right+20&&y>b.top-36*k&&y<b.bottom+24*k};
+ const a=hit($('hl')),c=hit($('hr'));
+ if(a!==hlF){hlF=a;$('hl').style.opacity=a?'.18':''}
+ if(c!==hrF){hrF=c;$('hr').style.opacity=c?'.18':''}
+ const my=mmTop();miniF=sx>-10&&sx<124+14+34&&sy>my-46&&sy<my+124+30;
 }
 function arrows(camX,camY){
  const s=S,p=s.p,sx=p.x-camX,sy=p.y-camY-30;
@@ -3953,7 +3964,7 @@ function mmTop(){
 }
 function mini(camX,camY){
  const s=S,M=124,mx=14,my=mmTop(),k=M/WORLD;
- cx.save();cx.imageSmoothingEnabled=false;
+ cx.save();if(miniF)cx.globalAlpha=.25;cx.imageSmoothingEnabled=false;
  cx.fillStyle='rgba(8,14,18,.8)';rr(mx-4,my-4,M+8,M+8,8);
  cx.drawImage(mmBase,mx,my,M,M);cx.drawImage(mmFog,mx,my,M,M);
  const known=(x,y)=>explored[Math.floor(y/200)*20+Math.floor(x/200)];
