@@ -803,7 +803,7 @@ function inputVec(){
 }
 function killCleaner(c){if(c.type==='boss'&&c.truth){if(c.kneel)return;c.hp=1;c.kneel=true;c.nt=true;truthKneel(c);return}
  if(S.ch===2&&c.type==='guard'&&!S.uv){S.guardK=(S.guardK||0)+1;if(Math.random()<.25||S.guardK>=4){S.uv=true;sfx('reward');toast('警衛掉了一支紫外線手電筒！地圖上會出現紫色的隱形墨水紙條')}}
- if(S.branch===4&&c.mark>0&&tierOf()>=3){for(const o of S.cl)if(o!==c&&!o.dead&&Math.hypot(o.x-c.x,o.y-c.y)<250){o.mark=Math.max(o.mark||0,8);o.markK=1.4}S.fx.push({k:'sboom',x:c.x,y:c.y,t:0,max:.6,r:250});if(S.coinL.length<300)S.coinL.push({x:c.x+8,y:c.y,ph:Math.random()*6,mag:false,v:coinValue(c)})}
+ if(S.branch===4&&c.mark>0&&tierOf()>=3){for(const o of S.cl)if(o!==c&&!o.dead){const dd=Math.hypot(o.x-c.x,o.y-c.y);if(dd<400){o.mark=Math.max(o.mark||0,10);o.markK=2;if(dd<300)hitCleaner(o,S.p.atk*2.5,false)}}S.fx.push({k:'sboom',x:c.x,y:c.y,t:0,max:.6,r:300});if(S.coinL.length<300)S.coinL.push({x:c.x+8,y:c.y,ph:Math.random()*6,mag:false,v:coinValue(c)})}
  c.dead=true;if(c.type==='gym'&&!c.gassed&&S.gas.length<60){c.gassed=1;S.gas.push({x:c.x,y:c.y,t:3,max:3,hitT:0})}S.kills++;sfx('kill');if(S.kills===50)unlock('kills50');if(c.type==='boss'){S.bossKilled=true;if(S.ch===2&&truthOK()&&S.codeOK)S.gold={x:c.x,y:c.y};sfx('bossdown');setTrack('main');toast('擊倒校長了！記得逃出學校')}
  if(S.coinL.length<300||c.type==='boss')S.coinL.push({x:c.x,y:c.y,ph:Math.random()*6,mag:false,v:coinValue(c)});S.fx.push({k:'puff',x:c.x,y:c.y-20,t:0,max:.4})}
 
@@ -934,9 +934,9 @@ const ABDESC={'真':'丟出發光體，吸引清潔工 6 秒（冷卻 20 秒）'
 const BR={
  1:{name:'滾動衛生紙',t:['衛生紙會滾出去，留下一條紙路，經過的清潔工 -7 血。紙變大、路變寬，紙路停留 3 秒','碰到清潔工後會滾向下一個，最多撞 3 個，紙路停留 5 秒','清潔工踩到紙路會減速 50%']},
 3:{name:'用過的衛生紙',t:['丟出去打到清潔工後會殘留毒氣，毒氣會持續傷害範圍內的清潔工','毒氣留存時間更久，清潔工碰到毒氣會中劇毒','毒氣會讓清潔工中劇毒並減速；即使毒氣消失，只要場上還有被感染的清潔工，就會自動傳染給附近的清潔工']},
- 4:{name:'螢光衛生紙',t:['命中的怪物會被螢光標記 6 秒，隔著牆也看得到，被標記的怪物受到的傷害 +25%（鬼魂也會現形）','標記延長到 9 秒、傷害加成 +40%，而且標記會擴散到附近 200 像素內的其他怪物','被標記的怪物倒下時，會把 250 像素內的怪物全部標記 8 秒，並多掉一枚金幣']},
- 5:{name:'靜音衛生紙',t:['沖水的噪音傳得沒那麼遠，警衛與警犬只能聽到原本 70% 距離內的聲音','噪音範圍縮到 45%，而且命中「還沒發現你」的警衛或遠處的警犬，傷害 ×2.5','噪音範圍縮到 20%，命中的怪物會迷失方向暈眩 1.2 秒，警衛會忘記你']},
- 6:{name:'聖水衛生紙',t:['對鬼魂的傷害 ×2，命中的鬼魂會現形 3 秒','命中的怪物減速 30%，鬼魂還會被定身 0.9 秒','命中處會留下聖水，6 秒內踩到的怪物減速 40%，鬼魂還會持續受傷且無法隱形']},
+ 4:{name:'螢光衛生紙',t:['命中會炸出螢光，80 像素內的怪物受到 60% 傷害並被標記 6 秒（隔牆也看得到），被標記的怪物受到的傷害 +50%，鬼魂也會現形','螢光範圍 110 像素，標記延長到 9 秒、傷害加成 +70%，300 像素內的怪物也會被標記','標記 10 秒、傷害加成 +100%；被標記的怪物倒下時，300 像素內的怪物受到 2.5 倍攻擊力的爆炸傷害，400 像素內全部被標記，並多掉一枚金幣']},
+ 5:{name:'靜音衛生紙',t:['傷害 +35%，衛生紙會穿透 2 個怪物，沖水的噪音只傳到原本 70% 的距離','穿透 4 個怪物，命中「還沒發現你」的警衛或遠處的警犬傷害再 ×4，噪音範圍縮到 45%','穿透 6 個怪物，命中的怪物暈眩 1.2 秒，警衛會忘記你，噪音範圍縮到 20%']},
+ 6:{name:'聖水衛生紙',t:['命中會濺開聖水，90 像素內的怪物受到 70% 傷害，鬼魂傷害 ×2 並現形 3 秒','濺射範圍 120 像素、傷害 90%，被濺到的怪物減速 30%，鬼魂還會被定身 0.9 秒','濺射範圍 150 像素、傷害 120%，並留下 8 秒的聖水：怪物持續受傷並減速 40%，鬼魂受到 3 倍傷害且無法隱形']},
  2:{name:'爆炸衛生紙',t:['衛生紙命中後爆炸，爆炸傷害 14','爆炸會連鎖引爆 6 格內最多 3 個清潔工','衛生紙飛到定點並吸引清潔工，3 秒後爆炸，範圍 5 格，傷害 10']}
 };
 const tierOf=()=>S.branch&&S.atkLv>=3?(S.atkLv>=9?3:S.atkLv>=6?2:1):0;
@@ -1017,12 +1017,13 @@ function combat(dt,L){
    q.x+=q.vx*dt;q.y+=q.vy*dt;q.life-=dt;
    if(q.life<=0||solidAt(q.x,q.y+24)){q.dead=true;continue}
    for(const c of L){
-    if(c.dead)continue;
+    if(c.dead||(q.hs&&q.hs.has(c)))continue;
     if(Math.abs(c.x-q.x)<20&&Math.abs(c.y-24-q.y)<28){
      let dm=q.dmg;
-     if(q.br===5&&tier>=2&&unaware(c))dm*=2.5;
+     if(q.br===5){dm*=1.35;if(tier>=2&&unaware(c))dm*=4}
      if(q.br===6&&c.type==='ghost')dm*=2;
-     hitCleaner(c,dm,q.k||true);q.dead=true;
+     hitCleaner(c,dm,q.k||true);
+     if(q.br===5&&(q.pl=(q.pl==null?(tier>=3?6:tier>=2?4:2):q.pl)-1)>0)(q.hs||(q.hs=new Set())).add(c);else q.dead=true;
      if(q.br&&!c.dead)brHit(c,q,tier);
      if(q.pie&&!c.dead){c.slow=Math.max(c.slow,1);c.slowPct=Math.max(c.slowPct,.3)}
      if(q.expl)boom(q.x,q.y+24,80,CFG.boomDmg*(q.k||1),tier>=2,q.k);
@@ -1886,15 +1887,25 @@ function unaware(c){
  if(c.type==='dog')return Math.hypot(c.x-S.p.x,c.y-S.p.y)>500;
  return false;
 }
-function holySpawn(x,y){const s=S;s.holy=s.holy||[];if(s.holy.length>=20)s.holy.shift();s.holy.push({x,y,t:6,max:6})}
+function holySpawn(x,y){const s=S;s.holy=s.holy||[];if(s.holy.length>=20)s.holy.shift();s.holy.push({x,y,t:8,max:8})}
 function brHit(c,q,tier){
  const s=S,b=q.br;
  if(b===4){
-  const dur=tier>=2?9:6,k=tier>=2?1.4:1.25;c.mark=dur;c.markK=k;
-  if(tier>=2)for(const o of s.cl)if(o!==c&&!o.dead&&Math.hypot(o.x-c.x,o.y-c.y)<200){o.mark=Math.max(o.mark||0,dur*.6);o.markK=k}
+  const dur=tier>=3?10:tier>=2?9:6,k=tier>=3?2:tier>=2?1.7:1.5,R=tier>=2?110:80;
+  c.mark=dur;c.markK=k;
+  for(const o of s.cl)if(o!==c&&!o.dead&&Math.hypot(o.x-c.x,o.y-c.y)<R){hitCleaner(o,q.dmg*.6,false);o.mark=Math.max(o.mark||0,dur*.7);o.markK=k}
+  if(tier>=2)for(const o of s.cl)if(o!==c&&!o.dead&&Math.hypot(o.x-c.x,o.y-c.y)<300){o.mark=Math.max(o.mark||0,dur*.6);o.markK=k}
+  s.fx.push({k:'sboom',x:c.x,y:c.y,t:0,max:.4,r:R});
  }else if(b===5){
   if(tier>=3){c.stun=Math.max(c.stun||0,1.2);if(c.type==='guard')c.al=0}
  }else if(b===6){
+  const R=tier>=3?150:tier>=2?120:90,dm=q.dmg*(tier>=3?1.2:tier>=2?.9:.7);
+  for(const o of s.cl)if(o!==c&&!o.dead&&Math.hypot(o.x-c.x,o.y-c.y)<R){
+   const gh=o.type==='ghost';hitCleaner(o,dm*(gh?2:1),false);
+   if(gh){o.holy=3;if(tier>=2)o.stun=Math.max(o.stun||0,.9)}
+   if(tier>=2){o.slow=Math.max(o.slow,1.5);o.slowPct=Math.max(o.slowPct,.3)}
+  }
+  s.fx.push({k:'sboom',x:c.x,y:c.y,t:0,max:.45,r:R});
   if(c.type==='ghost'){c.holy=3;if(tier>=2)c.stun=Math.max(c.stun||0,.9)}
   if(tier>=2){c.slow=Math.max(c.slow,1.5);c.slowPct=Math.max(c.slowPct,.3)}
   if(tier>=3)holySpawn(q.x,q.y+24);
@@ -1906,9 +1917,11 @@ function holyTick(dt,L){
   const g=s.holy[i];g.t-=dt;
   if(g.t<=0){s.holy.splice(i,1);continue}
   for(const c of L){
-   if(c.dead||Math.hypot(c.x-g.x,c.y-g.y)>70)continue;
+   if(c.dead||Math.hypot(c.x-g.x,c.y-g.y)>90)continue;
    c.slow=Math.max(c.slow,.2);c.slowPct=Math.max(c.slowPct,.4);
-   if(c.type==='ghost'){c.holy=.5;c.hp-=s.p.atk*.8*dt;c.flash=Math.max(c.flash,.04);if(c.hp<=0){killCleaner(c);break}}
+   c.hp-=s.p.atk*(c.type==='ghost'?1.5:.5)*dt;c.flash=Math.max(c.flash,.04);
+   if(c.type==='ghost')c.holy=.5;
+   if(c.hp<=0){killCleaner(c);break}
   }
  }
 }
@@ -1916,8 +1929,8 @@ function drawHoly(){
  const s=S;if(!s.holy)return;
  for(const g of s.holy){
   const a=.12+.25*Math.min(1,g.t/2);
-  cx.fillStyle=`rgba(130,205,255,${a})`;cx.beginPath();cx.ellipse(g.x,g.y,70,40,0,0,7);cx.fill();
-  cx.strokeStyle=`rgba(210,240,255,${a+.1})`;cx.lineWidth=2;cx.beginPath();cx.ellipse(g.x,g.y,70-4*Math.sin(s.tick*3),40-2*Math.sin(s.tick*3),0,0,7);cx.stroke();
+  cx.fillStyle=`rgba(130,205,255,${a})`;cx.beginPath();cx.ellipse(g.x,g.y,90,52,0,0,7);cx.fill();
+  cx.strokeStyle=`rgba(210,240,255,${a+.1})`;cx.lineWidth=2;cx.beginPath();cx.ellipse(g.x,g.y,90-4*Math.sin(s.tick*3),52-2*Math.sin(s.tick*3),0,0,7);cx.stroke();
  }
 }
 function ch2Lure(c){
@@ -2726,7 +2739,8 @@ const TPAL={
 const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
-const PATCH={v:'v3.6',date:'2026/11/15',items:[
+const PATCH={v:'v3.7',date:'2026/11/15',items:[
+ ['螢光、靜音、聖水衛生紙加強','三種第二章專屬分支大幅加強：螢光衛生紙命中會炸出範圍傷害並標記一群怪物，標記後受傷 +50%～+100%，標記的怪物倒下會連鎖爆炸；靜音衛生紙傷害 +35%，而且可以穿透 2／4／6 個怪物，偷襲傷害 ×4；聖水衛生紙命中會濺射範圍傷害，聖水區持續傷害所有怪物，鬼魂更痛。'],
  ['主選單音樂','主選單現在有輕快的背景音樂（瀏覽器規定要先點一下畫面才會開始播）。開始遊戲會換成遊戲音樂，回主選單會換回來。'],
  ['抽卡音效與音樂','抽卡時有專屬的緊張期待感音樂；按下抽卡有投幣聲，新夥伴有閃亮音效，抽完有總結音效。'],
  ['第二章：視野距離升級','第二章的升級選項多了「視野距離」，每升一級，夜色中你周圍的亮處範圍變大、也更亮，最高 Lv10。'],
