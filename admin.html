@@ -62,7 +62,7 @@ label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mute
     <label>鑽石總數（直接打你要的數字）<input id="fGems" type="number" min="0" step="1"></label>
     <label>逃離次數（每次 5 顆）<input id="fEsc" type="number" min="0" step="1"></label>
    </div>
-   <div class="row" style="margin-top:8px"><label class="chk"><input type="checkbox" id="oLolita">擁有「蘿莉塔」</label><label class="chk"><input type="checkbox" id="oJh">擁有「家豪造型」</label></div>
+   <div class="row" style="margin-top:8px"><label class="chk"><input type="checkbox" id="oLolita">擁有「蘿莉塔」</label><label class="chk"><input type="checkbox" id="oJh">擁有「家豪造型」</label><label class="chk"><input type="checkbox" id="oCh2">開放第二章（不用先打隱藏結局）</label></div>
    <p class="sub" id="gemInfo"></p>
    <div class="row" style="margin-top:6px"><button class="go" id="saveSave">儲存鑽石與造型</button></div>
   </div>
@@ -113,7 +113,7 @@ function pick(p){
  if(nb)say('這個帳號還沒有排行榜資料，排行榜欄位不能改。');
  const d=p.data;$('saveBox').style.display=d&&Object.keys(d).length?'':'none';
  if(d){const b=baseGems(d);$('fGems').value=Math.max(0,b+(d.bonus|0));$('fEsc').value=d.esc|0;
-  $('oLolita').checked=!!(d.owned||{}).lolita;$('oJh').checked=!!(d.owned||{}).jh;
+  $('oLolita').checked=!!(d.owned||{}).lolita;$('oJh').checked=!!(d.owned||{}).jh;$('oCh2').checked=!!d.ch2grant;
   $('gemInfo').textContent='改鑽石總數時，系統會自動換算成加成值存進去。改完請玩家重新整理頁面；玩家正在玩的時候改，會被他手上的存檔蓋回去。'}
  else $('gemInfo').textContent=''}
 $('saveBoard').onclick=async()=>{
@@ -125,8 +125,8 @@ $('saveSave').onclick=async()=>{
  d.owned={...(d.owned||{})};
  for(const [id,k] of [['oLolita','lolita'],['oJh','jh']]){if($(id).checked)d.owned[k]=1;else delete d.owned[k]}
  const want=Math.max(0,+$('fGems').value|0);
- d.bonus=want-baseGems(d);
- const r=await sb.rpc('admin_set_save',{p_id:cur.id,p_patch:{esc:d.esc,owned:d.owned,bonus:d.bonus}});
+ d.bonus=want-baseGems(d);d.ch2grant=$('oCh2').checked?1:0;
+ const r=await sb.rpc('admin_set_save',{p_id:cur.id,p_patch:{esc:d.esc,owned:d.owned,bonus:d.bonus,ch2grant:d.ch2grant}});
  if(r.error)return say('儲存失敗：'+r.error.message);
  cur.data=d;say(`已儲存。這位玩家的鑽石現在是 ${want} 顆。`,1);renderList()};
 let ALL=[];

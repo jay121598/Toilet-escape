@@ -1,6 +1,6 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><meta name="theme-color" content="#0f1a21"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="廁所大逃亡"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}.chs{display:flex;gap:8px;margin:2px 0 8px}.chb{flex:1;padding:9px 8px;border-radius:12px;border:2px solid var(--line);background:transparent;color:var(--fg);font:700 15px/1.3 inherit;font-family:inherit;cursor:pointer}.chb small{display:block;font-weight:400;font-size:12px;color:var(--mute)}.chb.on{border-color:var(--accent);background:rgba(255,183,3,.14)}
 #nbB{position:absolute;left:1.1em;bottom:6.4em;z-index:3;font:500 clamp(10px,1.5cqw,13px) var(--font-b);padding:.35em .8em;border-radius:99px;border:1px solid var(--line);background:rgba(8,14,18,.7);color:var(--fg);cursor:pointer;min-height:32px}#nbB[hidden]{display:none}#stage.cut #nbB{display:none!important}
-.nbc{max-width:640px;width:100%}.nbhd{display:flex;justify-content:space-between;align-items:center;gap:8px}.nbhd h2{font-size:18px;margin:0}.nbn{border:1px solid var(--line);border-radius:10px;margin:6px 0;padding:6px 10px}.nbt{background:none;border:0;color:var(--fg);font:700 14px inherit;font-family:inherit;cursor:pointer;width:100%;text-align:left;padding:4px 0}.nbimg svg{width:100%;height:auto;display:block;border-radius:6px}.nbimg{margin:6px 0}.nbx{font-size:14px;line-height:1.7;padding:4px 0;white-space:pre-line}.nbx.truth{border:1px solid var(--accent);border-radius:10px;padding:10px;margin-top:8px}.nbf{background:rgba(255,183,3,.12);border:1px solid var(--line);color:var(--fg);border-radius:99px;padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px}.nbf.on{border-color:var(--accent)}.nbok{color:#7be0a0;font-size:13px;margin-top:4px}.nbno{color:#ff9a8a;font-size:13px;margin-top:4px}.nbl{padding-left:18px;font-size:14px;line-height:1.8}.nbtry{display:flex;gap:8px;margin:10px 0}.nbtry input{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--fg);font:700 18px inherit;letter-spacing:.3em;font-family:inherit}
+.nbc{max-width:640px;width:100%}.nbhd{display:flex;justify-content:space-between;align-items:center;gap:8px}.nbhd h2{font-size:18px;margin:0}.nbn{border:1px solid var(--line);border-radius:10px;margin:6px 0;padding:6px 10px}.nbt{background:none;border:0;color:var(--fg);font:700 14px inherit;font-family:inherit;cursor:pointer;width:100%;text-align:left;padding:4px 0}.m2svg svg{width:100%;height:auto;display:block;border-radius:8px;margin-bottom:8px}.chb.lock{opacity:.55}.chb.lock small::after{content:' 🔒'}.nbimg svg{width:100%;height:auto;display:block;border-radius:6px}.nbimg{margin:6px 0}.nbx{font-size:14px;line-height:1.7;padding:4px 0;white-space:pre-line}.nbx.truth{border:1px solid var(--accent);border-radius:10px;padding:10px;margin-top:8px}.nbf{background:rgba(255,183,3,.12);border:1px solid var(--line);color:var(--fg);border-radius:99px;padding:4px 12px;cursor:pointer;font-family:inherit;font-size:13px}.nbf.on{border-color:var(--accent)}.nbok{color:#7be0a0;font-size:13px;margin-top:4px}.nbno{color:#ff9a8a;font-size:13px;margin-top:4px}.nbl{padding-left:18px;font-size:14px;line-height:1.8}.nbtry{display:flex;gap:8px;margin:10px 0}.nbtry input{flex:1;padding:10px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--fg);font:700 18px inherit;letter-spacing:.3em;font-family:inherit}
 </style></head><body>
 <title>廁所大逃亡</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -421,6 +421,8 @@ h1 .pi{width:1.1em;height:1.1em}
  </div>
 </section>
 
+<section id="gach" class="ov" hidden style="z-index:60"><canvas id="gcv" width="640" height="400" style="width:min(94vw,640px);height:auto;border-radius:14px;background:#0b121a"></canvas><button class="go ghost" id="gskip" type="button" style="margin-top:10px">跳過</button></section>
+<section id="c2m" class="ov" hidden><div class="card nbc"><div class="nbhd"><h2 id="c2mH"></h2><button class="go ghost" id="c2mX" type="button">離開</button></div><div id="c2mB"></div></div></section>
 <section id="nb" class="ov" hidden><div class="card nbc"><div class="nbhd"><h2 id="nbH">紙條簿</h2><button class="go ghost" id="nbX" type="button">關閉</button></div><div class="shopbar" id="nbTabs"><button class="stb on" data-nt="n" type="button">紙條</button><button class="stb" data-nt="p" type="button">證據</button><button class="stb" data-nt="k" id="nbK" type="button">推理</button></div><div id="nbBody"></div></div></section>
 <section id="c2end" class="ov" hidden><div class="card"><p id="c2t" style="white-space:pre-line;font-size:17px;line-height:1.8;min-height:9em"></p><div class="btns"><button class="go" id="c2b" type="button" hidden>回到結果</button></div></div></section>
 <section id="pause" class="ov" hidden>
@@ -481,6 +483,7 @@ const PASTEL=['#e3d6ee','#f3dccf','#d3e5f3','#e8ecc4','#d6ece1','#efd7e0'];
 
 let map,roomAt,rooms,toilets,teachers,discs=[],S=null,last=0,toastTimer=0,gateMsgT=0,lastSec=-1,explored,mmBase,mmFog;
 const flowP=new Int16Array(N*N),flowL=new Int16Array(N*N),flowN=new Int16Array(N*N),qbuf=new Int32Array(N*N);let CH=1;try{CH=+localStorage.getItem('toiletEscapeCh')===2?2:1}catch(e){}
+const ch2Allowed=()=>!!(save.ach.letgo||save.ch2grant);
 
 const mt=x=>S&&S.ch===2?String(x).replace(/清潔工/g,'怪物').replace(/屎等級/g,'沖水等級').replace(/老師/g,'工友'):x;
 function toast(msg){const t=$('toast');if(S&&S.ch===2)msg=mt(msg).replace(/校長/g,'鍾董事長');t.textContent=msg;t.classList.add('on');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('on'),2800)}
@@ -626,7 +629,7 @@ function newGame(name){
  lastSec=-1;gateMsgT=0;
  for(let i=0;i<6;i++)spawnEgg();
  if(S.ch===2){for(let i=0;i<4;i++)spawnCleaner('guard');for(let i=0;i<2;i++)spawnCleaner('ghost')}else for(let i=0;i<6;i++)spawnCleaner();
- if(S.ch===2)placeNotes();
+ if(S.ch===2){placeNotes();placeKeyStuff()}
  setTrack(null);setTrack('main');
  petsInit();
  syncHud();syncAbil();syncEff();
@@ -643,7 +646,7 @@ function syncHud(){
  $('pg').innerHTML=Array.from({length:CFG.goal},(_,i)=>`<i class="${i<S.poops?'on':''}"></i>`).join('')+`<span>${S.poops}/${CFG.goal}</span>`;
  $('atkt').textContent=S.p.atk;
  $('cgt').textContent=`${S.coins}/${S.need}`;
- $('alv').textContent=S.atkLv+(S.branch?['','·滾','·爆','·毒'][S.branch]:'');
+ $('alv').textContent=S.atkLv+(S.branch?['','·滾','·爆','·毒','·螢','·靜','·聖'][S.branch]:'');
 }
 function syncAbil(){
  for(const k in S.ab){
@@ -689,10 +692,18 @@ function nearby(){
   if(Math.hypot(p.x-t.x,p.y-t.y)<62)return t.cd>0?{kind:'wait',x:t.x,y:t.y-92,text:`${S.ch===2?'工友':'老師'}休息中 ${Math.ceil(t.cd)} 秒`}:{kind:'teacher',ref:t,x:t.x,y:t.y-92,text:S.ch===2?'向夜班工友領補給':`向${TNAME[t.kind||'norm']}請教`};
  }
  for(const u of S.stu)if(!u.leaving&&Math.hypot(p.x-u.x,p.y-u.y)<62)return{kind:'stu',ref:u,x:u.x,y:u.y-92,text:'交談'};
+ if(officeNear()){
+  if(S.ch===2&&truthOK()&&S.hasKey)return{kind:'office',x:50*T,y:3.6*T,text:'進入校長室'};
+  return{kind:'wait',x:50*T,y:3.6*T,text:S.ch!==2?'校長室（鎖著，現在還打不開）':truthOK()?'校長室的門鎖著，需要鑰匙':'校長室的門鎖著'};
+ }
+ if(S.ch===2&&truthOK()){
+  if(S.cab&&Math.hypot(p.x-S.cab.x,p.y-S.cab.y)<64)return{kind:'cab',x:S.cab.x,y:S.cab.y-50,text:S.cabOpen?'查看鑰匙清單':'鑰匙櫃（需要密碼）'};
+  if(S.ext&&Math.hypot(p.x-S.ext.x,p.y-S.ext.y)<64)return{kind:'ext',x:S.ext.x,y:S.ext.y-56,text:'查看滅火器箱'};
+ }
  return null;
 }
 function interact(){
- if(!S||S.over||S.paused||S.manPause||S.fin2||S.p.pooping>0)return;
+ if(!S||S.over||S.paused||S.manPause||S.fin2||S.p.pooping>0||m2)return;
  if(S.trip){tripInteract();return}
  if(S.cut){cutInteract();return}
  const h=S.hint;if(!h||h.kind==='wait')return;
@@ -700,6 +711,9 @@ function interact(){
  if(h.kind==='toilet'){sfx('plop');p.pooping=curPoopT();p.pt=h.ref;p.x=h.ref.x;p.y=h.ref.y+12;p.face=1}
  else if(h.kind==='gold')openGold();
  else if(h.kind==='fire'){S.fires=S.fires.filter(f=>f!==h.ref);sfx('flush');S.fx.push({k:'sboom',x:h.ref.x,y:h.ref.y,t:0,max:.5,r:90})}
+ else if(h.kind==='office')m2Open('office');
+ else if(h.kind==='cab')m2Open('cab');
+ else if(h.kind==='ext')extUse();
  else if(h.kind==='stu')openStu(h.ref);else teacherUse(h.ref)
 }
 function teacherReward(){
@@ -789,6 +803,7 @@ function inputVec(){
 }
 function killCleaner(c){if(c.type==='boss'&&c.truth){if(c.kneel)return;c.hp=1;c.kneel=true;c.nt=true;truthKneel(c);return}
  if(S.ch===2&&c.type==='guard'&&!S.uv){S.guardK=(S.guardK||0)+1;if(Math.random()<.25||S.guardK>=4){S.uv=true;sfx('reward');toast('警衛掉了一支紫外線手電筒！地圖上會出現紫色的隱形墨水紙條')}}
+ if(S.branch===4&&c.mark>0&&tierOf()>=3){for(const o of S.cl)if(o!==c&&!o.dead&&Math.hypot(o.x-c.x,o.y-c.y)<250){o.mark=Math.max(o.mark||0,8);o.markK=1.4}S.fx.push({k:'sboom',x:c.x,y:c.y,t:0,max:.6,r:250});if(S.coinL.length<300)S.coinL.push({x:c.x+8,y:c.y,ph:Math.random()*6,mag:false,v:coinValue(c)})}
  c.dead=true;if(c.type==='gym'&&!c.gassed&&S.gas.length<60){c.gassed=1;S.gas.push({x:c.x,y:c.y,t:3,max:3,hitT:0})}S.kills++;sfx('kill');if(S.kills===50)unlock('kills50');if(c.type==='boss'){S.bossKilled=true;if(S.ch===2&&truthOK()&&S.codeOK)S.gold={x:c.x,y:c.y};sfx('bossdown');setTrack('main');toast('擊倒校長了！記得逃出學校')}
  if(S.coinL.length<300||c.type==='boss')S.coinL.push({x:c.x,y:c.y,ph:Math.random()*6,mag:false,v:coinValue(c)});S.fx.push({k:'puff',x:c.x,y:c.y-20,t:0,max:.4})}
 
@@ -849,6 +864,7 @@ function update(dt){
   if(c.poison>0){c.poison-=dt;c.hp-=c.maxHp*c.poisonDps*dt*(c.type==='boss'?.35:1);if(c.hp<=0){killCleaner(c);continue}}
   if(c.burn>0){c.burn-=dt;c.hp-=c.burnDps*dt;if(c.hp<=0){killCleaner(c);continue}}
   if(c.cd>0)c.cd-=dt;
+  if(c.mark>0)c.mark-=dt;if(c.holy>0)c.holy-=dt;
   if(c.type==='boss'){bossAI(c,dt);continue}
   if(c.stun>0){c.stun-=dt;continue}
   if(c.type==='guard'||c.type==='ghost'||c.type==='dog'){ch2AI(c,dt,sp);continue}
@@ -882,7 +898,7 @@ function update(dt){
   }
  }
  gasTick(dt);botTick(dt);poisonTick(dt);studentTick(dt);if(s.over)return;
- geoTick(dt,L);toxTick(dt,L);
+ geoTick(dt,L);toxTick(dt,L);holyTick(dt,L);
  combat(dt,L);bossShots(dt);if(s.over)return;
  if(s.ch===2){ch2Tick(dt);if(s.over)return}
  petsTick(dt,L);
@@ -918,6 +934,9 @@ const ABDESC={'真':'丟出發光體，吸引清潔工 6 秒（冷卻 20 秒）'
 const BR={
  1:{name:'滾動衛生紙',t:['衛生紙會滾出去，留下一條紙路，經過的清潔工 -7 血。紙變大、路變寬，紙路停留 3 秒','碰到清潔工後會滾向下一個，最多撞 3 個，紙路停留 5 秒','清潔工踩到紙路會減速 50%']},
 3:{name:'用過的衛生紙',t:['丟出去打到清潔工後會殘留毒氣，毒氣會持續傷害範圍內的清潔工','毒氣留存時間更久，清潔工碰到毒氣會中劇毒','毒氣會讓清潔工中劇毒並減速；即使毒氣消失，只要場上還有被感染的清潔工，就會自動傳染給附近的清潔工']},
+ 4:{name:'螢光衛生紙',t:['命中的怪物會被螢光標記 6 秒，隔著牆也看得到，被標記的怪物受到的傷害 +25%（鬼魂也會現形）','標記延長到 9 秒、傷害加成 +40%，而且標記會擴散到附近 200 像素內的其他怪物','被標記的怪物倒下時，會把 250 像素內的怪物全部標記 8 秒，並多掉一枚金幣']},
+ 5:{name:'靜音衛生紙',t:['沖水的噪音傳得沒那麼遠，警衛與警犬只能聽到原本 70% 距離內的聲音','噪音範圍縮到 45%，而且命中「還沒發現你」的警衛或遠處的警犬，傷害 ×2.5','噪音範圍縮到 20%，命中的怪物會迷失方向暈眩 1.2 秒，警衛會忘記你']},
+ 6:{name:'聖水衛生紙',t:['對鬼魂的傷害 ×2，命中的鬼魂會現形 3 秒','命中的怪物減速 30%，鬼魂還會被定身 0.9 秒','命中處會留下聖水，6 秒內踩到的怪物減速 40%，鬼魂還會持續受傷且無法隱形']},
  2:{name:'爆炸衛生紙',t:['衛生紙命中後爆炸，爆炸傷害 14','爆炸會連鎖引爆 6 格內最多 3 個清潔工','衛生紙飛到定點並吸引清潔工，3 秒後爆炸，範圍 5 格，傷害 10']}
 };
 const tierOf=()=>S.branch&&S.atkLv>=3?(S.atkLv>=9?3:S.atkLv>=6?2:1):0;
@@ -928,7 +947,7 @@ const speedMul=()=>1-speedK()*S.speedLv;
 function hitCleaner(c,dmg,fx){
  if(c.dead||c.kneel)return;
  if(c.shield>0){sfx('hit');c.flash=.12;c.shield-=dmg;if(c.shield<=0){c.shield=0;c.open=3;c.say='護盾…！';c.sayT=1.5;toast('公文護盾破了！趁現在輸出');S.fx.push({k:'sboom',x:c.x,y:c.y,t:0,max:.6,r:150})}return}
- sfx('hit');c.hp-=dmg*(S.buffT>0?1.3:1);c.flash=.12;
+ sfx('hit');c.hp-=dmg*(S.buffT>0?1.3:1)*(c.mark>0?(c.markK||1.25):1);c.flash=.12;
  if(fx){
   const m=fx===true?1:fx;
   let l=S.effLv['麻痹'];if(l){c.slow=EF['麻痹'].dur(l)*m;c.slowPct=EF['麻痹'].slow(l)*m}
@@ -972,7 +991,7 @@ function combat(dt,L){
     }
     if(s.branch===1&&tier>=1)s.proj.push({type:'roll',x:p.x,y:p.y,vx:ux*520,vy:uy*520,rad:16,r:0,hits:0,max:tier>=2?3:1,hit:new Set(),id:++s.rid,trailLife:tier>=2?5:3,dist:0,lx:p.x,ly:p.y});
     else if(bombMode)s.bombs.push({x:p.x,y:p.y,tx,ty,sx:p.x,sy:p.y,state:'fly',timer:3,flow:new Int16Array(N*N),bt:0});
-    else s.proj.push({type:'n',x:p.x,y:p.y-24,vx:ux*CFG.projSpd,vy:uy*CFG.projSpd,life:.9,dmg:p.atk,r:0,expl:s.branch===2&&tier>=1,tox:s.branch===3&&tier>=1});
+    else s.proj.push({type:'n',x:p.x,y:p.y-24,vx:ux*CFG.projSpd,vy:uy*CFG.projSpd,life:.9,dmg:p.atk,r:0,expl:s.branch===2&&tier>=1,tox:s.branch===3&&tier>=1,br:s.branch>=4?s.branch:0});
    }
    p.atkT=(bombMode?Math.max(1,atkIntFor(s.atkLv)):atkIntFor(s.atkLv))*speedMul();{const V=skinAV();sfx(V?V.snd:'throw');if(V)p.thrT=.22}
   }
@@ -1000,7 +1019,11 @@ function combat(dt,L){
    for(const c of L){
     if(c.dead)continue;
     if(Math.abs(c.x-q.x)<20&&Math.abs(c.y-24-q.y)<28){
-     hitCleaner(c,q.dmg,q.k||true);q.dead=true;
+     let dm=q.dmg;
+     if(q.br===5&&tier>=2&&unaware(c))dm*=2.5;
+     if(q.br===6&&c.type==='ghost')dm*=2;
+     hitCleaner(c,dm,q.k||true);q.dead=true;
+     if(q.br&&!c.dead)brHit(c,q,tier);
      if(q.pie&&!c.dead){c.slow=Math.max(c.slow,1);c.slowPct=Math.max(c.slowPct,.3)}
      if(q.expl)boom(q.x,q.y+24,80,CFG.boomDmg*(q.k||1),tier>=2,q.k);
      if(q.tox)toxSpawn(q.x,q.y+24,tier,q.k);
@@ -1062,6 +1085,7 @@ function buildOptions(){
  }
  if(s.branch!==3&&s.multiLv<10){const l=s.multiLv;pool.push({tag:'投擲',nm:`多重衛生紙 Lv${l}→Lv${l+1}`,ds:`一次丟出 ${l+1}→${l+2} 個衛生紙`,apply(){s.multiLv=l+1;toast(`一次丟出 ${l+2} 個衛生紙`)}})}
  if(s.speedLv<10){const l=s.speedLv;pool.push({tag:'投擲',nm:`丟出速度 Lv${l}→Lv${l+1}`,ds:`衛生紙冷卻時間 -${Math.round(speedK()*100*l)}%→-${Math.round(speedK()*100*(l+1))}%${s.branch===3?'（毒紙分支加成）':''}`,apply(){s.speedLv=l+1;toast(`丟出冷卻時間 -${Math.round(speedK()*100*(l+1))}%`)}})}
+ if(s.ch===2&&(s.visLv|0)<10){const l=s.visLv|0,R=x=>120+36*x;pool.push({tag:'視野',nm:`視野距離 Lv${l}→Lv${l+1}`,ds:`夜色中，你周圍的亮處範圍 ${R(l)}→${R(l+1)} 像素，也更亮`,apply(){s.visLv=l+1;toast(`視野距離 Lv${l+1}：周圍更亮、看得更遠`)}})}
  if(s.regenLv<10){const l=s.regenLv;pool.push({tag:'生存',nm:`自動回血 Lv${l}→Lv${l+1}`,ds:`受傷後 ${fmt(regenDelayAt(l))}→${fmt(regenDelayAt(l+1))} 秒開始回血\n每秒回血 ${fmt(regenRateAt(l))}→${fmt(regenRateAt(l+1))} 點`,apply(){s.regenLv=l+1;toast(`自動回血 Lv${l+1}：每秒回 ${fmt(regenRateAt(l+1))} 點`)}})}
  if(s.walkLv<10){const l=s.walkLv;pool.push({tag:'移動',nm:`腳力 Lv${l}→Lv${l+1}`,ds:`走路速度 +${3*l}%→+${3*(l+1)}%`,apply(){s.walkLv=l+1;toast(`走路速度 +${3*(l+1)}%`)}})}
  shuffle(pool);
@@ -1081,7 +1105,7 @@ function openNext(){
  let opts,title,sub;
  if(job==='branch'){
   title='開局選擇：分支進化';sub='從兩個進化方向中選一個。普通攻擊升到 Lv3、Lv6、Lv9 時會自動強化。';
-  opts=shuffle([1,2,3]).slice(0,2).map((b,ix)=>({tag:`分支 ${ix?'二':'一'}`,nm:BR[b].name,ds:`Lv3：${BR[b].t[0]}\nLv6：${BR[b].t[1]}\nLv9：${BR[b].t[2]}`,apply(){s.branch=b;syncHud();toast(`分支進化：${BR[b].name}`)}}));
+  opts=shuffle(s.ch===2?[1,2,3,4,5,6]:[1,2,3]).slice(0,2).map((b,ix)=>({tag:`分支 ${ix?'二':'一'}`,nm:BR[b].name,ds:`Lv3：${BR[b].t[0]}\nLv6：${BR[b].t[1]}\nLv9：${BR[b].t[2]}`,apply(){s.branch=b;syncHud();toast(`分支進化：${BR[b].name}`)}}));
  }else{
   title='選一個獎勵';sub=`第 ${s.panelN} 次升級，遊戲已暫停`;opts=buildOptions();
  }
@@ -1527,7 +1551,7 @@ const HEX=/^#[0-9a-f]{6}$/i;
 function cleanCustom(c){if(!c||typeof c!=='object')return null;const o={};for(const k of['body','pants','pack','skirt','hair','dress'])if(typeof c[k]==='string'&&HEX.test(c[k]))o[k]=c[k];return Object.keys(o).length?o:null}
 function cleanCustoms(c){const o={};if(c&&typeof c==='object')for(const id in c){const v=cleanCustom(c[id]);if(v&&SKINS.some(k=>k.id===id))o[id]=v}return o}
 function cleanOwned(c){const o={};if(c&&typeof c==='object')for(const id in c)if(SKINS.some(k=>k.id===id&&k.price))o[id]=1;return o}
-try{const r=JSON.parse(localStorage.getItem('toiletEscapeSave')||'null');if(r&&typeof r==='object'){save.ach=r.ach||{};save.skin=r.skin||'default';{save.customs=cleanCustoms(r.customs);const cu=cleanCustom(r.custom);if(cu&&!save.customs.default)save.customs.default=cu}save.owned=cleanOwned(r.owned);save.esc=Math.max(0,Math.min(1e6,r.esc|0));save.bonus=Math.max(-1e6,Math.min(1e6,r.bonus|0));save.pets=cleanPets(r.pets);save.up=cleanUp(r.up);save.slots=r.slots===2?2:1;save.eq=(Array.isArray(r.eq)?r.eq:[]).filter((k,i,a)=>save.pets[k]&&a.indexOf(k)===i).slice(0,save.slots);save.gspent=ci(r.gspent,1e6);save.refund=ci(r.refund,1e6);save.pity=ci(r.pity,999);save.seen=r.seen||'';save.chat=Array.isArray(r.chat)?r.chat:[];save.dseen3=r.dseen3&&typeof r.dseen3==='object'?r.dseen3:{};save.dcnt3=r.dcnt3&&typeof r.dcnt3==='object'?r.dcnt3:{}}}catch(e){}
+try{const r=JSON.parse(localStorage.getItem('toiletEscapeSave')||'null');if(r&&typeof r==='object'){save.ach=r.ach||{};save.skin=r.skin||'default';{save.customs=cleanCustoms(r.customs);const cu=cleanCustom(r.custom);if(cu&&!save.customs.default)save.customs.default=cu}save.owned=cleanOwned(r.owned);save.esc=Math.max(0,Math.min(1e6,r.esc|0));save.bonus=Math.max(-1e6,Math.min(1e6,r.bonus|0));save.pets=cleanPets(r.pets);save.up=cleanUp(r.up);save.slots=r.slots===2?2:1;save.eq=(Array.isArray(r.eq)?r.eq:[]).filter((k,i,a)=>save.pets[k]&&a.indexOf(k)===i).slice(0,save.slots);save.gspent=ci(r.gspent,1e6);save.refund=ci(r.refund,1e6);save.pity=ci(r.pity,999);save.seen=r.seen||'';save.ch2grant=r.ch2grant?1:0;save.chat=Array.isArray(r.chat)?r.chat:[];save.dseen3=r.dseen3&&typeof r.dseen3==='object'?r.dseen3:{};save.dcnt3=r.dcnt3&&typeof r.dcnt3==='object'?r.dcnt3:{}}}catch(e){}
 if(save.ach.escape&&!save.esc)save.esc=1;
 let cloudHook=null;
 function persist(){try{localStorage.setItem('toiletEscapeSave',JSON.stringify(save))}catch(e){}if(cloudHook)cloudHook()}
@@ -1650,9 +1674,97 @@ $('sp-up').addEventListener('click',e=>{
  if(!spend(U.cost[l])){upMsg=`鑽石不足：需要 ${U.cost[l]} 顆，你有 ${gemsOf()} 顆。`;renderUp();return}
  save.up[k]=l+1;upMsg=`「${U.n}」升到 Lv ${l+1}。`;persist();renderMenu();
 });
+
+/* ---- 抽卡動畫 ---- */
+function gachaAnim(res,done){
+ const ov=$('gach'),cv2=$('gcv'),g=cv2.getContext('2d'),multi=res.length>1,SP=multi?.5:1;
+ const D0=.55*SP,D1=1.05*SP,D2=.42*SP,D3=multi?.9:1e9;
+ ov.hidden=false;
+ let idx=0,st='drop',ts=performance.now(),raf=0,summary=false,lastShake=0,fired=false;
+ const ease=k=>1-Math.pow(1-k,3);
+ function capsule(x,y,ang,open){
+  g.save();g.translate(x,y);g.rotate(ang);
+  const top=-open*60,bot=open*40;
+  g.fillStyle='#ff6b81';g.beginPath();g.arc(0,top,48,Math.PI,0);g.closePath();g.fill();
+  g.fillStyle='#f4f4f4';g.beginPath();g.arc(0,bot,48,0,Math.PI);g.closePath();g.fill();
+  if(!open){g.fillStyle='#d9d9d9';g.fillRect(-48,-3,96,6)}
+  g.fillStyle='rgba(255,255,255,.55)';g.beginPath();g.ellipse(-20,-22+top,10,18,.5,0,7);g.fill();
+  g.restore();
+ }
+ function pet(id,x,y,sc,alpha){
+  const old=cx;cx=g;g.save();g.globalAlpha=alpha==null?1:alpha;g.translate(x,y);g.scale(sc,sc);
+  petSprite(id,0,0,1,{t:performance.now()/1000,z:PETS[id].fly?16:0});g.restore();cx=old;
+ }
+ function rays(x,y,col,n,t,R){
+  g.save();g.translate(x,y);g.rotate(t*.6);g.fillStyle=col;g.globalAlpha=.22;
+  for(let i=0;i<n;i++){g.rotate(Math.PI*2/n);g.beginPath();g.moveTo(0,0);g.lineTo(R,-26);g.lineTo(R,26);g.closePath();g.fill()}
+  g.restore();
+ }
+ function glowC(x,y,r,col,a){const q=g.createRadialGradient(x,y,2,x,y,r);q.addColorStop(0,col);q.addColorStop(1,'rgba(0,0,0,0)');g.globalAlpha=a;g.fillStyle=q;g.beginPath();g.arc(x,y,r,0,7);g.fill();g.globalAlpha=1}
+ function next(){
+  idx++;fired=false;
+  if(idx>=res.length){if(multi){summary=true}else close();return}
+  st='drop';ts=performance.now();
+ }
+ function close(){cancelAnimationFrame(raf);ov.hidden=true;cv2.onclick=null;$('gskip').onclick=null;done()}
+ function drawBg(now){
+  const q=g.createRadialGradient(320,200,40,320,200,420);q.addColorStop(0,'#1c2b3a');q.addColorStop(1,'#070b10');g.fillStyle=q;g.fillRect(0,0,640,400);
+  g.fillStyle='rgba(255,255,255,.05)';for(let i=0;i<30;i++)g.fillRect((i*97+now*.02)%640,(i*53)%400,2,2);
+ }
+ function frame(now){
+  raf=requestAnimationFrame(frame);
+  g.clearRect(0,0,640,400);drawBg(now);g.textAlign='center';g.textBaseline='middle';
+  if(summary){
+   g.fillStyle='#fff';g.font=`700 22px ${FONT}`;g.fillText('抽卡結果',320,28);
+   res.forEach((it,i)=>{
+    const P=PETS[it.id],col=RCOL[P.r],x=64+(i%5)*128,y=60+Math.floor(i/5)*160;
+    g.fillStyle='rgba(255,255,255,.06)';g.strokeStyle=col;g.lineWidth=P.r>=2?3:2;g.beginPath();g.roundRect(x-52,y,104,142,10);g.fill();g.stroke();
+    if(P.r>=3)glowC(x,y+70,70,'rgba(255,200,60,.55)',.6);
+    pet(it.id,x,y+92,1.05);
+    g.fillStyle=col;g.font=`700 13px ${FONT}`;g.fillText(P.n,x,y+112);
+    g.fillStyle=it.dup?'#aab':'#7cf29a';g.font=`11px ${FONT}`;g.fillText(it.dup?`重複 +${RDUP[P.r]}💎`:'NEW',x,y+130);
+   });
+   g.fillStyle='rgba(255,255,255,.6)';g.font=`13px ${FONT}`;g.fillText('點一下關閉',320,390);
+   return;
+  }
+  const it=res[idx],P=PETS[it.id],col=RCOL[P.r],e=(now-ts)/1000;
+  if(multi){g.fillStyle='rgba(255,255,255,.55)';g.font=`13px ${FONT}`;g.fillText(`${idx+1} / ${res.length}`,320,22)}
+  if(st==='drop'){
+   const k=Math.min(1,e/D0);capsule(320,-60+260*k*k,0,0);
+   if(e>=D0){st='shake';ts=now;lastShake=0;sfx('gdrop')}
+  }else if(st==='shake'){
+   const k=Math.min(1,e/D1);
+   glowC(320,200,60+80*k,P.r>=3?'rgba(255,200,60,.9)':P.r>=2?'rgba(181,123,255,.9)':P.r>=1?'rgba(90,169,255,.85)':'rgba(220,230,240,.7)',(.15+.7*k)*(P.r>=1?1:.5));
+   capsule(320,200,Math.sin(e*38)*(.05+.24*k),0);
+   if(e-lastShake>.17*SP+.05){lastShake=e;sfx('gshake')}
+   if(e>=D1){st='burst';ts=now;sfx(P.r>=3?'glegend':P.r>=1?'grare':'gopen')}
+  }else if(st==='burst'){
+   const k=Math.min(1,e/D2);
+   g.globalAlpha=1-k;g.fillStyle='#fff';g.beginPath();g.arc(320,200,20+420*k,0,7);g.fill();g.globalAlpha=1;
+   capsule(320,200,k*.8,k);
+   if(e>=D2){st='reveal';ts=now}
+  }else{
+   const k=Math.min(1,e*3.2),sc=1.8+1.1*ease(k)+(P.r>=3?.15*Math.sin(e*5):0);
+   glowC(320,210,150,col,.45+.2*Math.sin(e*4));
+   if(P.r>=2)rays(320,210,col,P.r>=3?14:9,e,260);
+   if(P.r>=3){g.fillStyle='#ffd24a';for(let i=0;i<40;i++){const a=i*2.4+e*.7,r=60+((i*37+e*90)%220);g.globalAlpha=.8;g.fillRect(320+Math.cos(a)*r,210+Math.sin(a)*r*.7-((e*60+i*11)%80),3,3)}g.globalAlpha=1}
+   pet(it.id,320,250-14*ease(k),sc,Math.min(1,e*4));
+   g.fillStyle=col;g.font=`700 ${P.r>=3?30:26}px ${FONT}`;g.fillText(`${RAR[P.r]}・${P.n}`,320,318);
+   g.fillStyle=it.dup?'#b8c2cc':'#7cf29a';g.font=`15px ${FONT}`;g.fillText(it.dup?`重複，換成 ${RDUP[P.r]} 顆鑽石`:'新夥伴！已加入收藏',320,350);
+   if(!multi){g.fillStyle='rgba(255,255,255,.55)';g.font=`13px ${FONT}`;g.fillText('點一下繼續',320,383)}
+   else if(e>=D3)next();
+  }
+ }
+ cv2.onclick=()=>{
+  if(summary){close();return}
+  if(st==='reveal'){if(multi)next();else close()}
+ };
+ $('gskip').onclick=()=>{if(multi&&!summary){summary=true}else close()};
+ raf=requestAnimationFrame(frame);
+}
 $('sp-pet').addEventListener('click',e=>{
  const g=e.target.closest('[data-g]');
- if(g){doPull(+g.dataset.g);renderMenu();return}
+ if(g){doPull(+g.dataset.g);if(lastPull){const lp=lastPull;lastPull=null;gachaAnim(lp,()=>{lastPull=lp;renderMenu()})}else renderMenu();return}
  if(e.target.closest('[data-slot]')){
   if(save.slots>=2)return;
   if(!spend(SLOT2)){petMsg=`鑽石不足：需要 ${SLOT2} 顆，你有 ${gemsOf()} 顆。`}else{save.slots=2;petMsg='已解鎖第 2 個出戰欄位。'}
@@ -1765,9 +1877,57 @@ const CHAIR={body:'#5a1424',pants:'#17171c',hair:'#e8e8e8',skin:'#e8b894',glasse
 const angDiff=(a,b)=>{let d=a-b;while(d>Math.PI)d-=6.2832;while(d<-Math.PI)d+=6.2832;return d};
 const guardDir=c=>c.ang+Math.sin((S?S.tick:0)*1.3+c.x*.01)*.3;
 function ch2pick(){const r=Math.random();if(S.allies)return r<.55?'guard':'dog';if(S.level<1)return r<.6?'guard':'ghost';return r<.38?'guard':r<.65?'ghost':'dog'}
+
+/* ---------- 第二章專屬分支：螢光、靜音、聖水 ---------- */
+const noiseK=()=>S&&S.branch===5?[1,.7,.45,.2][tierOf()]:1;
+function unaware(c){
+ if(c.type==='guard')return c.al<=0;
+ if(c.type==='dog')return Math.hypot(c.x-S.p.x,c.y-S.p.y)>500;
+ return false;
+}
+function holySpawn(x,y){const s=S;s.holy=s.holy||[];if(s.holy.length>=20)s.holy.shift();s.holy.push({x,y,t:6,max:6})}
+function brHit(c,q,tier){
+ const s=S,b=q.br;
+ if(b===4){
+  const dur=tier>=2?9:6,k=tier>=2?1.4:1.25;c.mark=dur;c.markK=k;
+  if(tier>=2)for(const o of s.cl)if(o!==c&&!o.dead&&Math.hypot(o.x-c.x,o.y-c.y)<200){o.mark=Math.max(o.mark||0,dur*.6);o.markK=k}
+ }else if(b===5){
+  if(tier>=3){c.stun=Math.max(c.stun||0,1.2);if(c.type==='guard')c.al=0}
+ }else if(b===6){
+  if(c.type==='ghost'){c.holy=3;if(tier>=2)c.stun=Math.max(c.stun||0,.9)}
+  if(tier>=2){c.slow=Math.max(c.slow,1.5);c.slowPct=Math.max(c.slowPct,.3)}
+  if(tier>=3)holySpawn(q.x,q.y+24);
+ }
+}
+function holyTick(dt,L){
+ const s=S;if(!s.holy||!s.holy.length)return;
+ for(let i=s.holy.length-1;i>=0;i--){
+  const g=s.holy[i];g.t-=dt;
+  if(g.t<=0){s.holy.splice(i,1);continue}
+  for(const c of L){
+   if(c.dead||Math.hypot(c.x-g.x,c.y-g.y)>70)continue;
+   c.slow=Math.max(c.slow,.2);c.slowPct=Math.max(c.slowPct,.4);
+   if(c.type==='ghost'){c.holy=.5;c.hp-=s.p.atk*.8*dt;c.flash=Math.max(c.flash,.04);if(c.hp<=0){killCleaner(c);break}}
+  }
+ }
+}
+function drawHoly(){
+ const s=S;if(!s.holy)return;
+ for(const g of s.holy){
+  const a=.12+.25*Math.min(1,g.t/2);
+  cx.fillStyle=`rgba(130,205,255,${a})`;cx.beginPath();cx.ellipse(g.x,g.y,70,40,0,0,7);cx.fill();
+  cx.strokeStyle=`rgba(210,240,255,${a+.1})`;cx.lineWidth=2;cx.beginPath();cx.ellipse(g.x,g.y,70-4*Math.sin(s.tick*3),40-2*Math.sin(s.tick*3),0,0,7);cx.stroke();
+ }
+}
+function ch2Lure(c){
+ const s=S;let at=null,bd=820;
+ if(s.lure){const d=Math.hypot(s.lure.x-c.x,s.lure.y-c.y);if(d<bd){bd=d;at={x:s.lure.x,y:s.lure.y,f:flowL}}}
+ for(const b of s.bombs)if(b.state==='wait'){const d=Math.hypot(b.x-c.x,b.y-c.y);if(d<bd){bd=d;at={x:b.x,y:b.y,f:b.flow}}}
+ return at;
+}
 function ch2Noise(x,y){
  S.noise={x,y,t:9};bfs(Math.floor(x/T),Math.floor(y/T),flowN);
- S.fx.push({k:'sboom',x,y,t:0,max:.9,r:300});
+ S.fx.push({k:'sboom',x,y,t:0,max:.9,r:300*noiseK()});
 }
 function guardAlert(c,why){
  const s=S;
@@ -1777,10 +1937,12 @@ function guardAlert(c,why){
 }
 function ch2AI(c,dt,sp){
  const s=S,p=s.p,dx=p.x-c.x,dy=p.y-c.y,d=Math.hypot(dx,dy)||1;
- const fac=1-Math.max(c.slow>0?c.slowPct:0,c.ts>0?.5:0);
+ const fac=1-Math.max(c.slow>0?c.slowPct:0,c.ts>0?.5:0),at=ch2Lure(c),nk=noiseK();
  if(c.type==='ghost'){
-  c.vis=d<200||c.flash>0;c.nt=!c.vis;
-  const m=Math.min(sp*.62*fac*dt,d);c.x+=dx/d*m;c.y+=dy/d*m;c.face=dx>=0?1:-1;c.walk+=dt*5;
+  c.vis=d<200||c.flash>0||c.holy>0||c.mark>0;c.nt=!c.vis;
+  let gx=dx,gy=dy,gd=d;
+  if(at&&d>200){gx=at.x-c.x;gy=at.y-c.y;gd=Math.hypot(gx,gy)||1}
+  const m=Math.min(sp*.62*fac*dt,gd);c.x+=gx/gd*m;c.y+=gy/gd*m;c.face=gx>=0?1:-1;c.walk+=dt*5;
   if(d<150)p.ugly=Math.max(p.ugly,.35);
   return;
  }
@@ -1790,8 +1952,9 @@ function ch2AI(c,dt,sp){
   if(c.ps==='dash'){c.pt-=dt;walk(c,c.vx*560*dt,c.vy*560*dt,13);c.walk+=dt*16;c.face=c.vx>=0?1:-1;if(c.pt<=0){c.ps='rest';c.pt=1;c.cd=3.2}return}
   if(c.ps==='rest'){c.pt-=dt;if(c.pt<=0)c.ps='idle';return}
   if(d<300&&c.cd<=0&&los(c.x,c.y,p.x,p.y)){c.ps='wind';c.pt=.45;s.fx.push({k:'txt',x:c.x,y:c.y-70,t:0,max:.7,s:'汪！',c:'#ffb35a'});return}
-  const nz=s.noise&&Math.hypot(s.noise.x-c.x,s.noise.y-c.y)<1800&&Math.hypot(s.noise.x-p.x,s.noise.y-p.y)>200;
-  if(d<600)chase(c,flowP,p.x,p.y,spd,dt);
+  const nz=s.noise&&Math.hypot(s.noise.x-c.x,s.noise.y-c.y)<1800*nk&&Math.hypot(s.noise.x-p.x,s.noise.y-p.y)>200;
+  if(at&&d>220)chase(c,at.f,at.x,at.y,spd,dt);
+  else if(d<600)chase(c,flowP,p.x,p.y,spd,dt);
   else if(nz&&Math.hypot(s.noise.x-c.x,s.noise.y-c.y)>60)chase(c,flowN,s.noise.x,s.noise.y,spd,dt);
   else chase(c,flowP,p.x,p.y,spd*.5,dt);
   return;
@@ -1801,8 +1964,9 @@ function ch2AI(c,dt,sp){
  if(c.al>0)c.al-=dt;
  const gd=guardDir(c),seen=d<300&&Math.abs(angDiff(Math.atan2(dy,dx),gd))<.52&&los(c.x,c.y,p.x,p.y);
  if(seen||(d<100&&los(c.x,c.y,p.x,p.y)))guardAlert(c,'！');
- if(c.al>0)chase(c,flowP,p.x,p.y,sp*1.12*fac,dt);
- else if(s.noise&&Math.hypot(s.noise.x-c.x,s.noise.y-c.y)<1500&&Math.hypot(s.noise.x-c.x,s.noise.y-c.y)>70)chase(c,flowN,s.noise.x,s.noise.y,sp*.95*fac,dt);
+ if(c.al>0&&(!at||d<420))chase(c,flowP,p.x,p.y,sp*1.12*fac,dt);
+ else if(at)chase(c,at.f,at.x,at.y,sp*1.05*fac,dt);
+ else if(s.noise&&Math.hypot(s.noise.x-c.x,s.noise.y-c.y)<1500*nk&&Math.hypot(s.noise.x-c.x,s.noise.y-c.y)>70)chase(c,flowN,s.noise.x,s.noise.y,sp*.95*fac,dt);
  else{
   c.pt-=dt;if(c.pt<=0){c.pa+=rnd(-1.1,1.1);c.pt=rnd(2,5)}
   const v=55*fac,bx=c.x,by=c.y;walk(c,Math.cos(c.pa)*v*dt,Math.sin(c.pa)*v*dt,13);c.walk+=dt*6;
@@ -1858,7 +2022,11 @@ function drawG2(c){
 function nightFx(camX,camY){
  const s=S;
  cx.save();
- cx.globalCompositeOperation='multiply';cx.fillStyle='#56679c';cx.fillRect(0,0,W,H);
+ cx.globalCompositeOperation='multiply';
+ {const l=s.visLv|0,pxs=s.p.x-camX,pys=s.p.y-camY-24,r1=120+36*l,k=Math.min(1,.3+.07*l);
+  const g0=cx.createRadialGradient(pxs,pys,r1*.12,pxs,pys,r1);
+  g0.addColorStop(0,`rgb(${Math.round(86+169*k)},${Math.round(103+152*k)},${Math.round(156+99*k)})`);g0.addColorStop(1,'#56679c');
+  cx.fillStyle=g0;cx.fillRect(0,0,W,H)}
  cx.globalCompositeOperation='source-over';
  const g=cx.createRadialGradient(W/2,H/2,H*.38,W/2,H/2,H*1.0);g.addColorStop(0,'rgba(4,8,30,0)');g.addColorStop(1,'rgba(4,8,30,.45)');cx.fillStyle=g;cx.fillRect(0,0,W,H);
  cx.globalCompositeOperation='lighter';
@@ -1868,6 +2036,7 @@ function nightFx(camX,camY){
  if(s.gateOpen)glow(50*T,97*T,160,'120,255,160',.25);
  if(s.gold)glow(s.gold.x,s.gold.y-20,120,'255,210,80',.4);
  for(const f of s.fires||[])glow(f.x,f.y-10,f.r+50,'255,120,40',.35);
+ for(const c of s.cl)if(c.mark>0&&!c.dead)glow(c.x,c.y-24,64,'190,255,120',.42);
  cx.restore();
  for(const c of s.cl){
   if(c.type==='dog'&&!c.dead){
@@ -1916,12 +2085,12 @@ const NOTES=[
  {id:'o4',k:'doc',t:'會議紀錄（密）',x:'【會議紀錄】本案對外一律稱「設備老舊，自行失火」。傷亡名單不予公開，以免影響土地交易與補助款。'},
  {id:'c1',k:'counsel',t:'輔導紀錄 No.12',x:'個案：{n}。個案反覆提到「是我害了柏閔」。建議：持續強化學生自責敘事，降低其追問起火原因的意願。'},
  {id:'c2',k:'counsel',t:'輔導紀錄 No.19',x:'個案開始說「談話之後，常常忘記前一天寫過的東西」。處理：沒收個案的筆記本，縮短談話間隔。備註：舉報信可繼續使用，個案相信那是自己寫的。'},
- {id:'z1',k:'jiao',t:'教官的懺悔 ①',x:'我只是照命令鎖門。我以為那只是一個普通的夜晚。'},
- {id:'z2',k:'jiao',t:'教官的懺悔 ②',x:'火災那晚，我在校門外聽到有人拍門。我回頭了，但鑰匙在主任手上。如果有機會，我想親手把那些門打開。'},
- {id:'z3',k:'jiao',t:'教官的懺悔 ③',x:'有個學生託我保管一個信封，要我在學校拆除的前一晚寄出去，不准拆開。我答應了。我欠他們的，至少這件事我要做到。——教官'},
- {id:'f1',k:'fake',t:'好心提醒',x:'{w}同學，別再追究火災了。學校已經盡力，真相對大家都沒有好處。',flaw:'稱呼不對：紙條寫的是「{w}同學」，那不是你的名字。'},
- {id:'f2',k:'fake',t:'學務處通知',x:'火警系統是火災之後才升級的新設備，當晚運作完全正常。所有證據都收在新蓋好的實驗大樓保險櫃裡。',flaw:'時間對不上：新蓋好的實驗大樓是火災「之後」才有的，不可能存放當晚的證據。'},
- {id:'f3',k:'fake',t:'公文影本',x:'自 3 月 20 日起停用火警；逃生門自 9 月 9 日起加鎖。（鎖碼 ＝ 2009）',flaw:'可疑：正式公文不會把「鎖碼」直接寫在上面。'},
+ {id:'z1',k:'jiao',t:'教官的懺悔 ①',x:'我只是照命令鎖門。我以為那只是一個普通的夜晚。火災之後，我從警衛室的鑰匙櫃裡拿走了校長室的鑰匙，因為我不想讓他們再進去銷毀任何東西。'},
+ {id:'z2',k:'jiao',t:'教官的懺悔 ②',x:'火災那晚，我在校門外聽到有人拍門。我回頭了，但鑰匙在主任手上。我把拿走的鑰匙，藏在一個每天都會經過、卻沒有人會認真去看的地方。如果有機會，我想親手把那些門打開。'},
+ {id:'z3',k:'jiao',t:'教官的懺悔 ③',x:'鑰匙在東邊教學樓走廊的盡頭，滅火器箱的後面。那些滅火器，從來沒有人真的檢查過。另外，有個學生託我保管一個信封，要我在學校拆除的前一晚寄出去，不准拆開。我答應了。我欠他們的，至少這件事我要做到。——教官'},
+ {id:'g1',k:'duty',t:'警衛交班本 3/9',x:'備用鑰匙全部鎖在警衛室的鑰匙櫃裡，是 4 位數的密碼。我怕自己忘記，編成一句話：先寫逃生門被鐵鍊鎖死的道數，再寫火警被停擺的月數，各取兩位數，連在一起。'},
+ {id:'g2',k:'doc',t:'公告（影本）',x:'【公告】校長室自即日起上鎖，鑰匙不得留在辦公室內，一律由警衛室統一保管，借出須由董事長親簽。'},
+ {id:'d7',k:'diary',t:'柏閔的日記 ⑦',x:'今天教官又在走廊盡頭自言自語：「這次我不想再聽命令了。」我假裝沒聽到。……{n}，如果有一天你需要幫忙，去找教官吧，他其實是好人。'},
  {id:'p1',k:'torn',t:'撕成兩半的紙條（上）',x:'抽屜的鎖碼，是……火警被關閉的那一「日」，'},
  {id:'p2',k:'torn',t:'撕成兩半的紙條（下）',x:'……加上逃生門被加鎖的那一「日」，各取兩位數，連在一起。'},
  {id:'u1',k:'uv',t:'看起來是空白的紙',x:'給之後的我：數字的順序，先寫火，再寫門。這張紙是用理化社的隱形墨水寫的，因為談話室的人會翻我的東西。'}
@@ -1936,15 +2105,15 @@ const PAGES=[
  '滅火器驗收單造假＋壓案會議紀錄：為了保住土地交易與補助款，學校把整件事壓了下來，傷亡全被隱瞞。',
  '輔導紀錄：「持續強化學生自責敘事，降低其追問起火原因的意願。」——這是在說你。',
  '舉報信的筆跡鑑定：舉報柏閔的那封信，筆跡與「{n}」不符。（你根本沒有舉報過他。）',
- '最後一頁：被水泡爛了，字跡模糊。總務處的抽屜裡，也許有原稿的備份。'
+ '最後一頁：被水泡爛了，字跡模糊。校長室的抽屜裡，也許有原稿的備份。'
 ];
-const TRUTH_TXT='抽屜夾層裡，是一張泛黃的紙，字跡是你的：\n「給之後的我：如果你看到這張紙，代表他們又找你談過話了，你應該已經忘了不少事。\n我發現，每次去輔導室談完話，我就會多相信一件不是真的事：『是我害了柏閔』。所以趁我還記得，我把證據分成十份，藏進柏閔交給我顧的十個水箱，沒有人會懷疑一個值日生。\n這張紙放在總務處的抽屜夾層，鎖碼用公文上的日期，因為印在紙上的東西，談話洗不掉。信封我交給教官，請他在學校拆除的前一晚寄給你。他欠我們的。」\n\n你想起來了。那天晚上，逃生門被鐵鍊鎖死，是柏閔把你從氣窗推了出去，自己沒能出來。輔導室的談話，一點一點把「他推開你」改寫成「你害了他」。\n鍾董事長此刻正在中庭，他要在天亮前銷毀一切。擊倒他，然後去沖那個黃金馬桶。';
+const TRUTH_TXT='抽屜夾層裡，是一張泛黃的紙，字跡是你的：\n「給之後的我：如果你看到這張紙，代表他們又找你談過話了，你應該已經忘了不少事。\n我發現，每次去輔導室談完話，我就會多相信一件不是真的事：『是我害了柏閔』。所以趁我還記得，我把證據分成十份，藏進柏閔交給我顧的十個水箱，沒有人會懷疑一個值日生。\n這張紙放在校長室的抽屜夾層，是教官替我開的門。鎖碼用公文上的日期，因為印在紙上的東西，談話洗不掉。信封我交給教官，請他在學校拆除的前一晚寄給你。他欠我們的。」\n\n你想起來了。那天晚上，逃生門被鐵鍊鎖死，是柏閔把你從氣窗推了出去，自己沒能出來。輔導室的談話，一點一點把「他推開你」改寫成「你害了他」。\n鍾董事長此刻正在中庭，他要在天亮前銷毀一切。擊倒他，然後去沖那個黃金馬桶。';
 const MEMO_CUT=[
  ['n','紙上寫著——'],
  ['p','給之後的我：如果你看到這張紙，代表他們又找你談過話了，你應該已經忘了不少事。'],
  ['p','我發現，每次去輔導室談完話，我就會多相信一件不是真的事：「是我害了柏閔」。'],
  ['p','所以趁我還記得，我把證據分成十份，藏進柏閔交給我顧的十個水箱。沒有人會懷疑一個值日生。'],
- ['p','這張紙放在總務處的抽屜夾層。鎖碼用公文上的日期，因為印在紙上的東西，談話洗不掉。'],
+ ['p','這張紙放在校長室的抽屜夾層，是教官替我開的門。鎖碼用公文上的日期，因為印在紙上的東西，談話洗不掉。'],
  ['p','信封我交給教官，請他在學校拆除的前一晚寄給你。他欠我們的。'],
  ['n','你想起來了。那天晚上，逃生門被鐵鍊鎖死，是柏閔把你從氣窗推了出去，自己沒能出來。'],
  ['n','輔導室的談話，一點一點，把「他推開你」改寫成「你害了他」。你以為「全都想起來了」，其實想起來的，是他們給你的版本。'],
@@ -2031,7 +2200,7 @@ function placeNotes(){
  const R=NET.active&&NET.seed?mulberry(NET.seed+777):Math.random;
  const cand=rooms.filter(r=>r.kind&&r.kind!=='hall'&&r.kind!=='toilet'&&r.x1-r.x0>=3&&r.y1-r.y0>=3);
  for(let i=cand.length-1;i>0;i--){const j=(R()*(i+1))|0;[cand[i],cand[j]]=[cand[j],cand[i]]}
- S.notes=[];S.found={};S.flag={};S.pages=0;S.codeOK=false;S.uv=false;S.uvShown=false;S.fakeWarn=false;S.shieldN=0;S.fires=[];S.evi=100;S.gold=null;S.allies=null;
+ S.notes=[];S.found={};S.flag={};S.pages=0;S.codeOK=false;S.uv=false;S.uvShown=false;S.shieldN=0;S.fires=[];S.evi=100;S.gold=null;S.allies=null;
  NOTES.forEach((def,i)=>{
   const r=cand[i%cand.length];let x=r.px,y=r.py;
   for(let k=0;k<30;k++){
@@ -2041,12 +2210,77 @@ function placeNotes(){
   S.notes.push({def,x,y,got:false});
  });
 }
+
+/* ---- 校長室、鑰匙櫃、滅火器箱 ---- */
+const CAB_CODE='1208';
+const OFFICE_SVG='<svg viewBox="0 0 560 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="校長室"><rect width="560" height="250" fill="#cfc4b2"/><rect y="170" width="560" height="80" fill="#6d4e32"/><rect x="40" y="26" width="110" height="84" fill="#0f1b2d" stroke="#5b4329" stroke-width="6"/><circle cx="110" cy="52" r="10" fill="#e8e4cf"/><path d="M40 110 L150 110" stroke="#5b4329" stroke-width="6"/><rect x="215" y="22" width="86" height="104" fill="#3a2a1a" stroke="#c9a25f" stroke-width="5"/><circle cx="258" cy="62" r="21" fill="#d9b99b"/><path d="M236 58 Q258 30 280 58 Q268 44 258 46 Q246 44 236 58Z" fill="#ddd"/><rect x="232" y="86" width="52" height="30" rx="6" fill="#222"/><rect x="238" y="112" width="40" height="6" fill="#c9a25f"/><rect x="360" y="20" width="12" height="150" fill="#8a6a3a"/><path d="M372 24 L470 44 L372 80Z" fill="#b83232"/><rect x="190" y="150" width="260" height="22" fill="#4a3220"/><rect x="190" y="172" width="260" height="62" fill="#5b3b22"/><rect x="204" y="184" width="104" height="40" fill="#46301d" stroke="#2a1b10" stroke-width="3"/><rect x="246" y="198" width="20" height="8" fill="#c9a25f"/><circle cx="256" cy="212" r="4" fill="#222"/><text x="258" y="146" font-size="13" fill="#e8e0cc" text-anchor="middle" font-family="sans-serif">董事長</text></svg>';
+let m2=null;
+function m2Open(k){
+ const s=S;if(!s||s.over||s.fin2||s.cut)return;
+ m2=k;s.manPause=!NET.active;$('c2m').hidden=false;stopInput();m2Render();
+}
+function m2Close(){
+ if(!S)return;$('c2m').hidden=true;m2=null;
+ if(!S.fin2&&!S.cut)S.manPause=false;
+ ambushCheck();
+}
+function m2Render(){
+ const s=S,H=$('c2mH'),B=$('c2mB');
+ const inp=id=>`<div class="nbtry"><input id="${id}" maxlength="4" inputmode="numeric" placeholder="輸入 4 位數密碼" autocomplete="off"><button class="go" id="${id}Go" type="button">試鎖</button></div><p class="sub" id="m2Msg"></p>`;
+ if(m2==='cab'){
+  H.textContent='警衛室　鑰匙櫃';
+  B.innerHTML=s.cabOpen?'<div class="nbx">【備用鑰匙清單】<br>・教室、儲藏室、合作社：在櫃中<br>・校長室：（空）　備註：火災後，已由教官取走保管。<br><br>你看了看櫃子，校長室的那個掛勾上，什麼也沒有。得從教官身上找線索了。</div>':'<p class="sub">鐵製的鑰匙櫃，上面有一個 4 位數的密碼鎖。</p>'+inp('m2C');
+ }else{
+  H.textContent='校長室';
+  const c=Object.keys(s.found).length;
+  let h=`<div class="m2svg">${OFFICE_SVG}</div><p class="sub">辦公室整齊得像剛被打掃過。牆上掛著鍾董事長的肖像，桌邊有一個上鎖的抽屜。</p>`;
+  if(s.codeOK)h+='<p class="sub">抽屜已經打開了，裡面的東西你都看過了。</p>';
+  else if(c<NOTE_N)h+=`<p class="sub">抽屜上了鎖，是 4 位數的密碼鎖。你還沒掌握全部的線索（紙條 ${c}/${NOTE_N}），現在試也沒用。</p>`;
+  else h+='<p class="sub">抽屜上了鎖。你已經集齊所有紙條，把線索串起來吧。</p>'+inp('m2D');
+  B.innerHTML=h;
+ }
+}
+function m2Try(){
+ const s=S,inpEl=m2==='cab'?$('m2C'):$('m2D'),v=(inpEl&&inpEl.value||'').trim(),m=$('m2Msg');
+ if(!m)return;
+ if(v.length!==4){m.textContent='要輸入 4 位數字。';return}
+ if(m2==='cab'){
+  if(v===CAB_CODE){sfx('unlock');s.cabOpen=true;m2Render();toast('鑰匙櫃打開了')}
+  else{sfx('lockfail');m.textContent='「喀、喀」……沒有開。'}
+ }else{
+  if(Object.keys(s.found).length<NOTE_N)return;
+  if(v===CODE_OK){
+   s.codeOK=true;sfx('unlock');m2Close();
+   if(NET.active){codeEffects();toast('抽屜打開了！');nbTab='k';nbOpen()}
+   else startCut2('memo');
+  }else{sfx('lockfail');m.textContent='「喀、喀」……鎖沒有開。牆裡傳來低語。';s.amb=2}
+ }
+}
+$('c2mB').addEventListener('click',e=>{if(e.target.id==='m2CGo'||e.target.id==='m2DGo')m2Try()});
+$('c2mB').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();m2Try()}});
+$('c2mX').addEventListener('click',m2Close);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&m2)m2Close()});
+function placeKeyStuff(){
+ const s=S;s.hasKey=false;s.cabOpen=false;s.cab=null;
+ let best=null,bd=1e9;
+ for(const r of rooms)if(r.type==='room'&&r.kind==='other'){const d=Math.hypot(r.px-50*T,r.py-10*T);if(d<bd){bd=d;best=r}}
+ if(best){best.name='警衛室';best.guard=true;s.cab={x:best.px,y:(best.y0+.55)*T,room:best}}
+ s.ext={x:94.5*T,y:12.5*T};
+}
+function extUse(){
+ const s=S;
+ if(s.hasKey){toast('滅火器箱後面已經空了');return}
+ if(['z1','z2','z3'].every(id=>s.found[id])){s.hasKey=true;sfx('reward');toast('你在滅火器箱後面摸到一把生鏽的鑰匙。校長室的鑰匙！')}
+ else toast('只是一個普通的滅火器箱，上面的檢查日期是好幾年前。')
+}
+function officeNear(){
+ const p=S.p;return Math.abs(p.x-50*T)<100&&p.y<3.1*T
+}
 function noteTick(){
  const s=S,p=s.p;
  for(const n of s.notes){
   if(n.got||Math.hypot(n.x-p.x,n.y-p.y)>38)continue;
   n.got=true;s.found[n.def.id]=true;sfx('coin');
-  if(n.def.k==='fake'&&!s.fakeWarn){s.fakeWarn=true;toast('提醒：有些紙條是假線索，故意寫錯的。多比對幾張再相信')}
   const c=Object.keys(s.found).length;
   toast(`撿到紙條：${n.def.t}（${c}/${NOTE_N}）。按 N 或點「紙條簿」閱讀`);
   if(c>=NOTE_N)unlock('archive');
@@ -2063,6 +2297,20 @@ function drawNotes(){
   cx.shadowBlur=0;cx.fillStyle=uvv?'#7a4fd0':'#a59a78';for(let i=0;i<4;i++)cx.fillRect(-6,-8+i*5,12,1.5);
   cx.restore();
  }
+}
+function drawOfficeDoor(){
+ const s=S,x=49*T,open=s.ch===2&&s.hasKey;
+ cx.fillStyle='#3b2a1a';cx.fillRect(x-4,0,2*T+8,T+14);
+ cx.fillStyle='#7a5530';cx.fillRect(x,4,T-2,T+8);cx.fillRect(x+T+2,4,T-2,T+8);
+ cx.fillStyle='#5b3d20';cx.fillRect(x+6,10,T-14,T-8);cx.fillRect(x+T+8,10,T-14,T-8);
+ cx.fillStyle='#d9b86a';cx.beginPath();cx.arc(x+T-8,T-2,3,0,7);cx.arc(x+T+10,T-2,3,0,7);cx.fill();
+ cx.fillStyle='#ffb703';rr(x+T-28,1,56,16,5);cx.fillStyle='#1b1300';cx.font=`700 12px ${FONT}`;cx.textAlign='center';cx.textBaseline='middle';cx.fillText('校長室',x+T,9.5);
+ cx.fillStyle=open?'#6bd36b':'#c0392b';cx.fillRect(x+T-5,T-12,10,8);cx.strokeStyle=cx.fillStyle;cx.lineWidth=2;cx.beginPath();cx.arc(x+T,T-13,4,Math.PI,open?Math.PI*1.7:0);cx.stroke();
+}
+function drawKeyStuff(){
+ const s=S;
+ if(s.cab){const c=s.cab;cx.fillStyle='#5f6d75';cx.fillRect(c.x-22,c.y-18,44,40);cx.fillStyle='#46525a';cx.fillRect(c.x-18,c.y-14,36,32);cx.fillStyle=s.cabOpen?'#6bd36b':'#c0392b';cx.fillRect(c.x+12,c.y-2,5,8);cx.fillStyle='#e6c25a';for(let i=0;i<3;i++)cx.fillRect(c.x-12+i*10,c.y-8,4,6)}
+ if(s.ext){const e=s.ext;cx.fillStyle='#b8322a';cx.fillRect(e.x-14,e.y-20,28,38);cx.fillStyle='#e8e0cc';cx.fillRect(e.x-9,e.y-14,18,12);cx.fillStyle='#222';cx.fillRect(e.x-5,e.y-10,10,4);cx.fillStyle='#8a1f19';cx.fillRect(e.x-14,e.y+14,28,4)}
 }
 function drawGold(){
  const g=S.gold,t=S.tick;
@@ -2176,9 +2424,12 @@ function nbOpen(){
  S.manPause=!NET.active;$('nb').hidden=false;stopInput();
  $('nbK').hidden=!truthOK();nbRender();
 }
+function ambushCheck(){
+ if(S.amb){const n=S.amb;S.amb=0;for(let i=0;i<n;i++){const a=Math.random()*6.283;S.cl.push(mkCleaner(S.p.x+Math.cos(a)*220,S.p.y+Math.sin(a)*220,'ghost'));S.fx.push({k:'puff',x:S.p.x+Math.cos(a)*220,y:S.p.y+Math.sin(a)*220,t:0,max:.4})}toast('輸錯鎖碼，鬼魂從牆裡衝出來埋伏你')}
+}
 function nbClose(){
  if(!S)return;$('nb').hidden=true;if(!S.fin2)S.manPause=false;
- if(S.amb){const n=S.amb;S.amb=0;for(let i=0;i<n;i++){const a=Math.random()*6.283;S.cl.push(mkCleaner(S.p.x+Math.cos(a)*220,S.p.y+Math.sin(a)*220,'ghost'));S.fx.push({k:'puff',x:S.p.x+Math.cos(a)*220,y:S.p.y+Math.sin(a)*220,t:0,max:.4})}toast('被騙了！鬼魂從牆裡衝出來埋伏你')}
+ ambushCheck();
 }
 function nbRender(){
  const s=S,b=$('nbBody');
@@ -2186,7 +2437,7 @@ function nbRender(){
  const got=NOTES.filter(n=>s.found[n.id]);
  $('nbH').textContent=`紙條簿　紙條 ${got.length}/${NOTE_N}　證據 ${s.pages}/10`;
  if(nbTab==='n'){
-  let h='<p class="sub">這些都是選擇性的線索，不看也能逃出學校。⚠ 小心：其中混著假線索，多比對幾張再相信。</p>';
+  let h='<p class="sub">這些都是選擇性的線索，不看也能逃出學校。所有紙條的內容都是真的。</p>';
   if(!got.length)h+='<p class="sub">還沒有撿到紙條。地圖上到處都有發亮的紙條，走過去就會撿起來。</p>';
   const both=s.found.p1&&s.found.p2;
   for(const n of got){
@@ -2198,11 +2449,6 @@ function nbRender(){
      h+=`<div class="nbimg">${noteSvg(n,{uvOn:s.uvShown})}</div>`;
      h+=s.uvShown?'<div class="nbok">紫外線照下去，字浮現了。</div>':`<button class="nbf" data-uv="1" type="button"${s.uv?'':' disabled'}>用紫外線手電筒照下去</button>${s.uv?'':'<div class="nbno">這張紙看起來什麼都沒有。也許需要特殊的光。</div>'}`;
     }else h+=`<div class="nbimg">${noteSvg(n,{merged:mg})}</div>`;
-    if(truthOK()){
-     const f=s.flag[n.id];
-     h+=`<button class="nbf${f?' on':''}" data-flag="${n.id}" type="button">${f?'已標記為可疑':'我覺得這張是假的'}</button>`;
-     if(f)h+=n.k==='fake'?`<div class="nbok">✔ 你看出破綻了：${noteTx(n.flaw)}</div>`:`<div class="nbno">✘ 這張紙條看不出破綻，可能是真的。</div>`;
-    }
    }
    h+='</div>';
   }
@@ -2217,33 +2463,23 @@ function nbRender(){
   }
   b.innerHTML=h;
  }else{
-  const both=s.found.p1&&s.found.p2;
-  let h='<p class="sub">總務處的抽屜上了鎖，鎖碼是 4 位數字。線索散落在紙條裡，其中也有假的。</p><ul class="nbl">';
+  const both=s.found.p1&&s.found.p2,c=got.length,jc=['z1','z2','z3'].filter(id=>s.found[id]).length;
+  let h='<p class="sub">校長室裡有一個上鎖的抽屜。所有線索都是真的，只是要自己把它們串起來。</p><ul class="nbl">';
+  h+=`<li>鑰匙櫃：${s.found.g1?'警衛室的鑰匙櫃，密碼 ＝ 逃生門被鎖死的道數 ＋ 火警停擺的月數（各取兩位數，連在一起）。':'還不知道備用鑰匙放在哪裡。警衛的交班本也許有寫。'}${s.cabOpen?'　✔ 已打開':''}</li>`;
+  h+=`<li>校長室的鑰匙：${s.cabOpen?'鑰匙清單說，校長室的鑰匙已被教官拿走保管。':'還沒有任何線索。'}${jc>=3?'教官的三張紙條拼出了位置：東邊教學樓走廊的盡頭，滅火器箱的後面。':(s.cabOpen?`教官的紙條找到 ${jc}/3 張，還拼不出位置。`:'')}${s.hasKey?'　✔ 鑰匙已到手':''}</li>`;
+  h+=`<li>抽屜：${c>=NOTE_N?'紙條已經集齊，可以到校長室輸入鎖碼。':`紙條要集齊才能解抽屜（目前 ${c}/${NOTE_N}）。不會告訴你缺哪一張。`}</li>`;
   h+=`<li>${both?'拼好的紙條：鎖碼 ＝ 火警被關閉的那一日 ＋ 逃生門被加鎖的那一日，各取兩位數連在一起。':'撕成兩半的紙條還沒湊齊（共兩張，分在不同房間）。'}</li>`;
   h+=`<li>${s.found.u1&&s.uvShown?'隱形墨水：先寫火，再寫門。':(s.found.u1?'有一張看起來空白的紙，也許要用特殊的光照在紙上才看得見。':'有些字跡肉眼看不見。打倒警衛也許能拿到特殊手電筒。')}</li>`;
   h+=`<li>${s.found.o1&&s.found.o2?'兩份公文都找到了。':'還缺少公文上的日期。'}</li></ul>`;
   if(s.codeOK)h+=`<div class="nbx truth">${TRUTH_TXT.replace(/\n/g,'<br>')}</div>`;
-  else h+='<div class="nbtry"><input id="nbCode" maxlength="4" inputmode="numeric" placeholder="輸入 4 位數鎖碼" autocomplete="off"><button class="go" id="nbGo" type="button">試鎖</button></div><p class="sub" id="nbMsg"></p><p class="sub">小心假紙條，輸入錯誤的鎖碼會驚動牆裡的東西。</p>';
   b.innerHTML=h;
  }
-}
-function nbTry(){
- const s=S,v=($('nbCode').value||'').trim(),m=$('nbMsg');
- if(v.length!==4){m.textContent='要輸入 4 位數字。';return}
- if(v===CODE_OK){
-  s.codeOK=true;sfx('unlock');
-  if(NET.active){codeEffects();toast('抽屜打開了！');nbRender()}
-  else{nbClose();startCut2('memo')}
- }else{sfx('lockfail');m.textContent='「喀、喀」……鎖沒有開。牆裡傳來低語。';s.amb=2}
 }
 $('nbBody').addEventListener('click',e=>{
  const t=e.target;
  if(t.dataset.id){nbSel=nbSel===t.dataset.id?null:t.dataset.id;nbRender();const o=document.querySelector('#nbBody .nbn.op');if(o)o.scrollIntoView({block:'start'})}
  else if(t.dataset.uv){if(S.uv){S.uvShown=true;sfx('reward');nbRender()}}
- else if(t.dataset.flag){S.flag[t.dataset.flag]=!S.flag[t.dataset.flag];nbRender()}
- else if(t.id==='nbGo')nbTry();
 });
-$('nbBody').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='nbCode'){e.preventDefault();nbTry()}});
 $('nbTabs').addEventListener('click',e=>{const t=e.target;if(t.dataset.nt){nbTab=t.dataset.nt;nbRender()}});
 $('nbX').addEventListener('click',nbClose);
 $('nbB').addEventListener('click',()=>nbOpened()?nbClose():nbOpen());
@@ -2441,6 +2677,11 @@ function sfx(n){
   case 'boom':noiseHit(t,.45,.6,d,900,'lowpass');tone(t,130,.4,'sine',.6,d,35);break;
   case 'lockfail':tone(t,170,.09,'square',.22,d,110);tone(t+.11,110,.18,'sawtooth',.2,d,70);noiseHit(t,.06,.2,d,900,'lowpass');break;
   case 'unlock':noiseHit(t,.04,.25,d,3500,'highpass');tone(t+.07,1250,.05,'square',.12,d);arp(t+.2,[67,72,76,84],.09,'triangle',.22);break;
+  case 'gdrop':tone(t,300,.12,'sine',.25,d,120);noiseHit(t,.06,.14,d,500,'lowpass');break;
+  case 'gshake':tone(t,200,.05,'square',.12,d,260);noiseHit(t,.03,.1,d,1800,'bandpass');break;
+  case 'gopen':noiseHit(t,.12,.22,d,3000,'highpass');arp(t+.04,[72,76,79],.07,'triangle',.2);break;
+  case 'grare':noiseHit(t,.15,.25,d,3500,'highpass');arp(t+.04,[72,76,79,84,88],.07,'triangle',.24);break;
+  case 'glegend':noiseHit(t,.25,.3,d,4000,'highpass');arp(t+.04,[72,76,79,84,88,91,96],.08,'triangle',.28);arp(t+.1,[60,64,67,72],.12,'sine',.2);break;
   case 'reward':arp(t,[72,76,79,84],.08,'triangle',.22);break;
   case 'panel':tone(t,880,.12,'sine',.3,d);tone(t+.1,1320,.2,'sine',.3,d);break;
   case 'pick':tone(t,520,.06,'square',.14,d);tone(t+.05,780,.1,'square',.14,d);break;
@@ -2475,7 +2716,15 @@ const TPAL={
 const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
-const PATCH={v:'v3.3',date:'2026/11/15',items:[
+const PATCH={v:'v3.5',date:'2026/11/15',items:[
+ ['第二章：視野距離升級','第二章的升級選項多了「視野距離」，每升一級，夜色中你周圍的亮處範圍變大、也更亮，最高 Lv10。'],
+ ['第二章：三種新分支','第二章開局選分支時，除了原本三種，多了螢光衛生紙（標記怪物、讓怪物受傷加深）、靜音衛生紙（沖水噪音傳得更近、偷襲加倍傷害）、聖水衛生紙（剋制鬼魂、留下聖水減速怪物），六選二。'],
+ ['第二章：怪物會被炸彈吸引','爆炸衛生紙 Lv9 的定點炸彈與「真」的發光體，現在也會吸引第二章的警衛、警犬和鬼魂。'],
+ ['寵物抽卡動畫','抽卡時會播放膠囊掉落、晃動、爆開的動畫，依稀有度有不同的光和音效，10 連抽會依序開，最後顯示總覽，可以按「跳過」。'],
+ ['第二章需要解鎖','要先在第一章打出隱藏結局（走完「放下」）才能玩第二章，沒解鎖時第二章按鈕會上鎖。管理員可以在後台替指定玩家開放。'],
+ ['新增校長室','地圖正中央最上方有一扇「校長室」的門。第一章也看得到，但只會顯示鎖著、現在還打不開。第二章要有鑰匙才能進去，抽屜就在裡面。'],
+ ['第二章：鑰匙的三步推理','①讀警衛交班本，知道鑰匙放在警衛室的鑰匙櫃。②用證據算出櫃子的 4 位數密碼，打開後發現校長室鑰匙被教官拿走。③集齊教官的三張紙條，拼出鑰匙藏在哪裡，去找出來。全部都是真線索，沒有假資訊。'],
+ ['第二章：紙條全部是真的','拿掉了假紙條與「標記可疑」。要集齊全部 24 張紙條，才能輸入抽屜的鎖碼。'],
  ['第二章：紙條全部有圖片','所有紙條點開後都是一張「圖片」：日記是橫線筆記本、交班本是藍灰色表格、公文有核章、輔導紀錄有「機密」章、教官的懺悔是舊皺紙、撕成兩半的紙條湊齊後會拼在一起。滅火器驗收單改成貼著一張便利貼，寫著「例行檢查而已，給多少你心裡清楚吧」，不再放在備註欄。'],
  ['第二章：隱形墨水','隱形墨水紙條在地圖上隨時都撿得到，打開後是一張空白的紙，要按「用紫外線手電筒照下去」才會浮現字跡（需要先打倒警衛拿到手電筒）。'],
  ['第二章：假線索提醒','紙條簿和第一次撿到假紙條時，都會提醒你「有些紙條是假線索」。標記出破綻後，只會告訴你這張哪裡怪，不會直接把你還沒找到的正確答案講出來。'],
@@ -3840,6 +4089,7 @@ function mergeSave(c){
  {const pp=cleanPets(c.pets);for(const k in pp)save.pets[k]=1;const cu=cleanUp(c.up);for(const k in cu)save.up[k]=Math.max(save.up[k]|0,cu[k]);if(c.slots===2)save.slots=2;save.gspent=Math.max(save.gspent|0,ci(c.gspent,1e6));save.refund=Math.max(save.refund|0,ci(c.refund,1e6));save.pity=Math.max(save.pity|0,ci(c.pity,999));if(!save.eq.length&&Array.isArray(c.eq))save.eq=c.eq.filter((k,i,a)=>save.pets[k]&&a.indexOf(k)===i).slice(0,save.slots)}
  if(Number.isFinite(c.esc))save.esc=Math.max(save.esc||0,Math.min(1e6,c.esc|0));
  if(save.ach.escape&&!save.esc)save.esc=1;
+ if(typeof c.ch2grant!=='undefined')save.ch2grant=c.ch2grant?1:0;
  if(typeof c.seen==='string'&&c.seen)save.seen=c.seen;
  if(Array.isArray(c.chat)&&c.chat.length>=save.chat.length)save.chat=c.chat;
  if(c.dseen3&&typeof c.dseen3==='object')save.dseen3=c.dseen3;
@@ -3866,7 +4116,7 @@ async function cloudSync(){
  const changed=JSON.stringify(save)!==before;
  try{localStorage.setItem('toiletEscapeSave',JSON.stringify(save))}catch(e){}
  await cloudPushNow();
- if(changed){try{setPal()}catch(e){}try{renderMenu()}catch(e){}}
+ if(changed){try{setPal()}catch(e){}try{renderMenu()}catch(e){}try{chSync()}catch(e){}}
 }
 async function authDo(kind){
  const email=(($('authEmail')||{}).value||'').trim(),pw=($('authPw')||{}).value||'';
@@ -4034,6 +4284,7 @@ function netHostStart(){
  netBegin(NET.mode,seed,ord,CH);
 }
 function netBegin(mode,seed,ord,ch){
+ if(ch===2&&!ch2Allowed()){toast('這個房間玩的是第二章，你還沒有解鎖，已離開房間');netLeave();$('net').hidden=true;return}
  if(ch===1||ch===2){CH=ch;try{chSync()}catch(e){}}
  NET.ord=Array.isArray(ord)&&ord.length>1&&ord.length<=NMAX&&ord.every(x=>typeof x==='string')&&ord.includes(myId())?ord.slice():[];
  NET.mode=mode;NET.seed=seed;NET.active=true;NET.fin={};NET.won=false;
@@ -4312,6 +4563,7 @@ function drawRoomDecor(r){
   const n=r.name;
   if(n==='電腦教室'){for(let tx=r.x0+1;tx<=r.x1-1;tx+=2)for(let ty=r.y0+1;ty<=r.y1;ty+=3){cx.fillStyle='#8c7a5a';cx.fillRect(tx*T+4,ty*T+16,32,14);cx.fillStyle='#22313a';cx.fillRect(tx*T+10,ty*T+2,20,16);cx.fillStyle='#6fd0ff';cx.fillRect(tx*T+12,ty*T+4,16,11)}}
   else if(n==='保健室'){cx.fillStyle='#f4f7f8';rr(x0+30,y0+50,110,44,6);cx.fillStyle='#d9e6ee';rr(x0+30,y0+50,34,44,8);cx.fillStyle='#e04646';cx.fillRect(r.px-6,y0+14,12,36);cx.fillRect(r.px-18,y0+26,36,12)}
+  else if(n==='警衛室'){cx.fillStyle='#6e5a3c';cx.fillRect(r.px-50,r.py-12,100,26);cx.fillStyle='#1d2a33';cx.fillRect(r.px-40,r.py-34,26,20);cx.fillRect(r.px-8,r.py-34,26,20);cx.fillStyle='#5ad2a0';cx.fillRect(r.px-37,r.py-31,20,14);cx.fillRect(r.px-5,r.py-31,20,14);cx.fillStyle='#8a6a3a';cx.fillRect(r.px+30,y0+60,40,24)}
   else if(n==='音樂教室'){cx.fillStyle='#2b2b33';cx.fillRect(r.px-60,y0+24,120,50);cx.fillStyle='#f4f4f4';for(let k=0;k<10;k++)cx.fillRect(r.px-58+k*11.8,y0+46,10,26);cx.fillStyle='#111';for(let k=0;k<9;k++)if(k%7!==2&&k%7!==6)cx.fillRect(r.px-52+k*11.8,y0+46,7,16)}
   else{const cols=['#c25a4a','#4a7ac2','#d9a93a','#58a36a','#8a5ac2'];
    for(let tx=r.x0;tx<=r.x1;tx+=3){cx.fillStyle='#7d5f3c';cx.fillRect(tx*T+2,y0,3*T-6,34);cx.fillStyle='#5b4329';cx.fillRect(tx*T+2,y0+30,3*T-6,4);for(let b=0;b<9;b++){cx.fillStyle=cols[(b+tx)%5];cx.fillRect(tx*T+6+b*11,y0+4,8,24-(b%3)*3)}}}
@@ -4381,8 +4633,9 @@ function render(){
  cx.fillStyle='#ffb703';rr(50*T-60,95.2*T,120,28,8);cx.fillStyle='#1b1300';cx.font=`700 18px ${FONT}`;cx.textAlign='center';cx.textBaseline='middle';cx.fillText('校 門',50*T,95.2*T+15);
  const vis=(x,y,m)=>x>camX-m&&x<camX+W+m&&y>camY-m&&y<camY+H+m;
  for(const r of rooms)if(r.kind&&r.kind!=='hall'&&vis(r.px,r.py,300))drawRoomDecor(r);
+ drawOfficeDoor();
  for(const t of toilets)if(vis(t.x,t.y,60))drawToilet(t,s.tick);
- if(s.ch===2){drawNotes();if(s.gold)drawGold()}
+ if(s.ch===2){drawHoly();drawKeyStuff();drawNotes();if(s.gold)drawGold()}
  for(const e of s.eggs)if(vis(e.x,e.y,40))drawEgg(e,s.tick);
  for(const g of s.trails){
   const a=Math.min(1,g.life/.6);cx.lineCap='round';
@@ -4600,6 +4853,7 @@ function hudTick(){
 
 /* ---------- 輸入 ---------- */
 function startGame(){
+ if(CH===2&&!ch2Allowed()){CH=1;chSync();return}
  const nm=($('nm').value.trim()||'小明').slice(0,8);
  try{localStorage.setItem('toiletEscapeName',nm)}catch(e){}
  newGame(nm);
@@ -4607,12 +4861,14 @@ function startGame(){
 try{const n=localStorage.getItem('toiletEscapeName');if(n)$('nm').value=n}catch(e){}
 $('goBtn').addEventListener('click',startGame);
 function chSync(){
+ if(CH===2&&!ch2Allowed()){CH=1;try{localStorage.setItem('toiletEscapeCh',1)}catch(e){}}
+ document.querySelectorAll('.chb').forEach(b=>b.classList.toggle('lock',+b.dataset.ch===2&&!ch2Allowed()));
  document.querySelectorAll('.chb').forEach(b=>b.classList.toggle('on',+b.dataset.ch===CH));
  $('ol1').hidden=CH!==1;$('ch2note').hidden=CH!==2;
  $('chSub').textContent=CH===2?'深夜的學校停電了。沖滿十個馬桶，從南邊校門離開。':'二十分鐘內，找到十個廁所各拉一泡屎，再從南邊校門逃出去。';
  $('goBtn').textContent=CH===2?'進入黑夜':'開始逃亡';
 }
-document.querySelectorAll('.chb').forEach(b=>b.addEventListener('click',()=>{CH=+b.dataset.ch;try{localStorage.setItem('toiletEscapeCh',CH)}catch(e){}chSync()}));
+document.querySelectorAll('.chb').forEach(b=>b.addEventListener('click',()=>{if(+b.dataset.ch===2&&!ch2Allowed()){$('chSub').textContent='第二章還沒解鎖：要先在第一章打出隱藏結局（和柏閔好好說再見）。';return}CH=+b.dataset.ch;try{localStorage.setItem('toiletEscapeCh',CH)}catch(e){}chSync()}));
 chSync();
 /* ---- 全螢幕與手勢鎖定 ---- */
 const FSE=document.documentElement,FSreq=FSE.requestFullscreen||FSE.webkitRequestFullscreen;
