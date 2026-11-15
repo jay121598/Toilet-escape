@@ -2580,7 +2580,7 @@ const AU={ctx:null,master:null,mus:null,sfx:null,noise:null,muted:false,track:nu
 try{AU.muted=localStorage.getItem('toiletEscapeMute')==='1'}catch(e){}
 const mtof=m=>440*Math.pow(2,(m-69)/12);
 function audioInit(){
- if(AU.ctx){if(AU.ctx.state==='suspended')AU.ctx.resume();return}
+ if(AU.ctx){if(AU.ctx.state!=='running')AU.ctx.resume();return}
  try{
   const C=window.AudioContext||window.webkitAudioContext;if(!C)return;
   const c=AU.ctx=new C();
@@ -2721,7 +2721,8 @@ function sfx(n){
  }
 }
  function menuMusic(){if(!$('start').hidden&&!AU.name){audioInit();setTrack('menu')}}
- document.addEventListener('pointerdown',menuMusic);document.addEventListener('keydown',menuMusic);
+ for(const ev of ['pointerdown','pointerup','click','touchend','keydown'])document.addEventListener(ev,()=>{if(AU.ctx&&AU.ctx.state!=='running')AU.ctx.resume();menuMusic()},{passive:true});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AU.ctx&&AU.ctx.state!=='running')AU.ctx.resume()});
 $('mute').addEventListener('click',()=>{audioInit();setMute(!AU.muted)});
 setMute(AU.muted);
 document.addEventListener('visibilitychange',()=>{if(AU.ctx){if(document.hidden)AU.ctx.suspend();else AU.ctx.resume()}});
