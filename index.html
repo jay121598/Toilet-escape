@@ -1679,8 +1679,8 @@ $('sp-up').addEventListener('click',e=>{
 function gachaAnim(res,done){
  const ov=$('gach'),cv2=$('gcv'),g=cv2.getContext('2d'),multi=res.length>1,SP=multi?.5:1;
  const D0=.55*SP,D1=1.05*SP,D2=.42*SP,D3=multi?.9:1e9;
- ov.hidden=false;
- let idx=0,st='drop',ts=performance.now(),raf=0,summary=false,lastShake=0,fired=false;
+ ov.hidden=false;audioInit();setTrack('gacha');
+ let sumP=false,idx=0,st='drop',ts=performance.now(),raf=0,summary=false,lastShake=0,fired=false;
  const ease=k=>1-Math.pow(1-k,3);
  function capsule(x,y,ang,open){
   g.save();g.translate(x,y);g.rotate(ang);
@@ -1706,7 +1706,7 @@ function gachaAnim(res,done){
   if(idx>=res.length){if(multi){summary=true}else close();return}
   st='drop';ts=performance.now();
  }
- function close(){cancelAnimationFrame(raf);ov.hidden=true;cv2.onclick=null;$('gskip').onclick=null;done()}
+ function close(){cancelAnimationFrame(raf);ov.hidden=true;if(!$('start').hidden)setTrack('menu');cv2.onclick=null;$('gskip').onclick=null;done()}
  function drawBg(now){
   const q=g.createRadialGradient(320,200,40,320,200,420);q.addColorStop(0,'#1c2b3a');q.addColorStop(1,'#070b10');g.fillStyle=q;g.fillRect(0,0,640,400);
   g.fillStyle='rgba(255,255,255,.05)';for(let i=0;i<30;i++)g.fillRect((i*97+now*.02)%640,(i*53)%400,2,2);
@@ -1715,6 +1715,7 @@ function gachaAnim(res,done){
   raf=requestAnimationFrame(frame);
   g.clearRect(0,0,640,400);drawBg(now);g.textAlign='center';g.textBaseline='middle';
   if(summary){
+   if(!sumP){sumP=true;sfx('gsum')}
    g.fillStyle='#fff';g.font=`700 22px ${FONT}`;g.fillText('抽卡結果',320,28);
    res.forEach((it,i)=>{
     const P=PETS[it.id],col=RCOL[P.r],x=64+(i%5)*128,y=60+Math.floor(i/5)*160;
@@ -1742,7 +1743,7 @@ function gachaAnim(res,done){
    const k=Math.min(1,e/D2);
    g.globalAlpha=1-k;g.fillStyle='#fff';g.beginPath();g.arc(320,200,20+420*k,0,7);g.fill();g.globalAlpha=1;
    capsule(320,200,k*.8,k);
-   if(e>=D2){st='reveal';ts=now}
+   if(e>=D2){st='reveal';ts=now;if(!it.dup)sfx('gnew')}
   }else{
    const k=Math.min(1,e*3.2),sc=1.8+1.1*ease(k)+(P.r>=3?.15*Math.sin(e*5):0);
    glowC(320,210,150,col,.45+.2*Math.sin(e*4));
@@ -1764,7 +1765,7 @@ function gachaAnim(res,done){
 }
 $('sp-pet').addEventListener('click',e=>{
  const g=e.target.closest('[data-g]');
- if(g){doPull(+g.dataset.g);if(lastPull){const lp=lastPull;lastPull=null;gachaAnim(lp,()=>{lastPull=lp;renderMenu()})}else renderMenu();return}
+ if(g){sfx('gpull');doPull(+g.dataset.g);if(lastPull){const lp=lastPull;lastPull=null;gachaAnim(lp,()=>{lastPull=lp;renderMenu()})}else renderMenu();return}
  if(e.target.closest('[data-slot]')){
   if(save.slots>=2)return;
   if(!spend(SLOT2)){petMsg=`鑽石不足：需要 ${SLOT2} 顆，你有 ${gemsOf()} 顆。`}else{save.slots=2;petMsg='已解鎖第 2 個出戰欄位。'}
@@ -1776,7 +1777,7 @@ $('sp-pet').addEventListener('click',e=>{
  if(i>=0)save.eq.splice(i,1);else{save.eq.push(id);while(save.eq.length>save.slots)save.eq.shift()}
  petMsg='';persist();renderMenu();
 });
-$('toMenu').addEventListener('click',()=>{netLeave();$('giveup').hidden=true;$('end').hidden=true;$('start').hidden=false;renderMenu();S=null});
+$('toMenu').addEventListener('click',()=>{netLeave();$('giveup').hidden=true;$('end').hidden=true;$('start').hidden=false;renderMenu();S=null;audioInit();setTrack('menu')});
 
 /* ---------- 暫停 ---------- */
 let quitArm=false;
@@ -1788,7 +1789,7 @@ function setPause(v){
  if(v){stopInput();$('pauseT').textContent=NET.active?'選單':'遊戲暫停';$('pauseD').textContent=NET.active?'連線比賽中，遊戲不會停止，其他玩家還在繼續。':'目前這一局已暫停。';$('pResume').focus()}
 }
 function quitToMenu(){
- netLeave();$('pause').hidden=true;$('giveup').hidden=true;$('end').hidden=true;$('start').hidden=false;setTrack(null);renderMenu();S=null;
+ netLeave();$('pause').hidden=true;$('giveup').hidden=true;$('end').hidden=true;$('start').hidden=false;renderMenu();S=null;audioInit();setTrack('menu');
 }
 $('pauseB').addEventListener('click',()=>setPause(true));
 $('pResume').addEventListener('click',()=>setPause(false));
@@ -2602,6 +2603,8 @@ const TRK={
  night:{sd:60/84/4,bass:[41,38,36,39],lead:[[69,0,0,0,72,0,0,0],[67,0,0,0,64,0,0,0],[65,0,0,0,69,0,72,0],[71,0,0,0,68,0,0,0]]},
  nboss:{sd:60/148/4,bass:[36,36,34,31],lead:[[72,71,0,71,69,0,68,0],[70,0,69,70,68,0,66,0],[72,0,71,72,74,71,0,68],[69,68,66,0,68,69,71,0]]},
  truth:{sd:60/76/4,bass:[48,43,45,41],lead:[[72,0,76,0,79,0,76,0],[74,0,77,0,81,0,77,0],[71,0,74,0,79,0,74,0],[72,0,79,0,76,0,72,0]]},
+ menu:{sd:60/108/4,bass:[48,41,43,43],lead:[[76,0,79,76,84,0,79,0],[77,0,81,77,84,0,81,0],[74,0,77,74,83,0,79,0],[76,79,84,79,83,0,72,0]]},
+ gacha:{sd:60/132/4,bass:[45,45,43,43],lead:[[69,72,76,72,69,72,76,81],[69,72,77,72,69,72,77,84],[67,71,74,71,67,71,74,79],[69,73,76,73,81,85,88,93]]},
  boss:{sd:60/160/4,bass:[38,34,36,33],lead:[[74,0,75,74,77,74,75,74],[70,0,72,70,74,72,70,67],[72,0,74,72,75,74,72,69],[69,70,72,74,75,74,72,70]]}
 };
 function playStep(tr,s,t,boss){
@@ -2623,6 +2626,8 @@ function playStep(tr,s,t,boss){
   if(st===15)noiseHit(t,.05,.12,d,9000);
   return;
  }
+ if(AU.name==='menu'){const bar=(s>>4)&3,st=s&15,m=tr.lead[bar][st>>1],d=AU.mus,r=tr.bass[bar];if(st===0||st===8)tone(t,120,.13,'sine',.5,d,45);if(st%4===0)tone(t,mtof(r+(st%8===0?0:12)),tr.sd*3,'triangle',.26,d);if(st%2===1)noiseHit(t,.03,.07,d,8000);if(st===4||st===12)noiseHit(t,.07,.14,d,2500,'bandpass');if(st%2===0&&m){tone(t,mtof(m),tr.sd*2.6,'square',.07,d);tone(t,mtof(m+12),tr.sd*1.2,'triangle',.03,d)}return}
+ if(AU.name==='gacha'){const bar=(s>>4)&3,st=s&15,m=tr.lead[bar][st>>1],d=AU.mus,r=tr.bass[bar];if(st===0)tone(t,mtof(r),tr.sd*15,'sawtooth',.16,d);if(st%4===0)tone(t,90,.1,'sine',.35,d,50);if(st%2===1)noiseHit(t,.025,.06+.02*bar,d,9000);if(st%2===0&&m)tone(t,mtof(m),tr.sd*2.2,'triangle',.12,d);if(bar===3&&st%2===0)tone(t,mtof(m+12),tr.sd,'sine',.05,d);if(bar===3&&st===0)noiseHit(t,tr.sd*14,.12,d,3000,'bandpass');return}
  if(AU.name==='truth'){const bar=(s>>4)&3,st=s&15,m=tr.lead[bar][st>>1],d=AU.mus;if(st===0){tone(t,mtof(tr.bass[bar]),tr.sd*15,'sine',.3,d);tone(t,mtof(tr.bass[bar]+12),tr.sd*15,'sine',.08,d)}if(st===8)tone(t,mtof(tr.bass[bar]+7),tr.sd*7,'sine',.16,d);if(st%2===0&&m){tone(t,mtof(m+12),tr.sd*3,'sine',.12,d);tone(t,mtof(m+19),tr.sd*1.5,'triangle',.05,d)}if(st===5||st===13)noiseHit(t,.05,.05,d,5000,'highpass');return}
  if(AU.name==='sad'){const bar=(s>>4)&3,st=s&15,m=tr.lead[bar][st>>1],d=AU.mus;if(st===0)tone(t,mtof(tr.bass[bar]),tr.sd*14,'sine',.35,d);if(st===8)tone(t,mtof(tr.bass[bar]+7),tr.sd*7,'sine',.2,d);if(st%2===0&&m)tone(t,mtof(m),tr.sd*5,'triangle',.16,d);return}
  const bar=(s>>4)&3,st=s&15,d=AU.mus,m=tr.lead[bar][st>>1];
@@ -2677,6 +2682,9 @@ function sfx(n){
   case 'boom':noiseHit(t,.45,.6,d,900,'lowpass');tone(t,130,.4,'sine',.6,d,35);break;
   case 'lockfail':tone(t,170,.09,'square',.22,d,110);tone(t+.11,110,.18,'sawtooth',.2,d,70);noiseHit(t,.06,.2,d,900,'lowpass');break;
   case 'unlock':noiseHit(t,.04,.25,d,3500,'highpass');tone(t+.07,1250,.05,'square',.12,d);arp(t+.2,[67,72,76,84],.09,'triangle',.22);break;
+  case 'gpull':tone(t,1300,.05,'square',.13,d,1900);tone(t+.07,1700,.06,'square',.13,d,2400);tone(t+.15,2100,.1,'triangle',.12,d);break;
+  case 'gnew':arp(t,[84,88,91,96],.06,'sine',.2);break;
+  case 'gsum':arp(t,[72,76,79,84],.1,'triangle',.22);noiseHit(t,.2,.12,d,5000,'highpass');break;
   case 'gdrop':tone(t,300,.12,'sine',.25,d,120);noiseHit(t,.06,.14,d,500,'lowpass');break;
   case 'gshake':tone(t,200,.05,'square',.12,d,260);noiseHit(t,.03,.1,d,1800,'bandpass');break;
   case 'gopen':noiseHit(t,.12,.22,d,3000,'highpass');arp(t+.04,[72,76,79],.07,'triangle',.2);break;
@@ -2699,6 +2707,8 @@ function sfx(n){
   case 'bossdown':arp(t,[60,67,72,79],.1,'square',.16,.3);noiseHit(t,.4,.5,d,900,'lowpass');break;
  }
 }
+ function menuMusic(){if(!$('start').hidden&&!AU.name){audioInit();setTrack('menu')}}
+ document.addEventListener('pointerdown',menuMusic);document.addEventListener('keydown',menuMusic);
 $('mute').addEventListener('click',()=>{audioInit();setMute(!AU.muted)});
 setMute(AU.muted);
 document.addEventListener('visibilitychange',()=>{if(AU.ctx){if(document.hidden)AU.ctx.suspend();else AU.ctx.resume()}});
@@ -2716,7 +2726,9 @@ const TPAL={
 const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
-const PATCH={v:'v3.5',date:'2026/11/15',items:[
+const PATCH={v:'v3.6',date:'2026/11/15',items:[
+ ['主選單音樂','主選單現在有輕快的背景音樂（瀏覽器規定要先點一下畫面才會開始播）。開始遊戲會換成遊戲音樂，回主選單會換回來。'],
+ ['抽卡音效與音樂','抽卡時有專屬的緊張期待感音樂；按下抽卡有投幣聲，新夥伴有閃亮音效，抽完有總結音效。'],
  ['第二章：視野距離升級','第二章的升級選項多了「視野距離」，每升一級，夜色中你周圍的亮處範圍變大、也更亮，最高 Lv10。'],
  ['第二章：三種新分支','第二章開局選分支時，除了原本三種，多了螢光衛生紙（標記怪物、讓怪物受傷加深）、靜音衛生紙（沖水噪音傳得更近、偷襲加倍傷害）、聖水衛生紙（剋制鬼魂、留下聖水減速怪物），六選二。'],
  ['第二章：怪物會被炸彈吸引','爆炸衛生紙 Lv9 的定點炸彈與「真」的發光體，現在也會吸引第二章的警衛、警犬和鬼魂。'],
