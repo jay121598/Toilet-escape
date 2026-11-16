@@ -873,6 +873,7 @@ function update(dt){
   if(c.type==='boss'){bossAI(c,dt);continue}
   if(c.type==='naiwa'){nwBoss(c,dt);continue}
   if(c.stun>0){c.stun-=dt;continue}
+  if(infight(c,dt,sp))continue;
   if(c.type==='guard'||c.type==='ghost'||c.type==='dog'){ch2AI(c,dt,sp);continue}
   const fac=1-Math.max(c.slow>0?c.slowPct:0,c.ts>0?.5:0),spd=(c.type==='bike'?BIKE_SPD:sp)*fac;
   let at=null,bd=700;
@@ -940,7 +941,7 @@ const ABDESC={'真':'丟出發光體，吸引清潔工 6 秒（冷卻 20 秒）'
 const BR={
  1:{name:'滾動衛生紙',t:['衛生紙會滾出去，留下一條紙路，經過的清潔工 -7 血。紙變大、路變寬，紙路停留 3 秒','碰到清潔工後會滾向下一個，最多撞 3 個，紙路停留 5 秒','清潔工踩到紙路會減速 50%']},
 3:{name:'用過的衛生紙',t:['丟出去打到清潔工後會殘留毒氣，毒氣會持續傷害範圍內的清潔工','毒氣留存時間更久，清潔工碰到毒氣會中劇毒','毒氣會讓清潔工中劇毒並減速；即使毒氣消失，只要場上還有被感染的清潔工，就會自動傳染給附近的清潔工']},
- 4:{name:'螢光衛生紙',t:['命中會炸出螢光，80 像素內的怪物受到 60% 傷害並被標記 6 秒（隔牆也看得到），被標記的怪物受到的傷害 +50%，鬼魂也會現形','螢光範圍 110 像素，標記延長到 9 秒、傷害加成 +70%，300 像素內的怪物也會被標記','標記 10 秒、傷害加成 +100%；被標記的怪物倒下時，300 像素內的怪物受到 2.5 倍攻擊力的爆炸傷害，400 像素內全部被標記，並多掉一枚金幣']},
+ 4:{name:'螢光衛生紙',t:['命中會炸出螢光，80 像素內的怪物受到 60% 傷害並被標記 6 秒（隔牆也看得到），被標記的怪物受到的傷害 +50%，鬼魂也會現形，附近沒被標記的怪物會跑去攻擊被標記的怪物','螢光範圍 110 像素，標記延長到 9 秒、傷害加成 +70%，300 像素內的怪物也會被標記','標記 10 秒、傷害加成 +100%；被標記的怪物倒下時，300 像素內的怪物受到 2.5 倍攻擊力的爆炸傷害，400 像素內全部被標記，並多掉一枚金幣']},
  5:{name:'靜音衛生紙',t:['傷害 +35%，衛生紙會穿透 2 個怪物，沖水的噪音只傳到原本 70% 的距離','穿透 4 個怪物，命中「還沒發現你」的警衛或遠處的警犬傷害再 ×4，噪音範圍縮到 45%','穿透 6 個怪物，命中的怪物暈眩 1.2 秒，警衛會忘記你，噪音範圍縮到 20%']},
  6:{name:'聖水衛生紙',t:['命中會濺開聖水，90 像素內的怪物受到 70% 傷害，鬼魂傷害 ×2 並現形 3 秒','濺射範圍 120 像素、傷害 90%，被濺到的怪物減速 30%，鬼魂還會被定身 0.9 秒','濺射範圍 150 像素、傷害 120%，並留下 8 秒的聖水：怪物持續受傷並減速 40%，鬼魂受到 3 倍傷害且無法隱形']},
  2:{name:'爆炸衛生紙',t:['衛生紙命中後爆炸，爆炸傷害 14','爆炸會連鎖引爆 6 格內最多 3 個清潔工','衛生紙飛到定點並吸引清潔工，3 秒後爆炸，範圍 5 格，傷害 10']}
@@ -979,7 +980,7 @@ function segDist(px,py,g){
 function combat(dt,L){
  const s=S,p=s.p,tier=tierOf(),bombMode=s.branch===2&&tier===3;
  p.atkT-=dt;if(p.thrT>0)p.thrT-=dt;
- pieFire(dt,L);
+ pieFire(dt,L);dogTick(dt,L);
  const cnt=1+s.multiLv;
  if(p.atkT<=0&&L.length&&!(bombMode&&s.bombs.length>=12)){
   const cand=[];for(const c of L){if(c.dead||c.nt)continue;const d=Math.hypot(c.x-p.x,c.y-p.y);if(d<=CFG.range)cand.push([d,c])}
@@ -1209,7 +1210,7 @@ const PETS={
  dragon:{n:'龍',r:3,hp:240,spd:300,rest:22,h:70,fly:1,d:'高血量、會飛，不會被攻擊到（臭水瓶除外），噴火造成扇形範圍傷害'},
  phoenix:{n:'鳳凰',r:3,hp:140,spd:290,rest:20,h:58,d:'火球附帶灼燒，使怪物減速、虛弱並持續受傷；被打倒後 1 秒原地復活（每 25 秒一次）'},
  rock:{n:'石頭',r:3,hp:420,spd:170,rest:26,h:44,d:'免疫毒氣；跳到空中重重砸向地面，超高傷害，血量極高'},
- egg:{n:'奶蛋',r:4,hp:220,spd:240,rest:16,h:40,d:'隱藏寵物。靠近怪物就開心大笑，笑聲震波會傷害並暈眩周圍所有怪物（頭目不會暈）'}
+ egg:{n:'奶蛋',r:4,hp:220,spd:240,rest:16,h:38,d:'隱藏寵物。靠近怪物就開心大笑，笑聲震波會傷害並暈眩周圍所有怪物（頭目不會暈）'}
 };
 const RAR=['普通','稀有','史詩','傳說','隱藏'],RCOL=['#9fb3bd','#5aa9ff','#b57bff','#ffb703','#ff7ad9'],RDUP=[3,6,15,30,0];
 const UPG={
@@ -1506,14 +1507,18 @@ function petSprite(id,x,y,f,o){
   cx.fillStyle='#ff5a1e';for(let i=0;i<3;i++){cx.beginPath();cx.moveTo(sg*(2+i*3),-34);cx.lineTo(sg*(3+i*3),-43-i*2+Math.sin(t*10+i)*2);cx.lineTo(sg*(5+i*3),-34);cx.closePath();cx.fill()}
   cx.fillStyle='#ffe066';cx.beginPath();cx.moveTo(sg*10,-30);cx.lineTo(sg*16,-28);cx.lineTo(sg*10,-26);cx.closePath();cx.fill();eye(sg*6,-31);
  }else if(id==='egg'){
-  const sq=at?1.1:1,wb=Math.sin(t*(o.mv?14:3))*1.5;
-  cx.save();cx.rotate(wb*.03);cx.scale(sq,1/sq);
-  E(-5,-3,5,2.6,'#6b5a2a');E(5,-3,5,2.6,'#6b5a2a');
-  E(0,-19,12,16,'#f2c14e');E(-3,-25,6,7,'rgba(255,240,170,.55)');
+  const sq=at?1.07:1,wb=Math.sin(t*(o.mv?14:3))*1.2;
+  cx.save();cx.rotate(wb*.03);cx.scale(.82*sq,.82/sq);
+  const body=()=>{cx.beginPath();cx.moveTo(0,-44);cx.bezierCurveTo(16,-44,21,-22,21,-13);cx.bezierCurveTo(21,-3,11,0,0,0);cx.bezierCurveTo(-11,0,-21,-3,-21,-13);cx.bezierCurveTo(-21,-22,-16,-44,0,-44);cx.closePath()};
+  const gr=cx.createLinearGradient(-16,-38,18,0);gr.addColorStop(0,'#fbe27a');gr.addColorStop(.55,'#f2c14e');gr.addColorStop(1,'#d79428');
+  cx.fillStyle=gr;body();cx.fill();
+  cx.strokeStyle='rgba(150,95,20,.55)';cx.lineWidth=1.4;body();cx.stroke();
+  cx.fillStyle='rgba(255,255,255,.55)';cx.beginPath();cx.ellipse(-9,-32,3.6,8,-.45,0,7);cx.fill();
+  cx.fillStyle='rgba(255,255,255,.3)';cx.beginPath();cx.ellipse(-4,-40,2,1.4,-.3,0,7);cx.fill();
+  if(o.sleep){cx.strokeStyle='#222';cx.lineWidth=1.5;for(const ex of[-6.5,6.5]){cx.beginPath();cx.moveTo(ex-3,-24);cx.lineTo(ex+3,-24);cx.stroke()}}
+  else{for(const ex of[-6.5,6.5]){E(ex,-24,4.3,4.5,'#8fc9a0');E(ex+sg*.6,-24,2,2.2,'#111')}}
+  cx.strokeStyle='#9a6416';cx.lineWidth=1.6;cx.beginPath();if(at){cx.ellipse(0,-14,3.6,2.8,0,0,7)}else{cx.moveTo(-4,-16);cx.quadraticCurveTo(0,-13,4,-16)}cx.stroke();
   cx.restore();
-  if(o.sleep){cx.strokeStyle='#222';cx.lineWidth=1.4;for(const ex of[-4.5,4.5]){cx.beginPath();cx.moveTo(ex-2.5,-22);cx.lineTo(ex+2.5,-22);cx.stroke()}}
-  else{for(const ex of[-4.5,4.5]){E(ex,-22,3.2,3.4,'#8fc9a0');E(ex+sg*.5,-22,1.5,1.7,'#111')}}
-  cx.strokeStyle='#a8741e';cx.lineWidth=1.3;cx.beginPath();if(at){cx.ellipse(0,-14,3.2,2.4,0,0,7)}else{cx.moveTo(-3,-15);cx.quadraticCurveTo(0,-13,3,-15)}cx.stroke();
  }else if(id==='rock'){
   const sq=at?1.12:1;
   cx.save();cx.scale(1,sq);
@@ -2555,7 +2560,7 @@ function nwPlace(){
  }
  W.items=out;nwDecode();
 }
-const ARENA_KEYS=['gas','coinL','bombs','eggs','stu','proj','trails','bproj','slam','pp','fires','allies','booms','nwp','nwz'];
+const ARENA_KEYS=['dogs','gas','coinL','bombs','eggs','stu','proj','trails','bproj','slam','pp','fires','allies','booms','nwp','nwz'];
 const AR={x0:36,x1:63,y0:41,y1:58,pil:[[42,46],[57,46],[42,53],[57,53],[49,49],[50,49],[49,50],[50,50]]};
 function nwEnter(){
  const s=S,p=s.p;
@@ -2597,8 +2602,9 @@ function nwWon(c){
  for(const o of s.cl)if(o.type==='nmouse')o.dead=true;
  setTrack('main');nwLaugh(.9,.7);
  s.fx.push({k:'sboom',x:c.x,y:c.y,t:0,max:.9,r:260});
- if(!save.pets.egg){save.pets.egg=1;persist();sfx('reward');toast('隱藏 boss 倒下了！獲得隱藏寵物：奶蛋（到寵物頁裝備）')}
- else{sfx('reward');toast('隱藏 boss 倒下了！')}
+ if(!save.pets.egg){save.pets.egg=1;persist();sfx('reward');toast('隱藏 boss 倒下了！獲得隱藏寵物：奶蛋（到寵物頁裝備）。這局還能召喚奶狗幫你咬怪物')}
+ else{sfx('reward');toast('隱藏 boss 倒下了！這局還能召喚奶狗幫你咬怪物')}
+ s.dogAtk=true;s.dogCd=3;
  if(s.arena)s.arena.exitT=3.2;
 }
 function nwHurt(d,why){return bossHurt(d,why)}
@@ -2817,7 +2823,6 @@ function drawArenaBg(){
 }
 function drawNwFx(){
  const s=S;if(!s.nwp)return;
- if(s.arena)drawArenaBg();
  for(const z of s.nwz){
   if(z.t>0){
    const k=1-z.t/z.max;
@@ -2843,6 +2848,18 @@ function drawNwFx(){
  }
 }
 
+function infight(c,dt,sp){
+ if(c.ia>0)c.ia-=dt;
+ if(S.branch!==4||c.mark>0||c.type==='boss'||c.type==='naiwa'||c.type==='nmouse')return false;
+ let t=c.ft;
+ if(t&&(t.dead||!(t.mark>0)))t=c.ft=null;
+ if(!t){let bd=340;for(const o of S.cl){if(o===c||o.dead||o.nt||!(o.mark>0)||o.type==='boss'||o.type==='naiwa')continue;const d=Math.hypot(o.x-c.x,o.y-c.y);if(d<bd){bd=d;t=o}}c.ft=t||null}
+ if(!t)return false;
+ const dx=t.x-c.x,dy=t.y-c.y,d=Math.hypot(dx,dy)||1;
+ if(d>28){const m=Math.min(d,sp*1.15*dt*(1-(c.slow>0?c.slowPct:0)));walk(c,dx/d*m,dy/d*m,13);c.face=dx>=0?1:-1;c.walk+=dt*9}
+ else if(!(c.ia>0)){c.ia=.8;hitCleaner(t,8*(c.dm||1),false);S.fx.push({k:'puff',x:t.x,y:t.y-20,t:0,max:.25})}
+ return true;
+}
 function bossAI(c,dt){
  const s=S,p=s.p;
  c.face=p.x>=c.x?1:-1;
@@ -3081,7 +3098,9 @@ const TPAL={
 const GYMP={body:'#4a7bd8',pants:'#1c2b4d',hair:'#2b1e17',skin:'#e8bd98'};
 const HOOD={body:'#16161c',pants:'#16161c',hair:'#f4d35e',skin:'#e8bd98',spike:1,tat:1};
 
-const PATCH={v:'v3.10',date:'2026/11/16',items:[
+const PATCH={v:'v3.11',date:'2026/11/16',items:[
+ ['螢光衛生紙：怪物互咬','被螢光標記的怪物，附近沒被標記的怪物會跑去攻擊它，標記越多，場面越混亂。'],
+ ['隱藏 boss 戰調整','隱藏 boss 現在也有和校長一樣的大血條；打贏之後，那一局內會自動召喚「奶狗」幫忙：衝向怪物咬住不放，咬死了再換下一隻，最多咬死 3 隻後離開（不是寵物，是一種攻擊，不會留下路徑）。戰鬥場地的地面也改到路徑衛生紙的下面，不再蓋住紙路。隱藏寵物的外觀也畫得更像蛋了。'],
  ['隱藏 boss 戰調整','隱藏 boss 現在會在專屬場地裡戰鬥，戰鬥期間倒數時間暫停，不用擔心被時間追著跑；他的幾種攻擊也換成了更貼切的造型，並改成固定順序輪流出招。'],
  ['新增隱藏 boss 與隱藏寵物','第二章裡藏著一個很難打的隱藏 boss，打倒他有機會獲得一隻隱藏寵物。要怎麼找到他，就自己探索吧。'],
  ['多人模式可以再玩一次','多人比賽（合作、擊殺賽、時間賽）結束後，房主可以按「再玩一次」直接用同一批人再開一局（會換新地圖），其他人會自動進入倒數；房間人數不夠時按鈕會停用。'],
@@ -3168,6 +3187,7 @@ function stopInput(){for(const k in keys)keys[k]=false;joy.on=false;joy.m=0;$('j
 function extraChips(){
  return (S.buffT>0?`<span id="bufc" style="background:#ffd24a">國文加持 ${Math.ceil(S.buffT)}s</span>`:'')
   +(S.pie?'<span style="background:#f2f7f9">刮鬍泡派</span>':'')
+  +(S.dogAtk?'<span style="background:#f2d56c">奶狗</span>':'')
   +(S.geo?'<span style="background:#9fd3a8">地理震波</span>':'')
   +(S.pPoison>0?`<span id="poic" style="background:#8ccf5a">中毒 ${Math.ceil(S.pPoison)}s</span>`:'');
 }
@@ -3255,6 +3275,35 @@ $('bdIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing)yzSu
 $('bdO').addEventListener('click',e=>{const b=e.target.closest('.bo');if(b)baoAnswer(b.dataset.v)});
 
 /* ---------- 刮鬍泡派 ---------- */
+/* ---------- 奶狗（打贏隱藏 boss 後，本局可用） ---------- */
+function dogPick(x,y,L,R,not){
+ let b=null,bd=R;
+ for(const c of L){if(c.dead||c.nt||c.type==='boss'||c.type==='naiwa'||c===not)continue;const d=Math.hypot(c.x-x,c.y-y);if(d<bd){bd=d;b=c}}
+ return b;
+}
+function dogTick(dt,L){
+ const s=S,p=s.p;if(!s.dogAtk)return;
+ s.dogs=s.dogs||[];
+ if(!s.dogs.length){
+  s.dogCd=(s.dogCd||0)-dt;
+  if(s.dogCd<=0){const t=dogPick(p.x,p.y,L,CFG.range+100);if(t){s.dogs.push({x:p.x,y:p.y,tg:t,kills:0,bt:0,life:18,face:1});s.dogCd=6;sfx('cast');s.fx.push({k:'puff',x:p.x,y:p.y-10,t:0,max:.35})}}
+ }
+ for(const d of s.dogs){
+  d.life-=dt;if(d.bt>0)d.bt-=dt;
+  let t=d.tg;
+  if(t&&t.dead){d.kills++;t=d.tg=null;if(d.kills>=3){d.done=true;continue}}
+  if(!t){t=d.tg=dogPick(d.x,d.y,L,460);if(!t){d.done=true;continue}}
+  const dx=t.x-d.x,dy=t.y-d.y,dd=Math.hypot(dx,dy)||1;
+  d.face=dx>=0?1:-1;
+  if(dd>26){const m=Math.min(dd,560*dt);d.x+=dx/dd*m;d.y+=dy/dd*m}
+  else{
+   t.stun=Math.max(t.stun||0,.3);
+   if(d.bt<=0){d.bt=.25;hitCleaner(t,Math.max(5,(5+(p.atk-CFG.atk))*1.6),false);s.fx.push({k:'puff',x:t.x,y:t.y-18,t:0,max:.2})}
+  }
+  if(d.life<=0)d.done=true;
+ }
+ if(s.dogs.some(d=>d.done)){for(const d of s.dogs)if(d.done)s.fx.push({k:'puff',x:d.x,y:d.y-10,t:0,max:.35});s.dogs=s.dogs.filter(d=>!d.done)}
+}
 function pieFire(dt,L){
  const s=S,p=s.p;if(!s.pie)return;
  p.pieT-=dt;if(p.pieT>0||!L.length)return;
@@ -5008,6 +5057,7 @@ function render(){
  const tx0=Math.max(0,Math.floor(camX/T)),tx1=Math.min(N-1,Math.floor((camX+W)/T)),ty0=Math.max(0,Math.floor(camY/T)),ty1=Math.min(N-1,Math.floor((camY+H)/T));
  const ents=[];
  for(let y=ty0;y<=ty1;y++)for(let x=tx0;x<=tx1;x++)drawTile(x,y,map[y*N+x],ents,s.tick);
+ if(s.arena)drawArenaBg();
  // 校門招牌
  cx.fillStyle='#ffb703';rr(50*T-60,95.2*T,120,28,8);cx.fillStyle='#1b1300';cx.font=`700 18px ${FONT}`;cx.textAlign='center';cx.textBaseline='middle';cx.fillText('校 門',50*T,95.2*T+15);
  const vis=(x,y,m)=>x>camX-m&&x<camX+W+m&&y>camY-m&&y<camY+H+m;
@@ -5028,6 +5078,7 @@ function render(){
  if(s.cut&&s.cut.kind!=='memo')ents.push({y:s.cut.ny,d:'bm'});
  for(const t of teachers)if(vis(t.x,t.y,80))ents.push({y:t.y,d:'teacher',t});
  for(const c of s.cl)if(vis(c.x,c.y,80))ents.push({y:c.y,d:'cl',c});
+ for(const d of s.dogs||[])ents.push({y:d.y,d:'dog',dog:d});
  for(const pt of s.pets||[])ents.push({y:pt.y,d:'pet',pt});
  if(NET.active)for(const id in NET.peers){const pe=NET.peers[id];if(pe.st!=='esc'&&pe.st!=='out'&&Date.now()-pe.seen<6000)ents.push({y:pe.dy,d:'peer',pe})}
  ents.push({y:p.y,d:'player'});
@@ -5035,6 +5086,7 @@ function render(){
  for(const e of ents){
   if(e.d==='tree')drawTree(e);
   else if(e.d==='pet')drawPetEnt(e.pt);
+  else if(e.d==='dog')nwDogSprite(e.dog.x,e.dog.y-12,e.dog.face,s.tick,false);
   else if(e.d==='peer')drawPeer(e.pe);
   else if(e.d==='stu'||e.d==='bm')drawStuEnt(e);
   else if(e.d==='teacher'){
@@ -5226,7 +5278,7 @@ function hudTick(){
  {const kb=$('ab善');if(s.ab['善'].on)kb.querySelector('small').textContent=s.kindT>0?`剩 ${Math.ceil(s.kindT)} 秒`:ABIL['善'].name}
  {const lv=$('lvl');if(lv){const w=s.ch===2?'沖水等級':'屎等級';if(lv.textContent!==w)lv.textContent=w}}
  {const l=$('cltl');if(l){const w=s.ch===2?'敵人':'清潔工';if(l.textContent!==w)l.textContent=w}}
- {const bo=s.boss,show=!!(bo&&!bo.dead&&bo.hp>0);$('bb').hidden=!show;if(show){$('bbi').style.width=(bo.hp/bo.maxHp*100)+'%';$('bbn').textContent=(s.ch===2?'鍾董事長 ':'校長 ')+'★'.repeat(bo.ph||1)+(s.fireOn&&!bo.kneel?`　證據 ${Math.ceil(s.evi)}%`:bo.kneel?'　（跪倒）':'')}}
+ {const nb=s.nw&&s.nw.boss&&!s.nw.boss.dead&&s.nw.boss.hp>0?s.nw.boss:null,bo=nb||s.boss,show=!!(bo&&!bo.dead&&bo.hp>0);$('bb').hidden=!show;if(show){$('bbi').style.width=(bo.hp/bo.maxHp*100)+'%';$('bbn').textContent=nb?'奶娃 '+'★'.repeat(bo.ph||1):(s.ch===2?'鍾董事長 ':'校長 ')+'★'.repeat(bo.ph||1)+(s.fireOn&&!bo.kneel?`　證據 ${Math.ceil(s.evi)}%`:bo.kneel?'　（跪倒）':'')}}
  if(s.pPoison>0){const b=$('poic');if(b)b.textContent=`中毒 ${Math.ceil(s.pPoison)}s`}
  if(s.buffT>0){const b=$('bufc');if(b)b.textContent=`國文加持 ${Math.ceil(s.buffT)}s`}
  $('acti').classList.toggle('on',!!(s.hint&&s.hint.kind!=='wait'));
